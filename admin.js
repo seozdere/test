@@ -659,7 +659,7 @@ function filterStudentList() {
     });
     document.getElementById('clearStudentSearch').hidden = !query;
     document.getElementById('studentSearchResult').textContent = query || onlyUnchecked
-        ? (visible ? `${visible} öğrenci gösteriliyor` : onlyUnchecked && checked === students.length && students.length
+        ? (visible ? '' : onlyUnchecked && checked === students.length && students.length
             ? 'Tüm öğrencilerin kontrolü tamamlandı.' : 'Eşleşen öğrenci bulunamadı.') : '';
 }
 document.getElementById('onlyUncheckedStudents').addEventListener('change', filterStudentList);

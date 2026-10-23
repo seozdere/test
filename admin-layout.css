@@ -210,3 +210,158 @@ body.admin-page,body.admin-page :is(button,input,textarea,select,.s-name,.modal-
 #adminCalendar .calendar-homework-legend span{color:var(--homework-day-color)}
 .admin-page #manageStudentsBtn{display:grid;place-items:center}
 @media(min-width:1100px){.admin-page .date-day-row{grid-template-columns:44px minmax(0,1fr) 44px}}
+
+/* Center marks and streamline the date toolbar. */
+.admin-page .student-card .controls .btn:is(.btn-pos,.btn-neg){display:flex;align-items:center;justify-content:center;padding:0;line-height:1;text-align:center;text-indent:0}
+.admin-page #studentSearch,.admin-page .student-card .s-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;font-weight:400;letter-spacing:.1px;line-height:1.4}
+.admin-page .date-homework-row{padding:4px 38px;gap:6px}
+.admin-page .date-homework-row .homework-jump-btn{width:44px;height:38px;min-height:38px;padding:2px;gap:1px;border-radius:10px}
+.admin-page .date-homework-row .layout-control-icon{width:18px;height:18px}
+.admin-page .homework-jump-label{font-size:.58rem;line-height:1.1}
+.admin-page .date-day-row{position:relative}
+.admin-page .date-day-row #prevDate{background:#E8BCC5;color:#81505D;border-color:#D6A4AF}
+.admin-page .date-day-row #nextDate{background:#BADCC6;color:#3D7054;border-color:#9EC4AC}
+.admin-page .date-day-row .date-nav-btn .layout-control-icon{stroke-width:2.7}
+.admin-page .date-today{position:absolute;right:0;top:calc(100% + 8px);width:32px;height:32px;display:grid;place-items:center;padding:0;border:1px solid #4C685E;border-radius:10px;background:#293B36;cursor:pointer;z-index:1}
+.admin-page .date-today:hover{background:#365047}
+.admin-page #studentSearch::-webkit-search-cancel-button,.admin-page #studentSearch::-webkit-search-decoration{-webkit-appearance:none;appearance:none;display:none}
+.admin-page #studentSearch::-ms-clear{display:none}
+.admin-page #clearStudentSearch{display:grid;place-items:center;padding:0;line-height:1}
+.admin-page #clearStudentSearch .layout-control-icon{width:20px;height:20px;margin:0}
+@media(max-width:640px){.admin-page #studentSearch,.admin-page .student-card .s-name{font-size:.75rem;letter-spacing:.1px}}
+
+/* Keep today's pin separate from the homework jump controls. */
+.admin-page .date-today{background:transparent;border:0}
+.admin-page .date-today:hover{background:#ffffff0a}
+.admin-page .date-homework-row .homework-jump-btn{height:34px;min-height:34px;padding:1px 2px;gap:0}
+.admin-page .student-card{min-height:42px}
+.admin-page .student-card .controls .btn{height:30px;min-height:30px}
+@media(min-width:1100px){
+ .admin-page .admin-rail .date-homework-row{gap:4px;padding-left:0;padding-right:38px;justify-content:center;box-sizing:border-box}
+ .admin-page .admin-rail .date-homework-row .homework-jump-btn{width:38px;flex:0 0 38px}
+ .admin-page .admin-rail .date-today{right:6px;top:calc(100% + 8px)}
+ .admin-page .admin-rail .layout-progress{justify-content:center;width:100%;gap:12px;text-align:center}
+ .admin-page .admin-rail .layout-menu{display:flex;align-items:center;justify-content:center;line-height:1;padding:0;letter-spacing:0;text-indent:0}
+}
+
+.admin-page .homework-preview{display:flex;align-items:center;gap:8px}
+.admin-page .homework-preview-text{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.admin-page .homework-edit-icon{flex:none;pointer-events:none}
+
+.admin-page .layout-menu svg{display:block;margin:auto;flex:none;pointer-events:none}
+@media(min-width:1100px){
+ .admin-page .admin-rail .admin-tabs{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:5px}
+ .admin-page .admin-rail #classPickerButton{grid-column:1;grid-row:1;width:100%}
+ .admin-page .admin-rail #viewToggle{grid-column:2;grid-row:1;justify-self:center}
+ .admin-page .admin-rail #tabHomework{grid-column:1;grid-row:2;width:100%}
+ .admin-page .admin-rail .layout-menu{grid-column:2;grid-row:2;justify-self:center}
+ .admin-page .admin-rail #tabClass{grid-column:1/-1;grid-row:3;width:100%}
+}
+@media(max-width:640px){.admin-page .admin-tabs #tabClass{white-space:normal;line-height:1.2}}
+
+.admin-page .date-homework-row{position:relative}
+.admin-page .admin-homework-ribbon{position:absolute;left:0;top:50%;transform:translateY(-50%) rotate(-7deg);padding:4px 7px;background:#F7E9C9;color:#806C49;font:800 .65rem 'Plus Jakarta Sans',sans-serif;line-height:1.2;box-shadow:0 2px 0 #B9A47A55;clip-path:polygon(0 0,100% 0,94% 50%,100% 100%,0 100%,5% 50%);pointer-events:none}
+.admin-page .date-homework-row:has(.admin-homework-ribbon){padding-left:43px;padding-right:38px}
+@media(max-width:640px){
+ .admin-page .admin-tabs :is(#tabHomework,#tabClass){height:38px;min-height:38px;padding:7px 3px;box-sizing:border-box;line-height:1.2;white-space:nowrap}
+ .admin-page .date-homework-row{gap:5px}
+ .admin-page .date-homework-row .homework-jump-btn{width:40px;flex:0 0 40px}
+}
+
+.admin-page .layout-search-toolbar #homeworkCheckBar{border-radius:18px}
+
+.admin-page #onlyUncheckedStudents{appearance:none;-webkit-appearance:none;width:17px;height:17px;min-width:17px;border:2px solid #B8BCE9;border-radius:50%;background:#202B42;display:inline-grid;place-content:center;vertical-align:middle;margin:0 5px 0 0;cursor:pointer}
+.admin-page #onlyUncheckedStudents:checked{background:#A6A4EF;border-color:#C7C5FF}
+.admin-page #onlyUncheckedStudents:checked:after{content:'';width:7px;height:4px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:translateY(-1px) rotate(-45deg)}
+.admin-page #onlyUncheckedStudents:focus-visible{outline:2px solid #D7D5FF;outline-offset:3px}
+
+.admin-page .layout-search-toolbar .student-search-bar,
+.admin-page .layout-search-toolbar #homeworkCheckBar{flex:1 1 0;min-width:0}
+.admin-page .layout-search-toolbar #homeworkCheckBar{display:flex;align-items:center;justify-content:center}
+.admin-page .layout-search-toolbar #homeworkCheckBar[hidden]{display:none}
+.admin-page .layout-search-toolbar .bulk-toggle{flex:0 0 auto}
+.admin-page .layout-search-toolbar{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto}.admin-page .layout-search-toolbar:has(#homeworkCheckBar[hidden]){grid-template-columns:minmax(0,1fr) auto}
+
+/* Match the filter's top and bottom edges to the search field. */
+.admin-page .layout-search-toolbar{align-items:stretch}
+.admin-page .layout-search-toolbar #homeworkCheckBar{align-self:stretch;height:auto;margin:0;box-sizing:border-box}
+.admin-page .layout-search-toolbar .student-search-bar{align-self:stretch}
+.admin-page .layout-search-toolbar .student-search-field{height:100%;box-sizing:border-box}
+.admin-page .layout-search-toolbar .bulk-toggle{align-self:center}
+
+/* Desktop: allocate real space for the ribbon and today pin. */
+@media(min-width:1100px){
+ .admin-page .admin-rail .date-homework-row:has(.admin-homework-ribbon){display:grid;grid-template-columns:32px repeat(4,minmax(0,1fr)) 26px;gap:3px;padding:4px 0;align-items:center;width:100%}
+ .admin-page .admin-rail .date-homework-row .admin-homework-ribbon{position:static;transform:rotate(-7deg);padding:4px 3px;text-align:center;font-size:.58rem}
+ .admin-page .admin-rail .date-homework-row .homework-jump-btn{width:100%;min-width:0;height:34px;min-height:34px;padding:2px 0}
+ .admin-page .admin-rail .date-homework-row .homework-jump-label{font-size:.54rem;letter-spacing:0}
+ .admin-page .admin-rail .date-homework-row .date-today{position:static;inset:auto;width:26px;height:32px;justify-self:center}
+ .admin-page .layout-search-toolbar{grid-template-columns:repeat(2,minmax(0,1fr)) 44px;gap:8px}
+ .admin-page .student-list{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:8px;padding-right:52px}
+ .admin-page .student-card{width:100%;box-sizing:border-box}
+}
+
+@media(min-width:1100px){
+ .admin-page .admin-rail .date-homework-row .admin-homework-ribbon{font-size:.5rem;padding:3px 2px;justify-self:center;max-width:28px}
+ .admin-page .layout-search-toolbar .student-search-field,
+ .admin-page .layout-search-toolbar #homeworkCheckBar,
+ .admin-page .student-card{height:54px;min-height:54px;box-sizing:border-box}
+ .admin-page .student-card{align-items:center;border-radius:12px}
+ .admin-page .layout-search-toolbar .student-search-field #studentSearch{height:100%}
+}
+
+/* Landscape phone/tablet cards: reserve space for both participation totals. */
+@media(min-width:641px) and (max-width:1099px){
+ .admin-page .student-card{grid-template-columns:minmax(0,1fr) auto;min-width:0}
+ .admin-page .student-card .s-name{grid-column:1;grid-row:1;min-width:0}
+ .admin-page .student-card :is(.class-score-mini,.note-btn){grid-column:2;grid-row:1;justify-self:end}
+ .admin-page .student-card .class-score-mini{display:flex;flex-direction:row;gap:4px;max-width:100%}
+ .admin-page .student-card .class-score-mini span{padding:2px 5px;font-size:.72rem}
+ .admin-page .student-card .controls{grid-column:1/-1;grid-row:2;width:100%;min-width:0}
+ .admin-page .student-card .controls .btn{min-width:0;flex:1 1 0}
+ .admin-page .date-today{display:none}
+ .admin-page .admin-tabs{width:100%;box-sizing:border-box;display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1fr) 36px 36px;gap:5px;align-items:center}
+ .admin-page .admin-tabs .admin-tab{min-width:0;min-height:38px;white-space:normal;line-height:1.3;padding:6px}
+}
+@media(min-width:1100px){
+ .admin-page .layout-search-toolbar .bulk-toggle{display:none}
+ .admin-page .layout-search-toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .admin-page .layout-search-toolbar:has(#homeworkCheckBar[hidden]){grid-template-columns:minmax(0,1fr)}
+ .admin-page .student-list{padding-right:0}
+}
+@media(min-width:1100px) and (max-width:1366px) and (pointer:coarse){.admin-page .date-today{display:none}}
+
+/* Today belongs to homework navigation, never the participation toolbar. */
+@media(min-width:641px) and (max-width:1099px){
+ .admin-page .date-today{display:grid;right:0;top:calc(100% + 8px);width:32px;height:32px}
+ .admin-page .date-homework-row{padding-right:38px}
+}
+@media(min-width:1100px) and (max-width:1366px) and (pointer:coarse){
+ .admin-page .date-today{display:grid}
+}
+.admin-page:has(#tabClass.active) .date-today{display:none!important}
+
+/* Desktop card: date, explanation, then homework navigation. */
+@media(min-width:1100px){
+ .admin-page .admin-rail .admin-homework-ribbon{display:none}
+ .admin-page .admin-rail .date-selector .date-day-row{order:0}
+ .admin-page .admin-rail .date-selector .homework-description-editor{order:1}
+ .admin-page .admin-rail .date-selector .date-homework-row:has(.admin-homework-ribbon){order:2;grid-template-columns:repeat(4,minmax(0,1fr)) 28px;padding:7px 0 2px;border-top:1px solid #35415b;gap:5px}
+ .admin-page .admin-rail .homework-preview{border-top:0;padding:7px 0}
+}
+
+/* Desktop reading order: down the first column, then down the second. */
+@media(min-width:1100px){
+ .admin-page .student-list{grid-auto-flow:column;grid-template-rows:repeat(var(--student-column-rows,1),auto);align-content:start}
+}
+
+@media(min-width:1100px){
+ .admin-page .admin-rail .layout-menu{grid-column:2;grid-row:1}
+ .admin-page .admin-rail #viewToggle{grid-column:2;grid-row:2}
+}
+
+/* Compact toolbar: parent view, then menu. */
+@media(max-width:1099px){
+ .admin-page .admin-tabs .layout-menu{grid-column:5;grid-row:1}
+ .admin-page .admin-tabs #viewToggle{grid-column:4;grid-row:1}
+}
