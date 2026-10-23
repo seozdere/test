@@ -1,0 +1,28 @@
+NoTik: Sudoku, Şehrini Bul, Ülkeyi Bul
+
+Sudoku: 500 puzzles per difficulty (easy, medium, hard), 1,500 total.
+Source: https://github.com/grantm/sudoku-exchange-puzzle-bank
+Dataset dedicated to public domain; see sudoku-puzzles.txt.
+https://sudokuexchange.com/puzzle-bank/
+All bundled puzzles independently checked for exactly one solution using
+the build-time validation tool. Difficulty labels follow the source ratings.
+
+Türkiye: SVG Türkiye Haritası by dnomak. MIT license: turkey-map-MIT.txt.
+https://github.com/dnomak/svg-turkiye-haritasi
+Province paths extracted; only plate codes 01–81 used. Paths for the same
+province are combined, so Istanbul is one answer even across multiple shapes.
+
+World: Natural Earth, 1:50m Admin 0 Countries (upgraded 2026-10-16).
+https://github.com/nvkelso/natural-earth-vector/blob/master/geojson/ne_50m_admin_0_countries.geojson
+https://www.naturalearthdata.com/about/terms-of-use/
+Natural Earth vector/raster data are public domain. Country names use NAME_TR.
+164 mapped countries (TYPE Country/Sovereign country, ISO_A2_EH available).
+This simplified map does not include every small island state. Regions not
+in the question pool are grey background, not clickable quiz answers.
+World geometry is displayed with a Miller cylindrical projection.
+Borders follow the source dataset and are not a statement of political status.
+
+Original datasets downloaded 2026-10-04; world boundaries upgraded 2026-10-16.
+Raw source downloads are archived separately; runtime uses geography-data.json and sudoku-data.json.
+Game interfaces and rules are implemented locally; no external game API,
+advertising, accounts or student-data upload is used.

@@ -1,0 +1,136 @@
+.mobile-brand-wrap{display:contents}
+.parent-page .header-collapsible .excel-header .mobile-brand-wrap{display:block;width:100%}
+.parent-page .header-collapsible .mobile-brand-wrap>.school-brand{overflow:visible}
+.parent-page .header-collapsible.mobile-header-compact .mobile-brand-wrap{display:none}
+.parent-page .header-collapsible.mobile-header-compact .excel-header-inner{padding:8px 0;gap:0}
+/* Touch landscape/tablet: keep all navigation together, without changing phone portrait. */
+.parent-page .header-wide-touch .excel-header-inner{gap:12px;padding:12px 0}
+.parent-page .header-wide-touch .school-brand{width:100%}
+.parent-page .header-wide-touch .class-branding-row{min-height:0;padding-right:0}
+.parent-page .header-wide-touch .header-right{width:100%;display:flex;flex-wrap:nowrap;gap:12px;align-items:center}
+.parent-page .header-wide-touch .view-toggle-wrap{display:flex;flex-wrap:nowrap;align-items:center}
+.parent-page .header-wide-touch .excel-header .tools-shortcut{position:relative;inset:auto;flex-direction:row;width:auto;min-width:0;height:44px;min-height:44px;margin:0 0 0 4px;padding:8px 12px;gap:6px}
+.parent-page .header-wide-touch .excel-header .tools-shortcut>svg{width:27px;height:25px}
+.parent-page .header-wide-touch .excel-header .tools-shortcut-label{font-size:.89rem}
+.parent-page .header-wide-touch .tools-shortcut .tools-new-ribbon{top:-13px;left:0;scale:.85;transform-origin:left bottom}
+
+/* Compact mobile leaderboard, retaining the existing disclosure cards. */
+@media(max-width:640px){
+ .parent-page #leaderPanel .leader-panel-inner{gap:14px;padding:12px 10px}
+ .parent-page #leaderPanel .leader-collapsible{padding:12px}
+ .parent-page #leaderPanel .leader-section-body{padding-top:6px}
+ .parent-page #leaderPanel .achievement-group{margin-top:9px;padding:10px 12px;border-radius:15px}
+ .parent-page #leaderPanel .achievement-heading{gap:9px;margin-bottom:7px}
+ .parent-page #leaderPanel .achievement-names li{padding:6px 0;gap:8px;font-size:.86rem;line-height:1.4}
+ .parent-page #leaderPanel .leader-sort-note{margin-top:10px}
+}
+
+.leader-bottom-hide{display:none}
+@media(max-width:640px){
+ .parent-page .leader-bottom-hide{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;margin:14px auto 0;padding:8px 22px;border:1px solid #D8CFEA;border-radius:14px;background:#F1EEFA;color:#796691;font:600 .8rem 'Plus Jakarta Sans',sans-serif;cursor:pointer}
+ .parent-page .leader-bottom-hide:hover{background:#E8E1F4}
+ .parent-page .leader-bottom-hide:focus-visible{outline:2px solid #A38BC9;outline-offset:3px}
+}
+
+.leader-bottom-hide .leader-hide-arrow{width:24px;height:24px;flex:none}
+
+/* Scroll-linked header experiment. The previous controller remains the fallback. */
+@supports (animation-timeline: --dashboard-scroll) and (timeline-scope: --dashboard-scroll){
+ .parent-page #mainDashboard.header-scroll-driven{position:relative;box-sizing:border-box;timeline-scope:--dashboard-scroll;padding-top:calc(var(--hdr-h) - var(--hdr-shift))}
+ .parent-page .header-scroll-driven>.excel-header{position:absolute;inset:0 0 auto;z-index:50;animation:dashboard-header-scroll linear both;animation-timeline:--dashboard-scroll;animation-range:0px var(--hdr-shift)}
+ .parent-page .header-scroll-driven .school-brand{animation:dashboard-brand-scroll linear both;animation-timeline:--dashboard-scroll;animation-range:0px var(--hdr-shift)}
+ .parent-page .header-scroll-driven>.panel-scroll-active{scroll-timeline:--dashboard-scroll block}
+ .parent-page .header-scroll-driven>:is(#homeworkView,#classView,#leaderPanel,#toolsPanel){overflow-anchor:none}
+ .parent-page .header-scroll-driven>:is(#homeworkView,#classView,#leaderPanel,#toolsPanel)::before{content:"";display:block;height:var(--hdr-shift);flex:0 0 var(--hdr-shift)}
+ .parent-page .header-scroll-driven>#leaderPanel{flex-direction:column}
+ .parent-page .header-scroll-driven>#leaderPanel>.leader-panel-inner{flex:none;min-height:100%;box-sizing:border-box;align-content:start}
+}
+@keyframes dashboard-header-scroll{from{transform:translateY(0)}to{transform:translateY(calc(-1 * var(--hdr-shift)))}}
+@keyframes dashboard-brand-scroll{from{opacity:1;visibility:visible}to{opacity:0;visibility:hidden}}
+
+.parent-page:has(.header-scroll-driven) #latestHomeworkMarker{z-index:51}
+
+/* Compact landscape/tablet strip adapted from the supplied mockup. */
+.parent-page .header-wide-touch .excel-header{display:flex;flex-wrap:wrap;align-items:center;column-gap:12px;padding:0 130px 0 16px;overflow:visible}
+.parent-page .header-wide-touch .excel-header-inner{flex:1 1 0;min-width:0;flex-wrap:nowrap;gap:12px;padding:8px 0}
+.parent-page .header-wide-touch .excel-header .mobile-brand-wrap{display:block;flex:1 1 0;min-width:0;width:auto}
+.parent-page .header-wide-touch .school-brand{width:auto;min-width:0;gap:10px}
+.parent-page .header-wide-touch .comic-school{width:36px;height:36px}
+.parent-page .header-wide-touch .school-name-block{min-width:0}
+.parent-page .header-wide-touch .school-name-block h1{font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.parent-page .header-wide-touch #termBranding{display:none}
+.parent-page .header-wide-touch #classBranding{font-size:.62rem;letter-spacing:1px;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.parent-page .header-wide-touch .header-right{width:auto;flex:0 0 auto;gap:8px}
+.parent-page .header-wide-touch .subject-tabs-wrap{margin-right:0}
+.parent-page .header-wide-touch .view-toggle-wrap{padding:3px;gap:3px}
+.parent-page .header-wide-touch .excel-header :is(.subject-tab-parent,.view-toggle-btn){min-height:36px;padding:5px 11px;font-size:.8rem}
+.parent-page .header-wide-touch .excel-header :is(.comic-book,.comic-homework,.comic-plus,.comic-trophy){width:21px;height:21px}
+.parent-page .header-wide-touch .excel-header .subject-tab-parent svg{width:22px;height:22px}
+.parent-page .header-wide-touch .excel-header .tools-shortcut{height:36px;min-height:36px;margin:0 0 0 2px;padding:4px 8px}
+.parent-page .header-wide-touch .excel-header .tools-shortcut>svg{width:26px;height:24px}
+.parent-page .header-wide-touch .tools-shortcut .tools-new-ribbon{top:-7px;left:auto;right:-11px;scale:.5;transform-origin:right top}
+/* Şeritte kaydırmayla gizlenecek bir marka bölümü yok: kaydırmaya bağlı animasyonlar kapalı. */
+.parent-page .header-wide-touch.header-scroll-driven>.excel-header,.parent-page .header-wide-touch.header-scroll-driven .school-brand{animation:none;opacity:1;visibility:visible;transform:none}
+
+
+.parent-page .header-wide-touch .excel-header{padding:0 46px 0 12px;column-gap:8px}
+.parent-page .header-wide-touch .excel-header-inner{gap:8px;min-height:56px;box-sizing:border-box}
+.parent-page .header-wide-touch .header-right{gap:5px}
+.parent-page .header-wide-touch .excel-header :is(.subject-tab-parent,.view-toggle-btn){padding:5px 8px;font-size:.75rem}
+.parent-page .header-wide-touch .excel-header .tools-shortcut{padding:5px 8px;border:0;background:transparent;box-shadow:none;gap:4px}
+.parent-page .header-wide-touch .excel-header .tools-shortcut[aria-pressed="true"]{background:rgba(255,255,255,.18);box-shadow:0 1px 4px #0003}
+.parent-page .header-wide-touch .excel-header .tools-shortcut-label{display:block;font-size:.75rem}
+.parent-page .header-wide-touch .excel-header .tools-shortcut>svg{width:22px;height:22px}
+.parent-page .header-wide-touch #mainLegend{display:none!important}
+.parent-page .header-wide-touch .excel-footer{display:none}
+.parent-page #mainDashboard.header-wide-touch :is(#excelTable,#classTable) .student-header{padding:5px 10px!important}
+.parent-page #mainDashboard.header-wide-touch :is(#excelTable,#classTable) :is(.date-header,.class-date-header,.total-header){padding:5px 3px!important}
+.parent-page #mainDashboard.header-wide-touch .parent-search-shell{flex-basis:110px;width:110px;padding:3px 7px}
+.parent-page #mainDashboard.header-wide-touch .comic-search{width:18px;height:18px;flex-basis:18px}
+.parent-page #mainDashboard.header-wide-touch .homework-info-btn{width:22px;height:26px}
+.parent-page #mainDashboard.header-wide-touch #excelTable .date-label{writing-mode:horizontal-tb;transform:none}
+.parent-page #mainDashboard.header-wide-touch #excelTable .homework-date-heading{flex-direction:row;gap:2px;min-height:28px}
+/* Tablet portrait retains a full school heading rather than hiding it to fit. */
+@media(orientation:portrait){
+ .parent-page .header-wide-touch .excel-header-inner{flex-wrap:wrap;gap:6px;padding:8px 0}
+ .parent-page .header-wide-touch .excel-header .mobile-brand-wrap{flex:1 0 100%;width:100%}
+ .parent-page .header-wide-touch .school-name-block h1{white-space:normal;font-size:.83rem}
+ .parent-page .header-wide-touch .header-right{width:100%}
+}
+@media(max-width:740px) and (orientation:landscape){
+ .parent-page .header-wide-touch .school-name-block h1{font-size:.66rem}
+ .parent-page .header-wide-touch .comic-school{width:26px;height:30px}
+ .parent-page .header-wide-touch .school-brand{gap:4px}
+ .parent-page .header-wide-touch .excel-header :is(.subject-tab-parent,.view-toggle-btn){padding:5px;font-size:.7rem}
+}
+
+/* Preserve active announcements while the legend lives in its own disclosure. */
+.parent-page .header-wide-touch #mainLegend:not([style*="none"]):has(#parentTickerBar[style*="flex"]){display:flex!important;flex:1 0 100%;margin:0;padding:0;border:0}
+.parent-page .header-wide-touch #mainLegend>.legend-item{display:none}
+
+/* Status explanations are available directly on each homework square. */
+.parent-page .header-wide-touch .excel-header{padding-right:12px}
+.parent-page .header-collapsible>.excel-footer{display:none}
+.homework-status-bubble{position:fixed;z-index:1200;max-width:calc(100vw - 16px);box-sizing:border-box;padding:9px 14px;border:1px solid #D8D1E7;border-radius:12px;background:#FFFEFA;color:#49445F;box-shadow:0 3px 12px #26354C24;font:700 .8rem 'Plus Jakarta Sans',sans-serif;pointer-events:none;animation:status-bubble-in .12s ease-out}
+.homework-status-bubble[hidden]{display:none}
+#excelTable [data-homework-status]{cursor:pointer}
+#excelTable [data-homework-status]:focus-visible{outline:2px solid #8877B3;outline-offset:-3px}
+@keyframes status-bubble-in{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.homework-status-bubble{animation:none}}
+
+/* Keep the entire search prompt readable in the compact strip layouts. */
+.parent-page #mainDashboard.header-wide-touch .parent-search-shell{flex:0 0 140px;width:140px;box-sizing:border-box}
+.parent-page #mainDashboard.header-wide-touch .parent-student-search{min-width:0;font-size:.75rem}
+@media(min-width:641px) and (max-width:1024px) and (max-height:600px) and (orientation:landscape){
+ .parent-page #leaderPanel .leader-panel-inner{gap:14px;padding:12px 10px}
+ .parent-page #leaderPanel .leader-collapsible{padding:12px}
+ .parent-page #leaderPanel .leader-section-body{padding-top:6px}
+ .parent-page #leaderPanel .achievement-group{margin-top:9px;padding:10px 12px;border-radius:15px}
+ .parent-page #leaderPanel .achievement-heading{gap:9px;margin-bottom:7px}
+ .parent-page #leaderPanel .achievement-names li{padding:6px 0;gap:8px;font-size:.86rem;line-height:1.4}
+}
+
+/* Preserve the original single-subject row; tighten only multi-subject branding spacing. */
+@media(max-width:640px){
+ .parent-page .excel-header-inner:has(.subject-tabs-wrap > :nth-child(2)){row-gap:8px}
+}

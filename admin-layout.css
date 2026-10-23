@@ -1,0 +1,212 @@
+/* Scoped admin presentation, separate from parent and data layers. */
+.admin-page .container{max-width:1500px}
+.admin-page .admin-rail:empty{display:none}
+.admin-page .admin-tabs{display:flex;flex-wrap:nowrap;gap:5px;margin:0!important}
+.admin-page .admin-tabs .admin-tab{flex:1;min-width:0;padding:8px;font-size:.8rem}
+.admin-page .admin-tabs .comic-homework,.admin-page .admin-tabs .comic-plus{display:none}
+.admin-page .admin-status-strip{margin:6px 0;font-size:.7rem}
+.admin-page .parent-view-shortcut{margin:6px 0!important}
+.admin-page .layout-date-card{margin-bottom:12px!important}
+.admin-page .date-selector{max-width:none;gap:7px;padding:10px;border-radius:16px;background:#1e2940}
+.admin-page .homework-description-editor{max-width:none;width:100%;padding:0;margin:0;border:0;background:transparent}
+.admin-page .homework-description-editor:not(.is-editing)>:not(.homework-preview){display:none!important}
+.admin-page .homework-preview{display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;padding:10px;border:0;border-top:1px solid #35415b;background:transparent;color:#cbd5e1;cursor:pointer}
+.admin-page .homework-description-editor.is-editing .homework-preview{display:none}
+.admin-page .date-homework-row{padding-top:5px;gap:5px}
+.admin-page .date-homework-row .homework-jump-btn{padding:5px;min-height:34px;font-size:.7rem}
+.admin-page .calendar-open{padding:4px 10px;align-self:center}
+#adminMenuSheet,#adminCalendar{color:#e2e8f0;background:#1e2940;border:1px solid #3b4663;border-radius:22px;padding:18px;width:min(680px,94vw);max-height:88dvh;overflow:auto}
+#adminMenuSheet::backdrop,#adminCalendar::backdrop{background:#080f20aa}
+#adminMenuSheet>header,.calendar-heading{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#adminMenuSheet .admin-topbar-left{display:block;width:100%}
+#adminMenuSheet .menu-category{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+#adminMenuSheet h3{width:100%;font-size:.75rem;color:#abb8cf;text-transform:uppercase}
+#adminMenuSheet .menu-category .tbtn{flex:1 1 110px;min-height:60px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px;background:#26324b}
+#adminMenuSheet .subtitle{display:none}
+#adminMenuSheet .channel-hidden{display:none!important}
+#adminMenuSheet .notice-tabs{display:flex;gap:5px}
+#adminMenuSheet [aria-selected=true]{background:#8185f5;color:white}
+#adminMenuSheet input{max-width:100%;min-width:0!important}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:16px;text-align:center}
+#adminCalendar button,#adminMenuSheet>header button{color:#dce5f7;background:#293650;border:1px solid #3e4b69;border-radius:10px;min-height:36px;cursor:pointer}
+.calendar-grid .has-homework{box-shadow:inset 0 -4px #b9a5e6}
+#adminCalendar .selected{background:#8185f5}
+.admin-page .student-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.admin-page .student-card{min-width:0;margin:0;background:#1e2940;border:1px solid #303c53;border-radius:12px;animation:none}
+@media(min-width:641px) and (max-width:1099px){
+ .admin-page .student-card{display:grid;grid-template-columns:38px minmax(0,1fr) 32px;padding:10px;gap:8px}
+ .admin-page .student-card .s-avatar{display:none}
+ .admin-page .student-card .student-number{width:36px;padding:4px}
+ .admin-page .student-card .s-name{white-space:normal;font-size:.8rem}
+ .admin-page .student-card .controls{grid-column:1/-1;display:flex;gap:5px}
+ .admin-page .student-card .controls .btn{flex:1;width:auto!important;height:40px}
+}
+@media(min-width:1100px){
+ .admin-page .container{display:grid;grid-template-columns:280px minmax(0,1fr);gap:18px;padding:18px}
+ .admin-page .admin-rail{position:sticky;top:18px;height:calc(100dvh - 36px);overflow:auto;background:#1e2940;padding:12px;border-radius:18px}
+ .admin-page .container>main{min-width:0}
+ .admin-page .student-card{display:flex;padding:6px;gap:6px;min-height:48px}
+ .admin-page .student-card .s-avatar{display:none}
+ .admin-page .student-card .student-number{width:28px;flex-basis:28px;padding:4px 1px}
+ .admin-page .student-card .s-name{flex:1;min-width:0;font-size:.72rem;white-space:normal}
+ .admin-page .student-card .controls{display:flex;gap:3px}
+ .admin-page .student-card .controls .btn{width:30px!important;height:32px;padding:0}
+ .admin-page .student-card .note-btn{width:24px;padding:0}
+}
+@media(max-width:640px){
+ #adminMenuSheet{position:fixed;inset:auto 0 0;margin:0;width:100%;max-width:100%;box-sizing:border-box;border-radius:24px 24px 0 0}
+ .admin-page .container{padding:10px;max-width:100%}
+ .admin-page .student-list{grid-template-columns:minmax(0,1fr);gap:5px}
+ .admin-page .student-card{display:flex;padding:5px;gap:4px;min-height:46px}
+ .admin-page .student-card .s-avatar{display:none}
+ .admin-page .student-card .student-number{width:25px;flex:0 0 25px;padding:2px;font-size:.7rem}
+ .admin-page .student-card .s-name{flex:1;min-width:0;font-size:.66rem;line-height:1.25;overflow-wrap:anywhere}
+ .admin-page .student-card .controls{width:auto;flex:0 0 auto;border:0;padding:0;gap:3px}
+ .admin-page .student-card .controls .btn{width:29px!important;min-width:29px;height:32px;min-height:32px;margin:0;padding:0;flex:none;font-size:.9rem}
+ .admin-page .student-card .note-btn{width:20px;height:28px;flex:0 0 20px;padding:0}
+ .admin-page .student-card .note-btn svg{width:17px;height:17px}
+ .admin-page .student-search-bar{margin:8px 0}.admin-page .student-search-bar>label{display:none}
+ .admin-page .student-search-field{width:100%}
+}
+
+.admin-page .container header{margin-bottom:10px;padding-bottom:0}
+.admin-page .admin-status-strip{display:flex;flex-wrap:nowrap;gap:5px;overflow:hidden;white-space:nowrap}
+.admin-page .admin-status-strip .status-pill{padding:2px 4px;border:0;background:none;font-size:.65rem}
+.admin-page .admin-status-strip .status-meta{font-size:.65rem}
+.admin-page .date-selector .calendar-open{min-height:28px}
+
+@media(min-width:1100px){
+ .admin-page .admin-rail header{padding:0}
+ .admin-page .admin-rail .admin-tabs{flex-wrap:wrap;width:100%;box-sizing:border-box}
+ .admin-page .admin-rail #classPickerButton{flex:1 1 65%}
+ .admin-page .admin-rail .layout-menu{order:0}
+ .admin-page .admin-rail .admin-tab{order:1;flex:1 1 40%}
+}
+
+/* Reference proportions and shared dark command surfaces. */
+.admin-page{background:#141d2e;color:#dce3f0}
+.admin-page .admin-tabs{background:#1e2940;border:1px solid #34405b;border-radius:13px;padding:4px}
+.admin-page .admin-tabs .admin-tab.active{background:#8385f5;color:white;box-shadow:0 2px 8px #8185f555}
+.admin-page .layout-menu,.admin-page #viewToggle{flex:none;width:36px;padding:6px;display:grid;place-items:center}
+.admin-page .admin-status-strip{height:20px;align-items:center}
+.admin-page .admin-status-strip:before{content:"";width:6px;height:6px;background:#31d4a3;border-radius:50%;flex:none}
+.admin-page .layout-search-toolbar{display:flex;align-items:center;gap:8px;margin:10px 0}
+.admin-page .layout-search-toolbar .student-search-bar{margin:0;flex:1;min-width:0}
+.admin-page .layout-search-toolbar .student-search-bar>label{display:none}
+.admin-page .layout-search-toolbar .student-search-field{width:100%}
+.admin-page .layout-search-toolbar #homeworkCheckBar{margin:0;padding:9px;font-size:.68rem;white-space:nowrap}
+.admin-page .layout-search-toolbar #homeworkCheckCount{display:none}
+.admin-page .bulk-toggle{color:#ffd050;font-size:1.4rem;padding:4px 10px}
+.admin-page .date-selector{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:10px 12px;box-sizing:border-box}
+.admin-page .date-day-row{grid-template-columns:34px minmax(0,1fr) 34px;gap:6px}
+.admin-page .date-day-row .date-nav-btn{width:34px;height:36px}
+.admin-page #currentDate{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.admin-page .date-reference-label{grid-column:2;grid-row:1;background:none;border:0;color:#eef0fa;font-weight:700;font-size:.85rem;cursor:pointer}
+.admin-page .date-homework-row{margin:0;padding:0;border:0;align-items:center;gap:5px}
+.admin-page .date-homework-row .homework-jump-btn{font-size:0;flex:none;width:32px;min-height:36px;background:#303e61;color:#c8cffa;border:1px solid #54618e}
+.admin-page .date-homework-row .homework-jump-btn:after{content:attr(data-short);font-size:16px}
+.admin-page .date-selector .calendar-open{display:none}
+.admin-page .homework-description-editor{grid-column:1/-1}
+.admin-page .homework-preview{font-size:.75rem;line-height:1.5;padding:10px 0}
+.admin-page .homework-quick{display:flex;gap:5px;flex-wrap:wrap;margin:8px 0}
+.admin-page .homework-quick button{border:1px solid #4c597e;border-radius:20px;background:#2c3959;color:#cbd5f1;font-size:.7rem;padding:6px 10px}
+.admin-page .layout-progress{display:none}
+@media(min-width:1100px){
+ .admin-page .layout-progress{display:flex;align-items:center;gap:12px;margin:18px 0}.layout-progress strong{font-size:1.35rem}.layout-progress small{display:block;color:#93a2ba;margin-top:5px}
+ .progress-ring{width:60px;height:60px;border-radius:50%;background:conic-gradient(#acd9bc var(--progress),#36425a 0);display:grid;place-items:center}.progress-ring span{width:46px;height:46px;border-radius:50%;background:#1e2940}
+ .admin-page .bulk-toggle{display:none}.admin-page .admin-rail .date-selector{grid-template-columns:1fr}.admin-page .admin-rail .date-homework-row{justify-content:center}
+ .admin-page .student-card{border-radius:10px;min-height:46px}.admin-page .student-list{gap:6px 10px}
+}
+@media(max-width:1099px){.admin-page .bulk-action-row:not(.bulk-open){display:none!important}}
+@media(max-width:640px){
+ .admin-page .container{padding:12px}.admin-page .student-search-field input{font-size:.75rem;padding:9px 8px}
+ .admin-page .layout-search-toolbar{gap:6px}.admin-page .layout-search-toolbar #homeworkCheckBar{font-size:.6rem;padding:8px 5px}
+ .admin-page .student-card .s-name{font-size:.68rem}.admin-page .student-card{min-height:46px;border-radius:11px}
+ .admin-page .date-selector{gap:5px;padding:9px}.admin-page .date-reference-label{font-size:.75rem}.admin-page .date-homework-row .homework-jump-btn{width:27px}
+}
+
+/* Desktop navigation controls: consistent hit areas and centered artwork. */
+@media(min-width:1100px){
+ .admin-page .date-day-row{grid-template-columns:44px minmax(0,1fr) 44px;gap:8px}
+ .admin-page .date-day-row .date-nav-btn{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;padding:0}
+ .admin-page .date-day-row .date-nav-btn svg{width:23px;height:23px}
+ .admin-page .date-homework-row{gap:9px;padding-top:4px}
+ .admin-page .date-homework-row .homework-jump-btn{width:48px;height:44px;min-height:44px;border-radius:13px;padding:0;display:grid;place-items:center}
+ .admin-page .date-homework-row .homework-jump-btn:after{font-size:23px;line-height:1}
+ .admin-page .layout-menu{width:44px;height:44px;border-radius:13px;font-size:20px;padding:0}
+ #adminMenuSheet>header button,.calendar-heading button{width:44px;height:44px;min-height:44px;flex:0 0 44px;display:grid;place-items:center;padding:0;border:1px solid #556487;border-radius:13px;background:linear-gradient(145deg,#354563,#26334d);color:#e5e8fa;font-size:26px;line-height:1}
+ .calendar-heading strong{flex:1;text-align:center;font-size:1rem}
+ #adminMenuSheet .announcement-summary{display:flex;align-items:center;justify-content:space-between;min-height:48px;padding:10px 14px;box-sizing:border-box;border-radius:13px;background:#293650;border:1px solid #415071;cursor:pointer;gap:12px}
+ #adminMenuSheet .announcement-summary:after{font-size:22px;min-width:28px;text-align:center}
+ #adminMenuSheet>header button:hover,.calendar-heading button:hover,.admin-page .date-nav-btn:hover,.admin-page .homework-jump-btn:hover{background:#3b4e72;border-color:#8796c4}
+ #adminMenuSheet button:focus-visible,#adminCalendar button:focus-visible,.admin-page .date-selector button:focus-visible{outline:2px solid #a6a9ff;outline-offset:3px}
+}
+
+/* Restore the existing admin font and use scalable, rounded control artwork. */
+.admin-page button,.admin-page input,.admin-page textarea,.admin-page select{font-family:'DM Sans',sans-serif}
+.admin-page{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.admin-page .student-card .s-name{font-family:'Segoe UI','DM Sans',sans-serif;font-weight:600}
+.admin-page .admin-tabs :is(.comic-homework,.comic-plus){display:inline-block;width:19px;height:19px;flex:none;margin:0}
+.admin-page .admin-tabs .admin-tab{display:flex;align-items:center;justify-content:center;gap:5px}
+.admin-page .layout-control-icon{display:block;flex:none;margin:auto;pointer-events:none}
+.admin-page .homework-jump-btn:after{content:none!important}
+.admin-page .homework-jump-btn{display:grid;place-items:center}
+.admin-page .bulk-toggle{display:grid;place-items:center;padding:4px 8px}
+#adminMenuSheet .announcement-summary:after{content:none}
+#adminMenuSheet .announcement-summary>.layout-control-icon{width:26px;height:26px;margin:0 0 0 auto;transition:transform .18s}
+#adminMenuSheet details[open]>.announcement-summary>.layout-control-icon{transform:rotate(180deg)}
+#adminMenuSheet>header button,.calendar-heading button{display:grid;place-items:center;padding:0;min-width:36px}
+@media(max-width:640px){.admin-page .student-card .s-name{font-size:.72rem;letter-spacing:0}.admin-page .admin-tabs .admin-tab{font-size:.75rem}}
+
+/* Phone-only alignment; keep desktop dimensions intact. */
+@media(max-width:640px){
+ .admin-page .container>header{padding:0;margin:0 0 10px}
+ .admin-page .admin-tabs{width:100%;box-sizing:border-box;display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1fr) 36px 36px;align-items:center;gap:4px}
+ .admin-page .admin-tabs #classPickerButton{min-width:52px;padding:7px 8px;min-height:36px}
+ .admin-page .admin-tabs .admin-tab{padding:7px 3px;min-height:36px;letter-spacing:.15px;font-size:.74rem;gap:4px}
+ .admin-page .admin-tabs :is(#viewToggle,.layout-menu){height:36px;width:36px;box-sizing:border-box;margin:0;padding:0}
+ .admin-page .admin-status-strip{margin:5px 0 0;gap:4px;letter-spacing:.1px}
+ .admin-page .date-selector{grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px;padding:9px}
+ .admin-page .date-day-row{grid-template-columns:32px minmax(0,1fr) 32px;gap:4px;min-width:0;align-items:center}
+ .admin-page .date-day-row .date-nav-btn{width:32px;height:36px;min-height:36px;padding:0;display:grid;place-items:center;box-sizing:border-box;transform:none}
+ .admin-page .date-homework-row{gap:4px;align-items:center;padding:0;margin:0}
+ .admin-page .date-homework-row .homework-jump-btn{width:30px;height:36px;min-height:36px;box-sizing:border-box;padding:0;display:grid;place-items:center;transform:none}
+ .admin-page .date-selector .layout-control-icon{width:21px;height:21px;margin:0;display:block}
+ .admin-page .date-reference-label{padding:3px 0;min-width:0;font-size:.75rem;letter-spacing:.15px}
+ .admin-page .student-card .s-name{letter-spacing:.15px;line-height:1.3}
+ .admin-page .homework-preview{letter-spacing:.15px;line-height:1.45}
+ #adminMenuSheet .announcement-summary{display:flex;align-items:center;gap:10px;min-height:44px;letter-spacing:.15px}
+ #adminMenuSheet .announcement-summary[hidden]{display:none}
+}
+
+/* Homework navigation and synchronized homework-day indicators. */
+.admin-page .student-card .student-number{display:none}
+.admin-page .date-day-row .date-nav-btn{color:#ADE0BE;border-color:#527D67;background:#253D36}
+.admin-page .date-day-row .date-nav-btn:hover{background:#325345}
+#adminCalendar{position:fixed;inset:0;margin:auto;width:min(420px,calc(100vw - 32px));height:fit-content;max-height:calc(100dvh - 32px);box-sizing:border-box}
+.admin-page .date-reference-label.has-homework{color:#C6B4ED}
+.admin-page .date-reference-label.has-homework:after{content:'';display:block;width:5px;height:5px;margin:3px auto 0;border-radius:50%;background:currentColor}
+#adminCalendar .calendar-grid .has-homework{color:#C6B4ED;box-shadow:none;position:relative;padding-bottom:10px}
+#adminCalendar .calendar-grid .has-homework:after{content:'';position:absolute;bottom:3px;left:calc(50% - 2.5px);width:5px;height:5px;border-radius:50%;background:currentColor}
+#adminCalendar .calendar-grid .has-homework.selected{background:#41426B;color:#C6B4ED;border-color:#C6B4ED}
+@media(min-width:641px) and (max-width:1099px){.admin-page .student-card{grid-template-columns:minmax(0,1fr) 32px}}
+@media(max-width:640px){.admin-page .date-homework-row{gap:3px}.admin-page .date-homework-row .homework-jump-btn{width:26px}.admin-page .date-selector{gap:4px}}
+
+/* Admin typography and two-row date navigation. */
+body.admin-page,body.admin-page :is(button,input,textarea,select,.s-name,.modal-header h2,.announcement-summary){font-family:'Plus Jakarta Sans',sans-serif}
+.admin-page .student-card .s-name{padding-left:7px}
+.admin-page .date-selector{display:flex;flex-direction:column;align-items:stretch}
+.admin-page .date-day-row{width:100%;grid-template-columns:36px minmax(0,1fr) 36px;align-items:center}
+.admin-page .date-day-row .date-nav-btn{color:#F2F4FF;border-color:#42516C;background:#29354B;justify-self:center}
+.admin-page .date-day-row .date-nav-btn:hover{background:#3B4863;color:white}
+.admin-page .date-reference-label{text-align:center;justify-self:center}
+.admin-page .date-homework-row{display:flex;width:100%;justify-content:center;gap:10px;padding:5px 0}
+.admin-page .date-homework-row .homework-jump-btn{width:50px;height:52px;min-height:52px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3px;padding:5px 3px}
+.admin-page .homework-jump-label{display:block;font-size:.62rem;line-height:1.2;letter-spacing:.1px;color:#D8DDF2}
+.admin-page .date-homework-row .layout-control-icon{width:21px;height:21px;margin:0}
+.admin-page,#adminCalendar{--homework-day-color:#C6B4ED}
+.admin-page .date-reference-label.has-homework,#adminCalendar .calendar-grid .has-homework,#adminCalendar .calendar-grid .has-homework.selected{color:var(--homework-day-color)}
+#adminCalendar .calendar-homework-legend{margin-top:12px;font-size:.78rem;color:#DAE1EF}
+#adminCalendar .calendar-homework-legend span{color:var(--homework-day-color)}
+.admin-page #manageStudentsBtn{display:grid;place-items:center}
+@media(min-width:1100px){.admin-page .date-day-row{grid-template-columns:44px minmax(0,1fr) 44px}}

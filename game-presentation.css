@@ -1,0 +1,276 @@
+/* Compact game cards: same arrangement as the tools above. */
+#toolsPanel #gamesSectionBody .tool-card{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto 1fr;gap:6px 8px;min-height:178px;padding:18px 20px}
+#toolsPanel #gamesSectionBody .tool-card>h3,#toolsPanel #gamesSectionBody .tool-card>p{grid-column:1 / -1;margin:0}
+#toolsPanel #gamesSectionBody .game-card-art{grid-column:2;grid-row:3;align-self:end;width:80px;height:54px;margin:0}
+#toolsPanel #gamesSectionBody .tools-soon{grid-column:1;grid-row:3;align-self:end;justify-self:start;margin:0 0 6px;padding:6px 9px}
+#toolsPanel #gamesSectionBody>.tool-millionaire{margin-top:0}
+/* Images are confined to the backdrop; controls remain fully opaque. */
+#classroomGameDialog,#sentenceDialog,#chessDialog,#learningDialog,#spellingDialog{background-color:#FBF8F0;background-image:linear-gradient(#FFFCF766,#FFFCF766),var(--game-background);background-size:cover;background-position:center;background-repeat:no-repeat}
+#classroomGameDialog{--game-background:url('assets/game-backgrounds/school-6.jpg')}
+#classroomGameDialog[data-game="market"]{--game-background:url('assets/game-backgrounds/school-3.jpg')}
+#classroomGameDialog[data-game="secret"]{--game-background:url('assets/game-backgrounds/school-4.jpg')}
+#sentenceDialog{--game-background:url('assets/game-backgrounds/school-2.jpg')}
+#chessDialog{--game-background:url('assets/game-backgrounds/school-6.jpg')}
+#learningDialog{--game-background:url('assets/game-backgrounds/school-7.jpg')}
+#learningDialog[data-kind="country"],#learningDialog[data-kind="city"]{--game-background:url('assets/game-backgrounds/school-5.jpg')}
+#spellingDialog{--game-background:url('assets/game-backgrounds/school-4.jpg')}
+@media(max-width:600px){
+ #toolsPanel #gamesSectionBody .tool-card{padding:16px 12px;column-gap:4px}
+ #toolsPanel #gamesSectionBody .tools-soon{grid-column:1 / -1;grid-row:4;margin-top:4px}
+ #classroomGameDialog,#sentenceDialog,#chessDialog,#learningDialog,#spellingDialog{background-size:auto 100%;background-position:center top}
+}
+
+/* Readable title badges without fading the game controls. */
+#classroomGameDialog #gameTitle,#chainModePicker .game-intro-title,#sentenceDialog :is(#sentenceTitle,#sentenceModeTitle),#chessDialog :is(#chessChoose,#chessStage)>h2,#learningDialog .learn-stage>h2,#spellingDialog .spell-stage>h2,#millionaireDialog .mil-intro>h1{display:table;position:static;width:fit-content;height:auto;max-width:100%;clip-path:none;overflow:visible;margin:12px auto 20px;padding:10px 22px;background:#FFFDFAF5;border:1px solid #DED5E7;border-radius:18px;box-shadow:0 4px 16px #67567B0D;color:#4B435F;white-space:normal;font-family:'Plus Jakarta Sans',sans-serif}
+#sentenceModePicker>p{margin:18px 0 30px}
+.game-intro-art{display:block;width:115px;height:86px;margin:4px auto 14px;animation:game-intro-float 3.4s ease-in-out infinite}
+.game-intro-art svg{display:block;width:100%;height:100%;overflow:visible}
+@keyframes game-intro-float{50%{transform:translateY(-5px) rotate(2deg)}}
+#gameStage>.game-intro-art{display:none}
+#classroomGameDialog[data-game="market"] #gameStage>.intro-market,#classroomGameDialog[data-game="secret"] #gameStage>.intro-secret{display:block}
+#classroomGameDialog:has(#marketStart[hidden]) #gameStage>.intro-market,#classroomGameDialog:has(#secretStart[hidden]) #gameStage>.intro-secret{display:none}
+#spellingDialog #spellClose{display:grid;place-items:center;position:fixed;top:16px;right:16px;width:46px;height:46px;min-width:46px;min-height:46px;padding:0;line-height:1;transform:none;border:1px solid #D7CBE2;border-radius:50%;background:#FFFDFA;box-sizing:border-box}
+#spellClose svg{width:20px;height:20px;display:block}
+@media(prefers-reduced-motion:reduce){.game-intro-art{animation:none}}
+#millionaireDialog::before{opacity:.34}
+
+#toolsPanel #gamesSectionBody>.tool-spelling{order:-1;position:relative;overflow:visible}
+#classroomGameDialog #gameScore{display:none}
+#spellingDialog #spellClose{width:60px;height:60px;min-width:60px;min-height:60px}
+#spellClose svg{width:28px;height:28px}
+.spell-instruction{font-size:clamp(1.35rem,3vw,1.9rem);margin:20px 0;font-weight:800}
+.spell-correction-pop{position:fixed;inset:0;z-index:20;display:grid;place-items:center;pointer-events:none;padding:24px}
+.spell-correction-pop strong{max-width:100%;overflow-wrap:anywhere;padding:22px 36px;background:#F3FFF7;border:2px solid #ABCDB6;border-radius:24px;box-shadow:0 12px 48px #3F665333;color:#3F7555;font-size:clamp(1.6rem,5vw,3rem);animation:spell-correction-pop .85s ease-in-out both}
+@keyframes spell-correction-pop{0%{opacity:0;transform:scale(.75)}25%,65%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.06)}}
+#learningDialog[data-kind="city"] .learn-stage{width:min(100%,1250px)}
+#learningDialog[data-kind="city"] .geo-layout{display:flex;flex-direction:column;gap:10px;width:100%;min-width:0;flex-shrink:0}
+#learningDialog[data-kind="city"] .geo-directions{display:none}
+#learningDialog[data-kind="city"] .geo-navigation{flex-direction:row;padding:8px 14px;gap:12px}
+#learningDialog[data-kind="city"] .geo-viewport{width:100%;aspect-ratio:var(--map-ratio,2.5);height:auto;min-height:0}
+@media(max-width:640px){#spellingDialog #spellClose{width:50px;height:50px;min-width:50px;min-height:50px;top:12px;right:12px}#learningDialog[data-kind="city"] .geo-layout{width:100%}}
+@media(prefers-reduced-motion:reduce){.spell-correction-pop strong{animation:none}}
+
+/* Stable reading area and concise correction feedback. */
+#spellingDialog .spell-stage{width:min(980px,100%)}
+#spellingDialog .spell-text{width:fit-content;max-width:100%;min-width:min(340px,100%);min-height:0;margin:0 auto;padding:28px 32px;line-height:2;text-align:center;overflow-wrap:anywhere}
+#spellingDialog .spell-feedback{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:10px;min-height:110px;margin:0;font-size:clamp(1.1rem,2.5vw,1.5rem);font-weight:700;line-height:1.5}
+#spellingDialog .spell-feedback.spell-good{font-size:clamp(1.35rem,3vw,1.9rem)}
+.spell-answer-wrong{color:#B45265}.spell-answer-right{color:#397654}.spell-answer-arrow{color:#7E6A91}
+@media(max-width:600px){#spellingDialog .spell-text{padding:24px 16px}#spellingDialog .spell-feedback{min-height:120px;padding:14px 4px}}
+
+#spellingDialog #spellPass{background:#F8DFC5;border-color:#DEB58D;color:#805C37}
+#spellingDialog #spellPass:disabled{opacity:.5;cursor:default}
+
+/* City controls: compact centered zoom on mobile, game actions below map on desktop. */
+#learningDialog[data-kind="city"] .geo-navigation{align-self:center;justify-content:center;width:max-content;max-width:100%;margin-inline:auto}
+@media(min-width:641px){
+ #learningDialog[data-kind="city"] main{display:flex;flex-direction:column}
+ #learningDialog[data-kind="city"] .geo-navigation{display:none}
+ #learningDialog[data-kind="city"] .geo-actions{margin:12px auto 0}
+ #learningDialog[data-kind="city"] #geoMessage{order:1}
+ #learningDialog[data-kind="city"] .learn-credit{order:2}
+}
+
+#spellingDialog #spellStart{animation:spell-start-attention 2.8s ease-in-out infinite;transform-origin:center}
+@keyframes spell-start-attention{0%,100%{transform:scale(1) rotate(0)}35%{transform:scale(1.07) rotate(-2deg)}50%{transform:scale(1.07) rotate(2deg)}65%{transform:scale(1.07) rotate(0)}}
+@media(prefers-reduced-motion:reduce){#spellingDialog #spellStart{animation:none}}
+
+#spellingDialog #spellStart{padding:15px 30px;min-height:54px;font-size:1.05rem;border-radius:16px}
+#learningDialog[data-kind="country"] .geo-viewport [data-place]{stroke:#687E8C;stroke-width:1.15}
+#learningDialog[data-kind="country"] .geo-viewport [data-place]:hover,
+#learningDialog[data-kind="country"] .geo-viewport [data-place]:focus-visible{stroke:#796389;stroke-width:2}
+#learningDialog[data-kind="country"] .geo-viewport [data-place].right{stroke:#4D8B64;stroke-width:2}
+#learningDialog[data-kind="country"] .geo-viewport .geo-background{stroke:#A3B3BE;stroke-width:.7}
+
+#toolsPanel #gamesSectionBody>.tool-millionaire{animation:none;border-color:#E5D3AF;box-shadow:0 5px 18px #67567B0D}
+
+/* Compact city-game header, with a legible progress badge. */
+#learningDialog[data-kind="city"] .learn-stage>h2{margin-bottom:10px}
+#learningDialog[data-kind="city"] .learn-stats{width:fit-content;max-width:100%;align-items:center;gap:14px;margin:4px auto 8px;padding:8px 14px;background:#FFFCF7;border:1px solid #DDD2E7;border-radius:13px;box-shadow:0 3px 10px #67567B0D;color:#635477}
+#learningDialog[data-kind="city"] .learn-stats strong{color:#426D58}
+#learningDialog[data-kind="city"] .geo-question{margin:8px 0 10px}
+#learningDialog[data-kind="city"] .geo-layout{margin-top:8px}
+
+#learningDialog .geo-wrong-feedback{inset:auto;display:block;width:max-content;max-width:calc(100vw - 16px);animation-duration:.75s}
+#learningDialog .geo-wrong-card{max-width:calc(100vw - 40px);padding:18px 28px;border-radius:22px;border:1px solid #D69AA5;background:#F9DFE3;color:#9C4052;box-shadow:0 12px 40px #9C405229;font-size:clamp(1.2rem,3vw,1.65rem);font-weight:800;text-align:center}
+
+/* Classroom tool backgrounds and illustrated stopwatch controls. */
+#speechDialog{background:#FCFAF4 url('assets/tool-backgrounds/timer.jpg') center/cover no-repeat}
+#studentPickerDialog{background:#FCFAF4 url('assets/tool-backgrounds/student-picker.jpg') center/cover no-repeat}
+#gradeDialog{background:#FCFAF4 url('assets/tool-backgrounds/grade-calculator.jpg') center/cover no-repeat}
+#speechDialog .speech-icon-actions{gap:20px}
+#speechDialog .speech-icon-actions button{--control-fill:#D2EBD9;display:grid;place-items:center;width:92px;height:92px;min-width:0;min-height:0;padding:0;border:0;border-radius:22px;background:transparent;color:#548467;box-shadow:none;transition:transform .18s ease,opacity .18s ease}
+#speechDialog .speech-icon-actions button:nth-child(2){--control-fill:#F3D8DD;color:#AC687A}
+#speechDialog .speech-icon-actions button:nth-child(3){--control-fill:#E5DDF2;color:#86709F}
+#speechDialog .speech-icon-actions svg{display:block;width:100%;height:100%;pointer-events:none}
+#speechDialog .speech-icon-actions button:hover:not(:disabled){transform:translateY(-3px)}
+#speechDialog .speech-icon-actions button:active:not(:disabled){transform:scale(.95)}
+#speechDialog .speech-icon-actions button:disabled{opacity:.45;cursor:default}
+#speechDialog .speech-icon-actions button:focus-visible{outline:3px solid #8C77AB;outline-offset:4px}
+@media(max-width:600px){#speechDialog .speech-icon-actions button{width:76px;height:76px}}
+@media(prefers-reduced-motion:reduce){#speechDialog .speech-icon-actions button{transition:none}}
+
+#speechDialog .speech-topic-area > button{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:9px 17px 9px 10px;border-radius:18px;font:700 1rem 'Plus Jakarta Sans',sans-serif;vertical-align:middle;box-shadow:0 3px 0 #B6CDBF55}
+#speechDialog .speech-topic-area > button svg{width:46px;height:46px;flex-shrink:0}
+#speechDialog .speech-topic-area > button span{line-height:1.3;text-align:left}
+#speechDialog .speech-topic-area > button[hidden]{display:none}
+@media(max-width:600px){#speechDialog .speech-topic-area > button{font-size:.85rem;padding:8px 12px 8px 7px;gap:5px}#speechDialog .speech-topic-area > button svg{width:38px;height:38px}}
+
+#studentPickerDialog{background:linear-gradient(#FFFCF765,#FFFCF765),url('assets/tool-backgrounds/student-picker.jpg') center/cover no-repeat}
+#studentPickerDialog #pickStudentButton{display:inline-flex;align-items:center;justify-content:center;gap:12px;padding:10px 24px 10px 13px;border-radius:20px;font-weight:700}
+#studentPickerDialog #pickStudentButton svg{width:54px;height:50px;flex-shrink:0}
+#studentPickerDialog #pickStudentButton:disabled svg{animation:picker-button-float .65s ease-in-out infinite alternate}
+@keyframes picker-button-float{to{transform:translateY(-3px) rotate(4deg)}}
+@media(prefers-reduced-motion:reduce){#studentPickerDialog #pickStudentButton:disabled svg{animation:none}}
+
+#studentPickerDialog{background:linear-gradient(#FFFCF79E,#FFFCF79E),url('assets/tool-backgrounds/student-picker.jpg') center/cover no-repeat}
+#studentPickerDialog,#studentPickerDialog *{font-family:'Plus Jakarta Sans',sans-serif}
+#studentPickerDialog .grade-title-icon{width:88px;height:76px;margin:0 auto 14px}
+#studentPickerDialog .grade-title-icon svg{display:block;width:100%;height:100%}
+#studentPickerDialog #pickerClass{display:table;width:fit-content;max-width:100%;margin:16px auto 24px;padding:12px 26px;border:1px solid #CDBADC;border-radius:18px;background:#EEE5F6;color:#6B527F;font-size:clamp(1.25rem,3.5vw,1.65rem);font-weight:800;line-height:1.4;box-shadow:0 4px 0 #DDCCE9;overflow-wrap:anywhere}
+
+.parent-page .excel-header .tools-shortcut{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;height:62px;min-width:58px;color:white}
+.parent-page .tools-shortcut-label{font-family:'Plus Jakarta Sans',sans-serif;font-size:.75rem;font-weight:700;line-height:1.2}
+.parent-page.tools-view-active .tools-shortcut{color:#49445F}
+@media(max-width:640px){.parent-page .excel-header .class-branding-row{min-height:62px}.parent-page .excel-header .tools-shortcut svg{width:28px;height:26px}}
+
+/* Match the visual weight of the adjacent navigation cards. */
+.parent-page .excel-header .tools-shortcut{padding:7px 2px;gap:4px;min-height:62px}
+.parent-page .excel-header .tools-shortcut-label{font-size:.89rem;font-weight:600;line-height:1.2}
+.parent-page .excel-header .tools-shortcut svg{width:36px;height:32px;flex-shrink:0}
+@media(max-width:640px){.parent-page .excel-header .tools-shortcut-label{font-size:.75rem}}
+
+/* Desktop tools tab; retain the existing mobile tile unchanged. */
+@media(min-width:641px){
+ .parent-page .excel-header .tools-shortcut{flex-direction:row;width:auto;min-width:112px;height:44px;min-height:44px;margin:0;padding:9px 15px;gap:7px;border:1px solid rgba(255,255,255,.2);border-radius:10px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.92);white-space:nowrap}
+ .parent-page .excel-header .tools-shortcut svg{width:27px;height:25px}
+ .parent-page .excel-header .tools-shortcut-label{font-size:.89rem;font-weight:600;line-height:1.2}
+ .parent-page .excel-header .tools-shortcut:hover{background:rgba(255,255,255,.18)}
+ .parent-page .excel-header .tools-shortcut[aria-pressed="true"]{background:rgba(255,255,255,.22);box-shadow:0 1px 4px #0003}
+ .parent-page.tools-view-active .excel-header .tools-shortcut{color:#49445F;background:#FFFFFF7A;border-color:#CEC5E2}
+}
+
+@media(min-width:641px){.parent-page .excel-header .tools-shortcut{min-width:0;padding-left:9px;padding-right:9px;gap:5px}}
+
+@media(min-width:641px){
+ .parent-page .excel-header .tools-shortcut{flex-direction:column;width:auto;min-width:70px;height:62px;min-height:62px;padding:7px 9px;gap:4px}
+ .parent-page .excel-header .tools-shortcut svg{width:36px;height:32px}
+}
+
+.parent-page .tools-shortcut .tools-new-ribbon{left:-14px;right:auto;transform:rotate(-7deg)}
+
+/* Open, compact mobile catalogue; retain original titles and animated artwork. */
+@media(max-width:700px){
+ #toolsPanel{padding:16px 12px}
+ #toolsPanel .tools-section-toggle{min-height:0;padding:6px 0;border:0;border-radius:0;background:none;box-shadow:none;font-size:1rem}
+ #toolsPanel .tools-section-hint{display:none}
+ #toolsPanel .tools-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 10px}
+ #toolsPanel .tools-grid .tool-card,#toolsPanel #gamesSectionBody .tool-card{display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:8px;min-width:0;min-height:148px;padding:14px 10px 10px;border-radius:18px;text-align:center}
+ #toolsPanel .tools-grid .tool-card>h3{display:flex;justify-content:center;flex-wrap:wrap;gap:5px;font:700 .85rem/1.35 'Plus Jakarta Sans',sans-serif;margin:0;max-width:100%;overflow-wrap:normal}
+ #toolsPanel .tools-grid .tool-card>p,#toolsPanel .tools-grid .tool-card>.tools-soon{display:none}
+ #toolsPanel #gamesSectionBody .tool-card>h3>svg{display:none}
+ #toolsPanel #gamesSectionBody .game-card-art{width:90px;height:68px;max-width:100%;margin:0 auto;align-self:center;flex-shrink:0}
+ #toolsPanel .tools-grid .timer-card-preview{margin:8px 0;font-size:1.65rem}
+ #toolsPanel .tools-grid .grade-card-motion{gap:5px;margin:4px 0;height:58px;max-width:100%}
+ #toolsPanel .tools-grid .tool-card>h3 svg{width:25px;height:25px}
+ #toolsPanel #gamesSectionBody{padding-top:8px}
+ #toolsPanel #gamesSectionBody .game-new-ribbon{right:8px;top:-11px;padding:3px 8px;font-size:.6rem;gap:4px}
+ #toolsPanel #gamesSectionBody .game-new-ribbon svg{width:18px;height:18px}
+}
+@media(min-width:540px) and (max-width:700px){#toolsPanel .tools-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+@media(max-width:700px){#toolsPanel .grade-mini-note{width:28px;height:38px;flex-shrink:0;border-radius:8px}#toolsPanel .grade-mini-note svg{width:22px;height:27px}#toolsPanel .picker-card-preview{font-size:2rem;margin:5px 0}}
+
+/* Three tools in one mobile row; keep game cards and original artwork intact. */
+@media(max-width:700px){
+ #toolsPanel #toolsSectionBody{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+ #toolsPanel #toolsSectionBody .tool-card{padding:12px 5px 10px;min-height:148px;gap:8px;border-radius:16px}
+ #toolsPanel #toolsSectionBody .tool-card>h3{font-size:clamp(.65rem,2.7vw,.85rem);line-height:1.35;flex-direction:column;gap:6px;width:100%}
+ #toolsPanel #toolsSectionBody .tool-card>h3 svg{width:24px;height:24px;flex-shrink:0}
+ #toolsPanel #toolsSectionBody .timer-card-preview{font-size:clamp(1rem,4.7vw,1.65rem);margin:6px 0}
+ #toolsPanel #toolsSectionBody .grade-card-motion{width:100%;justify-content:center;gap:3px;height:44px;margin:4px 0}
+ #toolsPanel #toolsSectionBody .grade-mini-note{width:clamp(17px,5.4vw,28px);height:auto;aspect-ratio:5 / 6;box-sizing:border-box;border-width:1px;border-radius:6px}
+ #toolsPanel #toolsSectionBody .grade-mini-note svg{width:75%;height:auto;aspect-ratio:28 / 32}
+ #toolsPanel #toolsSectionBody .picker-card-preview{font-size:clamp(1.6rem,6.5vw,2rem);margin:4px 0}
+}
+
+@media(max-width:700px){
+ #toolsPanel #toolsSectionBody .tool-card > :is(.timer-card-preview,.grade-card-motion,.picker-card-preview){align-self:center;justify-self:center;grid-column:1 / -1;grid-row:auto;margin: auto auto 0;height:44px;display:flex;align-items:center;justify-content:center;text-align:center;flex-shrink:0}
+}
+
+@media(max-width:700px){
+ #toolsPanel .tools-top p{display:none}
+ #toolsPanel .tools-top{margin-bottom:10px;align-items:center}
+}
+
+#gradeDialog .grade-reset svg{display:none}
+@media(max-width:560px){
+ #gradeDialog .grade-stage{padding:48px 0 44px}
+ #gradeDialog .grade-title-icon svg{margin-bottom:6px}
+ #gradeDialog .grade-inputs{margin-top:16px;gap:8px}
+ #gradeDialog .grade-inputs label{padding:10px 16px}
+ #gradeDialog .grade-result{margin:12px 0;padding:10px 14px}
+ #gradeDialog .grade-pass-note{margin:10px 0 4px}
+ #gradeDialog .timer-actions{margin-top:2px;gap:0}
+ #gradeDialog .grade-reset{display:grid;place-items:center;min-width:0;min-height:0;width:64px;height:64px;padding:0;border:0;background:transparent;box-shadow:none;border-radius:18px}
+ #gradeDialog .grade-reset svg{display:block;width:64px;height:64px}
+ #gradeDialog .grade-reset span{display:none}
+ #gradeDialog .grade-reset:active{transform:scale(.95)}
+ #gradeDialog .grade-reset:focus-visible{outline:3px solid #9F89B6;outline-offset:3px}
+}
+
+/* Illustrated reset with a visible label on both desktop and mobile. */
+#gradeDialog .grade-reset{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:auto;height:auto;min-width:76px;min-height:0;padding:0 8px 4px;border:0;background:transparent;box-shadow:none;border-radius:18px;color:#79608F}
+#gradeDialog .grade-reset svg{display:block;width:60px;height:60px}
+#gradeDialog .grade-reset span{display:block;font:700 .85rem/1.3 'Plus Jakarta Sans',sans-serif}
+#gradeDialog .grade-reset:focus-visible{outline:3px solid #9F89B6;outline-offset:3px}
+#gradeDialog .grade-reset:active{transform:scale(.95)}
+@media(max-width:700px){
+ .parent-page .excel-footer{padding-left:10px;padding-right:10px}
+ .parent-page .excel-footer .excel-footer-legend{display:flex;flex-wrap:nowrap;justify-content:center;gap:clamp(5px,1.8vw,12px);width:100%;min-width:0}
+ .parent-page .excel-footer .legend-item{white-space:nowrap;flex-shrink:0;font-size:clamp(.58rem,2.35vw,.75rem);gap:4px;letter-spacing:0}
+ .parent-page .excel-footer .dot{width:6px;height:6px;flex-shrink:0}
+}
+
+/* Glass start control uses the same proportions on phones and desktops. */
+#spellingDialog #spellStart{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:80px;min-height:0;padding:0 8px 5px;background:transparent;border:0;box-shadow:none;border-radius:18px;color:#416D52}
+#spellingDialog #spellStart svg{display:block;width:72px;height:72px}
+#spellingDialog #spellStart span{font:800 1rem/1.3 'Plus Jakarta Sans',sans-serif}
+.parent-page .tools-shortcut .tools-new-ribbon{gap:4px}
+.parent-page .tools-new-ribbon .tools-new-exclamation{display:inline-grid;place-items:center;width:12px;height:12px;flex:none;border:1px solid #C19A51;border-radius:50%;background:#FFF4CF;color:#8C652D;font:900 10px/1 'Plus Jakarta Sans',sans-serif;box-shadow:inset 0 1px 1px #FFFFFFB3}
+
+.parent-page .tools-shortcut .tools-new-ribbon{gap:2px}
+.parent-page .excel-header .tools-shortcut .tools-new-exclamation-art{width:9px;height:17px;flex:none;margin:-2px -1px -2px 0;transform:rotate(7deg)}
+
+@media(max-width:700px){
+ .parent-page .excel-footer .excel-footer-legend{justify-content:flex-start;gap:8px;overflow-x:auto;scrollbar-width:none}
+ .parent-page .excel-footer .excel-footer-legend::-webkit-scrollbar{display:none}
+ .parent-page .excel-footer .legend-item{font-size:.72rem;gap:4px}
+ .parent-page .excel-footer .dot{width:7px;height:7px}
+}
+
+/* Suppress browser tap rectangles; preserve deliberate keyboard focus rings. */
+.parent-page dialog button,.parent-page dialog button *{-webkit-tap-highlight-color:transparent}
+.parent-page dialog button{appearance:none;-webkit-appearance:none}
+.parent-page dialog button:focus:not(:focus-visible){outline:none}
+
+#speechDialog .speech-time-row{display:flex;align-items:baseline;justify-content:center;white-space:nowrap}
+#speechDialog .speech-centiseconds{font:700 clamp(1.1rem,3vw,2.5rem) 'Plus Jakarta Sans',sans-serif;color:#817598;font-variant-numeric:tabular-nums}
+#speechDialog #speechToggle[data-running="true"]{--control-fill:#F3D8DD;color:#AC687A}
+#speechDialog #speechToggle[data-running="true"] .speech-play-icon{display:none}
+#speechDialog #speechToggle:not([data-running="true"]) .speech-stop-icon{display:none}
+
+/* Reset stays distinct from the green/red start-stop control. */
+#speechDialog .speech-icon-actions button:nth-child(2){--control-fill:#E5DDF2;color:#796198}
+
+/* Glossy spelling actions only; all fonts and chess styles retain their original theme. */
+#spellingDialog.punct-theme #spellModes button[aria-pressed="true"]{background:#F9DDAA;border-color:#D7B576;color:#7C5F30}
+#spellingDialog.punct-theme .punct-actions button.spell-pass,#spellingDialog.punct-theme button.punct-restart,#spellingDialog:not(.punct-theme) :is(#spellRestart,#spellPass,#spellAgain){display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:70px;min-height:44px;padding:2px 8px 5px;border:0;border-radius:16px;background:transparent;box-shadow:none;color:#705882;font-family:'Plus Jakarta Sans',sans-serif;font-size:.95rem;font-weight:700;line-height:1.4;text-align:center;touch-action:manipulation;transform:none}
+:is(#spellingDialog.punct-theme .punct-actions button.spell-pass,#spellingDialog.punct-theme button.punct-restart,#spellingDialog:not(.punct-theme) :is(#spellRestart,#spellPass,#spellAgain))::before{content:"";display:block;flex:none;width:var(--spell-action-width,64px);height:var(--spell-action-height,68px);background:var(--gloss-art) center/100% 100% no-repeat;pointer-events:none}
+:is(#spellingDialog.punct-theme .punct-actions button.spell-pass,#spellingDialog.punct-theme button.punct-restart,#spellingDialog:not(.punct-theme) :is(#spellRestart,#spellPass,#spellAgain)):disabled{opacity:.45}
+#spellingDialog.punct-theme button.punct-restart{font-size:1.05rem;font-weight:800;letter-spacing:0;transform:none}
+#spellingDialog.punct-theme button.punct-restart,#spellingDialog:not(.punct-theme) :is(#spellRestart,#spellAgain){--gloss-art:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2068%22%20fill%3D%22none%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%228%22%20y1%3D%225%22%20x2%3D%2253%22%20y2%3D%2258%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20stop-color%3D%22%23FFFFFF%22/%3E%3Cstop%20offset%3D%22.45%22%20stop-color%3D%22%23E8DEF4%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23B59DCE%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20x%3D%225%22%20y%3D%229%22%20width%3D%2254%22%20height%3D%2254%22%20rx%3D%2218%22%20fill%3D%22%23B59DCE%22%20opacity%3D%22.35%22/%3E%3Crect%20x%3D%225%22%20y%3D%224%22%20width%3D%2254%22%20height%3D%2254%22%20rx%3D%2218%22%20fill%3D%22url%28%23g%29%22%20stroke%3D%22%23B59DCE%22%20stroke-width%3D%222%22/%3E%3Cpath%20d%3D%22M13%2022q0-10%2012-10h10%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.85%22/%3E%3Cpath%20d%3D%22M18%2028a15%2015%200%201%201%200%2013M18%2018v10h10%22%20stroke%3D%22%237D6099%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E")}
+#spellingDialog.punct-theme .punct-actions button.spell-pass,#spellingDialog:not(.punct-theme) #spellPass{--gloss-art:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2068%22%20fill%3D%22none%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22glass%22%20x1%3D%2212%22%20y1%3D%225%22%20x2%3D%2250%22%20y2%3D%2259%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20stop-color%3D%22%23FFF9FA%22/%3E%3Cstop%20offset%3D%22.48%22%20stop-color%3D%22%23F5D6DE%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23DCA3B3%22/%3E%3C/linearGradient%3E%3ClinearGradient%20id%3D%22shine%22%20x1%3D%2232%22%20y1%3D%229%22%20x2%3D%2232%22%20y2%3D%2232%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20stop-color%3D%22white%22%20stop-opacity%3D%22.85%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22white%22%20stop-opacity%3D%220%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20x%3D%226%22%20y%3D%2210%22%20width%3D%2252%22%20height%3D%2252%22%20rx%3D%2218%22%20fill%3D%22%23BD7F94%22%20opacity%3D%22.22%22/%3E%3Crect%20x%3D%225%22%20y%3D%225%22%20width%3D%2254%22%20height%3D%2252%22%20rx%3D%2218%22%20fill%3D%22url%28%23glass%29%22%20stroke%3D%22%23C88D9F%22%20stroke-width%3D%221.7%22/%3E%3Crect%20x%3D%229%22%20y%3D%229%22%20width%3D%2246%22%20height%3D%2244%22%20rx%3D%2214%22%20stroke%3D%22white%22%20stroke-opacity%3D%22.45%22/%3E%3Cpath%20d%3D%22M12%2026V23q0-11%2012-11h16q12%200%2012%2011v3q-20%207-40%200Z%22%20fill%3D%22url%28%23shine%29%22/%3E%3Cpath%20d%3D%22m19%2024%208%208-8%208m12-16%208%208-8%208%22%20stroke%3D%22%23A75E77%22%20stroke-width%3D%223.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3Cpath%20d%3D%22M46%2024v16%22%20stroke%3D%22%23A75E77%22%20stroke-width%3D%223.5%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E")}
+
+/* Slightly smaller pass artwork in DUO only. */
+#spellingDialog.punct-theme .punct-actions button.spell-pass{--spell-action-width:56px;--spell-action-height:59.5px}

@@ -1,0 +1,27 @@
+#toolsPanel .tool-chess{background:#F4E2E8;border-color:#E5C7D3}.chess-card-art{animation:chess-float 3s ease-in-out infinite}@keyframes chess-float{50%{transform:translateY(-6px) rotate(3deg)}}
+.chess-game{background:#E8CFDA;padding:38px 18px 28px;font-family:'Plus Jakarta Sans',sans-serif}.chess-stage{max-width:750px;margin:auto;text-align:center}.chess-stage h2{margin:4px 0 12px;font-size:1.8rem}.chess-toolbar{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px;margin:12px 0}.chess-game button,.chess-game select{font-family:inherit}.chess-toolbar button,.chess-game select,.chess-pop button{border:1px solid #CDBDDD;border-radius:12px;padding:10px 14px;min-height:42px;background:#E7DDF2;color:#554366;font-weight:600;cursor:pointer}.chess-toolbar #chessUndo{background:#F9EACB;border-color:#DAC89F}.chess-toolbar #chessReset,.chess-pop #chessAgain{background:#D8EADD;border-color:#B2D2BD}.chess-toolbar #chessFlip{background:#DAE8F7;border-color:#B7CFE9}.chess-toolbar label{font-size:.8rem}.chess-turn{font-weight:800;font-size:1.1rem;min-height:28px;color:#534661}.chess-notice{min-height:24px;margin:5px 0 10px;font-size:.85rem;color:#645474}.chess-notice.error{color:#A22E46;font-weight:700}.chess-board{width:min(530px,100%,calc(100dvh - 320px));aspect-ratio:1;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));margin:auto;border:7px solid #8D779B;border-radius:12px;overflow:hidden;box-shadow:0 9px 0 #B69BAB,0 16px 26px #71516320;box-sizing:border-box}.chess-board .chess-square{position:relative;display:grid;place-items:center;border:0;border-radius:0;padding:0;min-width:0;aspect-ratio:1;cursor:pointer;touch-action:manipulation}.chess-square.light{background:#FFF6E5}.chess-square.dark{background:#ADC4BB}.chess-square svg{width:88%;height:88%;z-index:1;filter:drop-shadow(0 2px 1px #44305022);pointer-events:none}.chess-square.selected{box-shadow:inset 0 0 0 4px #9870BF}.chess-square.last{background:#DFD29B}.chess-square.legal:after{content:'';position:absolute;width:23%;height:23%;background:#61796988;border-radius:50%;z-index:2}.chess-square.legal:has(svg):after{width:88%;height:88%;box-sizing:border-box;border:4px solid #61796999;background:none}.chess-square.check{background:#E4A3AC}.chess-square:focus-visible{outline:3px solid #8253AD;outline-offset:-3px;z-index:3}.chess-square small{position:absolute;font-size:10px;color:#4D6357;font-weight:800;z-index:2;line-height:1}.chess-square .rank{left:3px;top:3px}.chess-square .file{right:3px;bottom:2px}.chess-history{max-width:530px;max-height:76px;overflow:auto;margin:22px auto 10px;font-size:.8rem;line-height:1.8;color:#62536B}.chess-credits{font-size:.65rem;color:#766782}.chess-credits a{color:inherit}.chess-overlay{position:fixed;inset:0;background:#46365055;display:grid;place-items:center;padding:20px;z-index:20;backdrop-filter:blur(3px)}.chess-game [hidden]{display:none!important}.chess-pop{background:#FFFCF7;border:1px solid #D5C7E1;border-radius:26px;padding:30px;width:min(380px,100%);box-sizing:border-box;text-align:center;box-shadow:0 18px 70px #44305040;animation:chess-pop .3s ease-out}.chess-pop h2{font-size:1.6rem;color:#66507C}.chess-pop p{color:#776680;line-height:1.6}.chess-pop button{margin:5px}.chess-promotion-choices{display:flex;justify-content:center}.chess-promotion-choices button{padding:4px;width:65px;margin:2px}.chess-promotion-choices svg{width:100%;display:block}.chess-promotion-choices span{font-size:.75rem}@keyframes chess-pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}@media(max-width:600px){.chess-game{padding:58px 10px 20px}.chess-board{border-width:5px}.chess-toolbar button{padding:8px 10px;font-size:.75rem}.chess-stage h2{font-size:1.45rem}.chess-square small{font-size:8px}}@media(prefers-reduced-motion:reduce){.chess-card-art,.chess-pop{animation:none}}
+
+.chess-pop>svg{width:100px;height:80px}.chess-game button:disabled{opacity:.45;cursor:default}@media(max-width:600px){.chess-board{width:min(530px,100%)}}
+
+.chess-game[open]{display:block}.chess-stage{width:min(750px,100%);margin:0 auto}
+
+/* Keep the chess typography and spacing independent of shared game headings. */
+#chessDialog, #chessDialog :is(h2,p,strong,span,button,label,select,option,small,a) {
+  font-family:'Plus Jakarta Sans',sans-serif;
+}
+#chessChoose > p { margin:0 0 30px; }
+#chessChoose .chain-mode-card > svg { width:100px; height:90px; }
+.chess-bottom-controls { margin:24px 0 10px; gap:10px; }
+.chess-bottom-controls + .chess-history { margin-top:12px; }
+@media(max-width:600px) {
+  #chessChoose > p { margin-bottom:24px; }
+  #chessChoose .chain-mode-card > svg { width:86px; height:78px; }
+}
+
+#chessChoose .chess-intro-art { display:flex; justify-content:center; margin:12px auto 18px; }
+#chessChoose .chess-intro-art svg { display:block; width:120px; height:90px; }
+@media(max-width:600px) { #chessChoose .chess-intro-art svg { width:104px; height:78px; } }
+
+.chess-toolbar #chessHint { background:#F9E3BA; border-color:#DEC291; color:#795C2E; }
+.chess-square.recommended { outline:4px solid #D29A32; outline-offset:-4px; }
+.chess-hint-status { margin:10px auto; padding:10px 14px; max-width:500px; border-radius:12px; background:#FFF0D1; color:#74582F; font-size:.9rem; font-weight:600; }

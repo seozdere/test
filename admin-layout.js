@@ -1,0 +1,66 @@
+/* Presentation only: reuse existing controls and their event handlers. */
+(() => {
+ const icon=(kind)=>{const paths={close:'M7 7l10 10M17 7 7 17',left:'m14 6-6 6 6 6',right:'m10 6 6 6-6 6',first:'M6 5v14m12-13-6 6 6 6',last:'M18 5v14M6 6l6 6-6 6',down:'m6 9 6 6 6-6'};return '<svg class="layout-control-icon" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="'+paths[kind]+'"/></svg>';};
+ const $=id=>document.getElementById(id),container=document.querySelector('.admin-page .container');if(!container)return;
+ const header=container.querySelector('header'),main=container.querySelector('main');
+ const sheet=document.createElement('dialog');sheet.id='adminMenuSheet';sheet.innerHTML='<header><strong>Yönetim</strong><button type="button" aria-label="Menüyü kapat">×</button></header><div class="menu-body"></div>';document.body.append(sheet);
+ sheet.querySelector('button').innerHTML=icon('close');const close=()=>sheet.close();sheet.querySelector('button').onclick=close;sheet.addEventListener('click',e=>{if(e.target===sheet)close();});
+ const menu=document.createElement('button');menu.className='tbtn layout-menu';menu.type='button';menu.textContent='•••';menu.setAttribute('aria-label','Yönetim menüsü');menu.onclick=()=>{const mobileMenu=matchMedia('(max-width:640px)').matches;const panel=$('adminManagementPanel');panel.querySelector('summary').hidden=!mobileMenu;if(mobileMenu)sheet.querySelectorAll('details').forEach(el=>{el.open=false;});else panel.open=true;sheet.showModal();};
+ const tabs=header.querySelector('.admin-tabs');tabs.append(menu);header.prepend(tabs);
+ const body=sheet.querySelector('.menu-body');
+ const management=$('adminManagementPanel');body.append(management);management.open=true;management.querySelector('summary').hidden=true;
+ const top=management.querySelector('.admin-topbar-left');
+ const groups=[['Sınıf ve ders',['teacherMgrBtn','subjectMgrBtn','termMgrBtn']],['Tahta ve veli',['copyLinkBtn','qrBtn','pushToBoardBtn','downloadParentBtn','closeBoardBtn']],['Yedek',['exportHomeworkBtn','exportClassBtn','fullBackupBtn']]];
+ groups.forEach(([label,ids])=>{const section=document.createElement('section');section.className='menu-category';const title=document.createElement('h3');title.textContent=label;section.append(title);ids.forEach(id=>{const el=$(id);if(el)section.append(el);});top.append(section);});
+ body.append($('adminInfoPanel'),$('speechAdmin'));
+ body.addEventListener('click',e=>{if(e.target.closest('#teacherMgrBtn,#subjectMgrBtn,#termMgrBtn,#qrBtn,#pushToBoardBtn,#changePwBtn'))close();});
+ // One announcement surface, preserving each channel's inputs, drafts and save handlers.
+ const info=$('adminInfoPanel'),noticeTabs=document.createElement('div');noticeTabs.className='notice-tabs';noticeTabs.setAttribute('role','tablist');
+ const channels=[['Uyarı barı','parentNoticeAdminBar'],['Kayan yazı','parentTickerAdminBar'],['Pop-up','parentPopupAdminBar']];
+ channels.forEach(([label,id],i)=>{const b=document.createElement('button');b.type='button';b.className='tbtn';b.textContent=label;b.setAttribute('role','tab');b.setAttribute('aria-controls',id);b.onclick=()=>{channels.forEach(([,key],j)=>{$(key).classList.toggle('channel-hidden',j!==i);noticeTabs.children[j].setAttribute('aria-selected',String(j===i));});};noticeTabs.append(b);});
+ info.querySelector('.admin-info-content').prepend(noticeTabs);noticeTabs.firstChild.click();
+ const editor=$('homeworkDescriptionEditor'),input=$('homeworkDescriptionInput');
+ const preview=document.createElement('button');preview.type='button';preview.className='homework-preview';preview.setAttribute('aria-expanded','false');editor.prepend(preview);
+ const updatePreview=()=>{preview.textContent='Ödev · '+(input.value.trim()||'Açıklama ekle')+'  ✎';};
+ const collapse=()=>{editor.classList.remove('is-editing');preview.setAttribute('aria-expanded','false');updatePreview();};
+ preview.onclick=()=>{editor.classList.add('is-editing');preview.setAttribute('aria-expanded','true');input.focus();};input.addEventListener('input',updatePreview);
+ const closeEditor=document.createElement('button');closeEditor.type='button';closeEditor.className='tbtn tbtn-ghost';closeEditor.textContent='Kapat';closeEditor.onclick=collapse;editor.querySelector('.homework-description-actions').append(closeEditor);
+ $('resetHomeworkDescriptionBtn').addEventListener('click',collapse);
+ new MutationObserver(updatePreview).observe($('homeworkDescriptionContext'),{childList:true,subtree:true,characterData:true});updatePreview();
+ const dateCard=editor.parentElement;dateCard.classList.add('layout-date-card');dateCard.prepend(dateCard.querySelector('.date-selector'));dateCard.querySelector('.date-selector').append(editor);
+ const rail=document.createElement('aside');rail.className='admin-rail';container.prepend(rail);
+ const headerAnchor=document.createComment('header'),dateAnchor=document.createComment('date');header.before(headerAnchor);dateCard.before(dateAnchor);
+ const wide=matchMedia('(min-width:1100px)');function layout(){if(wide.matches){rail.append(header,dateCard);}else{headerAnchor.after(header);dateAnchor.after(dateCard);}}wide.addEventListener('change',layout);layout();
+ // Calendar reads existing homework dates and dispatches the existing date change event.
+ const calendar=document.createElement('dialog');calendar.id='adminCalendar';document.body.append(calendar);let month;
+ const calendarButton=document.createElement('button');calendarButton.type='button';calendarButton.className='tbtn calendar-open';calendarButton.textContent='Takvim';$('currentDate').parentElement.after(calendarButton);
+ function draw(){calendar.innerHTML='';const head=document.createElement('div');head.className='calendar-heading';
+ const prev=document.createElement('button'),next=document.createElement('button'),label=document.createElement('strong'),exit=document.createElement('button');prev.innerHTML=icon('left');next.innerHTML=icon('right');exit.innerHTML=icon('close');prev.setAttribute('aria-label','Önceki ay');next.setAttribute('aria-label','Sonraki ay');exit.setAttribute('aria-label','Takvimi kapat');label.textContent=month.toLocaleDateString('tr-TR',{month:'long',year:'numeric'});head.append(prev,label,next,exit);calendar.append(head);prev.onclick=()=>{month.setMonth(month.getMonth()-1);draw();};next.onclick=()=>{month.setMonth(month.getMonth()+1);draw();};exit.onclick=()=>calendar.close();
+ const grid=document.createElement('div');grid.className='calendar-grid';['Pt','Sa','Ça','Pe','Cu','Ct','Pa'].forEach(day=>{const el=document.createElement('span');el.textContent=day;grid.append(el);});
+ const dates=typeof homeworkRecordedDates==='function'?homeworkRecordedDates():[];
+ for(let i=0;i<(month.getDay()+6)%7;i++)grid.append(document.createElement('span'));
+ for(let day=1;day<=new Date(month.getFullYear(),month.getMonth()+1,0).getDate();day++){const value=month.getFullYear()+'-'+String(month.getMonth()+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');const b=document.createElement('button');b.type='button';b.textContent=day;b.classList.toggle('has-homework',dates.includes(value));b.classList.toggle('selected',value===$('currentDate').value);b.setAttribute('aria-label',value+(dates.includes(value)?' — ödev var':''));b.onclick=()=>{$('currentDate').value=value;$('currentDate').dispatchEvent(new Event('change',{bubbles:true}));calendar.close();};grid.append(b);}calendar.append(grid);const hint=document.createElement('p');hint.className='calendar-homework-legend';hint.innerHTML='<span aria-hidden="true">●</span> Ödev verilmiş gün';calendar.append(hint);}
+ calendarButton.onclick=()=>{month=new Date(($('currentDate').value||new Date().toISOString().slice(0,10)).slice(0,7)+'-01T12:00:00');draw();calendar.showModal();};
+
+ // Reference command strip and search toolbar, reusing the original controls.
+ [$('tabHomework'),$('tabClass')].forEach((button,i)=>{const drawing=button.querySelector('svg');button.textContent=i?'Katılım':'Ödev';if(drawing)button.prepend(drawing);});
+ const eye=$('viewToggle');eye.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#BDA9E3" stroke-width="1.7"><path d="M2 12q10-14 20 0-10 14-20 0Z"/><circle cx="12" cy="12" r="3"/></svg>';eye.title='Veli görünümü';eye.setAttribute('aria-label','Veli görünümü');tabs.insertBefore(eye,menu);header.querySelector('.parent-view-shortcut').remove();
+ const toolbar=document.createElement('div');toolbar.className='layout-search-toolbar';main.insertBefore(toolbar,$('homeworkCheckBar'));toolbar.append(document.querySelector('.student-search-bar'),$('homeworkCheckBar'));
+ $('studentSearch').placeholder='Öğrenci ara';
+ const bulk=dateCard.querySelector('.bulk-action-row'),bulkButton=document.createElement('button');bulkButton.className='tbtn bulk-toggle';bulkButton.type='button';bulkButton.innerHTML='<svg width="25" height="28" viewBox="0 0 28 32" aria-hidden="true" focusable="false"><rect x="5" y="5" width="20" height="24" rx="5" fill="#DDEEE3" stroke="#87B79C" stroke-width="1.5"/><path d="M3 10v15a5 5 0 0 0 5 5" fill="none" stroke="#B9A6D8" stroke-width="2" stroke-linecap="round"/><path d="m9 12 2 2 3-4m-5 11 2 2 3-4M17 12h4m-4 9h4" fill="none" stroke="#497C65" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';bulkButton.title='Toplu işaretleme seçeneklerini aç/kapat';bulkButton.setAttribute('aria-label','Toplu işaretleme seçeneklerini aç/kapat');bulkButton.setAttribute('aria-expanded','false');toolbar.append(bulkButton);bulkButton.onclick=()=>{const open=bulk.classList.toggle('bulk-open');bulkButton.setAttribute('aria-expanded',String(open));};
+ const progress=document.createElement('div');progress.className='layout-progress';progress.innerHTML='<div class="progress-ring"><span></span></div><div><strong></strong><small>işaretlendi</small></div>';bulk.before(progress);
+ function progressUpdate(){const cards=[...$('studentList').querySelectorAll('.student-card')],marked=cards.filter(c=>c.querySelector('.controls .active')).length;progress.querySelector('strong').textContent=marked+'/'+cards.length;progress.style.setProperty('--progress',(cards.length?marked/cards.length*100:0)+'%');}
+ new MutationObserver(progressUpdate).observe($('studentList'),{childList:true,subtree:true,attributes:true,attributeFilter:['class']});progressUpdate();
+ const firstHomework=document.createElement('button');firstHomework.type='button';firstHomework.id='firstHomeworkDate';firstHomework.className='homework-jump-btn';firstHomework.title='İlk ödev';firstHomework.setAttribute('aria-label','İlk ödev');firstHomework.innerHTML=icon('first');$('previousHomeworkDate').before(firstHomework);firstHomework.onclick=()=>{const date=homeworkRecordedDates()[0];if(date){$('currentDate').value=date;$('currentDate').dispatchEvent(new Event('change',{bubbles:true}));}};
+ const dateText=document.createElement('button');dateText.type='button';dateText.className='date-reference-label';dateText.onclick=()=>calendarButton.click();$('currentDate').after(dateText);
+ function dateLabel(){const value=$('currentDate').value,dates=homeworkRecordedDates();dateText.classList.toggle('has-homework',dates.includes(value));firstHomework.disabled=!dates.length||dates[0]===value;firstHomework.hidden=typeof adminTab!=='undefined'&&adminTab!=='homework';if(calendar.open)draw();dateText.textContent=value?new Date(value+'T12:00:00').toLocaleDateString('tr-TR',{weekday:'short',day:'numeric',month:'short'}):'Tarih seç';}
+ $('currentDate').addEventListener('change',dateLabel);document.querySelector('.date-selector').addEventListener('click',()=>queueMicrotask(dateLabel));new MutationObserver(dateLabel).observe($('studentList'),{childList:true});dateLabel();
+ ['previousHomeworkDate','nextHomeworkDate','latestHomeworkDate'].forEach((id,i)=>{const b=$(id);b.title=b.textContent;b.setAttribute('aria-label',b.textContent);b.innerHTML=icon(['left','right','last'][i]);});
+ [$('prevDate'),$('nextDate')].forEach((b,i)=>{if(b)b.innerHTML=icon(i?'right':'left');});
+ sheet.querySelectorAll('.announcement-summary').forEach(summary=>{summary.insertAdjacentHTML('beforeend',icon('down'));});
+
+ ['firstHomeworkDate','previousHomeworkDate','nextHomeworkDate','latestHomeworkDate'].forEach((id,i)=>{const label=document.createElement('span');label.className='homework-jump-label';label.textContent=['İlk','Önceki','Sonraki','Son'][i];$(id).append(label);});
+ new MutationObserver(dateLabel).observe($('homeworkDescriptionContext'),{childList:true,subtree:true,characterData:true});
+ $('manageStudentsBtn').innerHTML='<svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><circle cx="13" cy="10" r="5" fill="#F6DDB5" stroke="#79638E" stroke-width="1.6"/><path d="M3 27v-4a10 10 0 0 1 20 0v4Z" fill="#DCEDE4" stroke="#79638E" stroke-width="1.6"/><circle cx="25" cy="23" r="6" fill="#E6DDF7" stroke="#79638E" stroke-width="1.5"/><path d="M25 20v6m-3-3h6" stroke="#79638E" stroke-width="1.8" stroke-linecap="round"/></svg>';
+ $('manageStudentsBtn').setAttribute('aria-label','Öğrenci ekle ve düzenle');
+})();

@@ -1,0 +1,4 @@
+Original background generated with the built-in image_gen tool for NoTik.
+Asset: millionaire-studio.png
+Prompt: Create a wide 16:9 photographic architectural visualization for a Turkish middle-school trivia game background. Empty elegant TV quiz studio, no people, no letters, no text, no logos, no branding. Central circular podium, two subtle empty chairs in distance, curved stage light strips, soft pastel lavender and dusty blue with champagne gold accent lights. Refined realistic studio photography, softly luminous, inviting and calm rather than dark or neon. Symmetrical wide composition with architectural detail on edges and subdued uncluttered center suitable behind readable UI cards. No game UI drawn. Original set design.
+The game implementation and starter question bank are original project files. No third-party quiz source, programme logo, music or photograph was copied.

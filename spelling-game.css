@@ -1,0 +1,47 @@
+#toolsPanel .tool-spelling{background:#E5E7F7;border-color:#C8CEE8}.tool-spelling .spelling-lens,.spell-logo .spelling-lens{transform-origin:76px 48px;animation:spell-search 3s ease-in-out infinite}@keyframes spell-search{50%{transform:translate(-8px,3px) rotate(-8deg)}}
+.spelling-game{background:#CDD3EB;padding:48px 20px 30px}.spelling-game[open]{display:block}.spelling-game,.spelling-game *{box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif}.spell-stage{max-width:980px;margin:auto;text-align:center;color:#48445F}.spell-stage h2{font-size:clamp(1.6rem,4vw,2.3rem);margin:12px 0}.spell-stage p{line-height:1.7}.spell-logo{width:125px;margin:auto}.spell-mini-art{width:65px;margin:auto}.spell-stage button{font:inherit;cursor:pointer;border-radius:14px;border:1px solid #C6B8D9;background:#EEE7F7;color:#625078;padding:12px 18px;min-height:44px;-webkit-tap-highlight-color:transparent}.spell-stage button:focus-visible{outline:3px solid #7B5B9E;outline-offset:3px}.spell-stage button:disabled{cursor:default}.spell-stage .spell-primary{background:#CBE7D8;border-color:#9CC6AD;color:#365D4B;font-weight:700}.spell-modes{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:26px auto;max-width:650px}.spell-modes button[aria-pressed=true]{background:#F9DDAA;border-color:#D7B576;color:#7C5F30}.spell-rules,.spell-bank{font-size:.85rem;color:#69647D}.spell-stats{display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;margin:24px 0}.spell-stats>*{padding:10px 16px;border-radius:16px;background:#F9F7FF}.spell-stats strong{font-size:1.35rem;color:#426D58;background:#DCEEE3}.spell-instruction{font-weight:700;color:#61528B}.spell-text{background:#FFFEFA;border:1px solid #D2C8E0;box-shadow:0 8px 28px #67608015;border-radius:26px;padding:36px 28px;text-align:left;line-height:2.4;font-size:clamp(1.15rem,2.7vw,1.65rem)}.spell-text button{display:inline;padding:5px 4px;min-height:44px;border:0;background:transparent;color:#47445B;line-height:1.7;font-weight:500;border-radius:7px;box-decoration-break:clone;-webkit-box-decoration-break:clone}.spell-text button:hover:not(:disabled){background:#EBE7F6}.spell-text .spell-fixed{background:#D4ECDC;color:#376649;animation:spell-fix .3s ease-out}.spell-text .spell-wrong{background:#F7DBDF;color:#8F5663}.spell-feedback{min-height:88px;display:grid;place-content:center;padding:14px;font-size:.95rem;line-height:1.7}.spell-good{color:#345F48}.spell-bad{color:#944D60}.spell-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.spell-actions button:disabled{opacity:.45}.spell-result{background:#FFFCF7;border:1px solid #C8BDDA;border-radius:28px;padding:32px;margin:24px auto;max-width:560px;animation:spell-fix .3s ease-out}.spell-result>strong{font-size:2.5rem;color:#45745D}.spell-result button{margin:8px}.spelling-game .speech-close{border-radius:50%;background:#FFFCF8;color:#655476;font:2rem 'Plus Jakarta Sans',sans-serif;-webkit-tap-highlight-color:transparent}
+@keyframes spell-fix{from{opacity:.4;transform:scale(.94)}to{opacity:1;transform:scale(1)}}@media(max-width:600px){.spelling-game{padding:65px 12px 24px}.spell-text{padding:20px 14px;line-height:2.2}.spell-stats{gap:6px}.spell-stats>*{padding:8px 10px;font-size:.8rem}.spell-stats strong{font-size:1.1rem}.spell-feedback{font-size:.85rem}.spell-modes{gap:8px}.spell-modes button{padding:10px 13px}}@media(prefers-reduced-motion:reduce){.spelling-lens,.spell-fixed,.spell-result{animation:none!important}}
+
+#spellingDialog .spell-player-modes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;max-width:760px;margin:24px auto}
+#spellingDialog .spell-player-modes button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:210px;padding:20px;border-radius:24px;background:#DDEEE3;border-color:#B6D6C1;color:#426955;touch-action:manipulation}
+#spellingDialog .spell-player-modes button+button{background:#E7DDF2;border-color:#CABADD;color:#745F8D}
+#spellingDialog .spell-player-modes svg{width:76px;height:68px}
+#spellingDialog .spell-player-modes strong{font-size:1.4rem}
+#spellingDialog .spell-player-modes span{font-size:.88rem;line-height:1.5}
+#spellingDialog .spell-stage:has(.spell-arena){max-width:1400px}
+.spell-duel-header{display:flex;align-items:center;justify-content:center;gap:18px;margin:0 56px 16px}
+.spell-duel-header h2{margin:0}
+#spellClock{padding:9px 15px;border:1px solid #E4C68B;border-radius:14px;background:#FFE9B7;color:#89632E;font-size:1.15rem;font-variant-numeric:tabular-nums}
+.spell-arena{display:grid;gap:16px;max-width:1400px;margin:auto}
+.spell-arena.spell-duel{grid-template-columns:repeat(2,minmax(0,1fr))}
+.spell-player{min-width:0;padding:20px;border:1px solid #B0D2BB;border-radius:24px;background:#DDEEE3F5}
+.spell-player+.spell-player{background:#E9E0F3F5;border-color:#C8B8DE}
+.spell-player-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.spell-player-head span{padding:7px 11px;border-radius:11px;background:#FFFEFA;white-space:nowrap}
+.spell-progress{margin:12px 0;color:#736782;font-size:.85rem}
+.spell-player .spell-instruction{margin:8px 0}
+.spell-player .spell-text{min-height:180px;padding:22px;text-align:center;overflow-wrap:anywhere}
+.spell-player .spell-feedback{min-height:65px}
+.spell-remaining{font-size:.85rem;color:#736782}
+.spell-game-footer{margin-top:18px;text-align:center}
+.spell-player-done{display:grid;place-content:center;min-height:360px}
+.spell-player-done strong{font-size:1.8rem;color:#426D58}
+@media(max-width:650px){
+ #spellingDialog .spell-player-modes{gap:9px}
+ #spellingDialog .spell-player-modes button{min-height:155px;padding:10px 5px;gap:7px}
+ #spellingDialog .spell-player-modes svg{width:52px;height:46px}
+ #spellingDialog .spell-player-modes strong{font-size:1rem}
+ #spellingDialog .spell-player-modes span{font-size:.73rem}
+ .spell-duel-header{margin:0 42px 12px 0;gap:8px}
+ .spell-duel-header h2{font-size:1.15rem}
+ #spellClock{font-size:.9rem;padding:7px}
+ .spell-arena{gap:7px}
+ .spell-player{padding:10px 7px;border-radius:16px}
+ .spell-player-head{flex-direction:column;gap:4px;font-size:.83rem}
+ .spell-player-head span{font-size:.75rem;padding:4px 7px}
+ .spell-player .spell-text{min-height:220px;padding:10px 6px;font-size:.96rem;line-height:1.9;border-radius:15px}
+ .spell-player .spell-text button{font-size:inherit;min-height:38px;padding:3px 2px}
+ .spell-player .spell-feedback{min-height:66px;padding:5px 2px;font-size:.72rem}
+ .spell-player .spell-instruction,.spell-progress,.spell-remaining{font-size:.73rem}
+ .spell-player .spell-actions button{padding:8px 10px}
+}

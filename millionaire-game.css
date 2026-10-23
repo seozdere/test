@@ -1,0 +1,107 @@
+#millionaireDialog{position:fixed;inset:0;width:100%;max-width:none;height:100dvh;max-height:none;margin:0;border:0;padding:52px 24px 24px;box-sizing:border-box;overflow:auto;color:#403D59;font-family:'Plus Jakarta Sans',sans-serif;background:#DAD6E4}
+#millionaireDialog::backdrop{background:#40384D}#millionaireDialog *{box-sizing:border-box}#millionaireDialog button{font:inherit;cursor:pointer;border:1px solid #CEBEDB;border-radius:15px;padding:13px 18px;color:#53476B;background:#F6F0FC;transition:transform .18s,background .18s;min-height:46px}#millionaireDialog button:disabled{cursor:default;opacity:.5}#millionaireDialog button:focus-visible{outline:3px solid #8475B3;outline-offset:3px}#millionaireDialog button:hover:not(:disabled){transform:translateY(-2px)}#millionaireDialog .mil-close{position:fixed;right:18px;top:15px;border-radius:50%;width:48px;height:48px;padding:0;background:#FFFDFA;z-index:3;font-size:22px}.mil-main{max-width:1080px;margin:auto}.mil-eyebrow{font-size:.7rem;letter-spacing:.16em;font-weight:800;color:#79628C}.mil-intro{max-width:610px;margin:2vh auto;text-align:center;padding:30px 28px;border-radius:32px;border:1px solid #FFFC;background:#FFFDF3DE;box-shadow:0 20px 80px #53456320;backdrop-filter:blur(10px)}.mil-emblem{display:grid;place-items:center;margin:18px auto;width:84px;height:84px;border-radius:28px;background:linear-gradient(145deg,#FBE8AB,#E7D9F0);border:1px solid #CEB678;font-size:3rem;color:#A88948;box-shadow:0 8px 0 #B89FBD20;animation:mil-float 3s ease-in-out infinite}.mil-intro h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.2;margin:22px 0;color:#514166;letter-spacing:-.04em}.mil-intro p{line-height:1.8;color:#85718E}.mil-rules{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:24px 0}.mil-rules span{padding:8px 12px;border-radius:20px;background:#EAE4F3;font-size:.78rem}#millionaireDialog .mil-primary{background:#DBEDE2;border-color:#A5CDB7;color:#365D4B;font-weight:800;box-shadow:0 4px 0 #9EBAAA35}.mil-intro>.mil-primary{padding:16px 30px;font-size:1.05rem}.mil-intro>small{display:block;margin:22px 0 0;font-size:.72rem;line-height:1.8;color:#8C7C8E}.mil-header{display:flex;align-items:center;justify-content:space-between;gap:20px;margin:0 0 22px}.mil-score{text-align:right}.mil-score small{display:block;font-size:.72rem;color:#746281}.mil-score strong{font-size:1.7rem;color:#7C5C31}.mil-score strong span{font-size:.8rem}.mil-layout{display:grid;grid-template-columns:minmax(0,1fr) 215px;gap:24px}.mil-play{align-self:center}.mil-jokers{display:flex;gap:10px;margin:0 0 20px}.mil-jokers button{background:#FFF8E7!important;border-color:#DFCA9F!important;display:flex;align-items:center;gap:10px;font-size:.8rem!important}.mil-jokers b{font-size:1.25rem;color:#AD8852}.mil-question-card{padding:28px;background:#FFFDFAF2;border:1px solid #D6C9E4;border-radius:24px;box-shadow:0 10px 35px #64507215}.mil-meta{display:flex;justify-content:space-between;font-size:.7rem;font-weight:700;color:#9A7CA3}.mil-question-card h2{font-size:clamp(1.2rem,2.3vw,1.7rem);line-height:1.55;margin:20px 0 4px;min-height:80px;outline:none}.mil-answers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}#millionaireDialog .mil-answer{display:flex;align-items:center;gap:13px;text-align:left;background:#FFFDF5EE;min-height:72px;box-shadow:0 4px 0 #C6B7D126}.mil-answer b{display:grid;place-items:center;flex:0 0 32px;height:32px;border-radius:10px;background:#EAE1F3;color:#8E6D9D}.mil-answer span{font-size:.9rem;font-weight:600}#millionaireDialog .mil-answer.selected{background:#F8E6BC;border-color:#BD9451}#millionaireDialog .mil-answer.correct{background:#CBE8D7;border-color:#72AA8B;opacity:1}#millionaireDialog .mil-answer.wrong{background:#F2CCD0;border-color:#C48691;opacity:1}.mil-notice{text-align:center;min-height:24px;font-weight:700;font-size:.9rem;color:#685377}.mil-bottom{display:flex;justify-content:center;flex-wrap:wrap;gap:12px}.mil-safety{text-align:center;font-size:.72rem;color:#756780}.mil-ladder{padding:20px;border-radius:24px;border:1px solid #FFF9;background:#FFFCF2D9;backdrop-filter:blur(12px)}.mil-ladder h3{font-size:.85rem;margin:0 0 14px}.mil-ladder ol{list-style:none;padding:0;margin:0;display:grid;gap:3px}.mil-ladder li{display:flex;gap:12px;align-items:center;border-radius:9px;padding:7px 10px;font-size:.8rem;min-height:31px}.mil-ladder li>span{font-size:.68rem;color:#AA95B3;width:15px}.mil-ladder li strong{flex:1}.mil-ladder li.safe{color:#9C743B}.mil-ladder li.active{background:#E6D9F2;border:1px solid #BFA4D0;color:#624677}.mil-ladder li.passed{opacity:.55}.mil-ladder>small{display:block;margin-top:12px;font-size:.65rem;color:#927A57}.mil-result{max-width:510px;margin:7vh auto;text-align:center;background:#FFFDF5F2;padding:35px;border-radius:30px;border:1px solid #DDCCE8;animation:mil-pop .35s ease-out}.mil-result h2{font-size:1.6rem;margin:22px 0}.mil-result>strong{font-size:2.6rem;color:#588770}.mil-result>strong span{font-size:1rem}.mil-result p{line-height:1.7;color:#86748F;margin:22px 0}#toolsPanel .tool-millionaire{background:#F5E8CE;border-color:#E5D3AF}
+@keyframes mil-float{50%{transform:translateY(-5px) rotate(4deg)}}@keyframes mil-pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+@media(max-width:700px){#millionaireDialog{padding:72px 14px 24px}.mil-intro{margin:0 auto;padding:24px 17px}.mil-layout{grid-template-columns:1fr}.mil-header{align-items:flex-start}.mil-header>.mil-eyebrow{max-width:150px;line-height:1.7}.mil-score strong{font-size:1.35rem}.mil-question-card{padding:20px}.mil-question-card h2{min-height:0}.mil-answers{grid-template-columns:1fr;gap:9px;margin:14px 0}#millionaireDialog .mil-answer{min-height:59px;padding:10px 13px}.mil-jokers{gap:7px}#millionaireDialog .mil-jokers button{padding:10px 12px;flex:1;justify-content:center}.mil-ladder ol{grid-template-columns:1fr 1fr}.mil-ladder{padding:15px}.mil-result{padding:24px;margin:2vh auto}.mil-emblem{width:65px;height:65px;font-size:2.5rem}}
+@media(prefers-reduced-motion:reduce){#millionaireDialog *,#millionaireDialog *::before{animation:none!important;transition:none!important}}
+.mil-modes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0}.mil-modes button{display:grid;gap:12px;min-height:110px;text-align:left;background:#E8E0F2!important}.mil-modes button+button{background:#F6E7C5!important}.mil-modes b{font-size:1.05rem}.mil-modes span{font-size:.75rem;line-height:1.5}.mil-clock{padding:12px 18px;border-radius:16px;background:#FFF6DE;border:1px solid #DAC697;color:#8A6733;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}.mil-clock.urgent{background:#F8DCE0;border-color:#D999A4;color:#A0495A}.mil-correct-pop{position:fixed;inset:0;z-index:5;display:grid;place-items:center;pointer-events:none;animation:mil-correct .95s ease-in-out both}.mil-correct-pop>div{display:grid;text-align:center;gap:8px;background:#F5FFF6F5;border:1px solid #ACD3B7;padding:28px 40px;border-radius:28px;box-shadow:0 20px 60px #304A3F30;color:#44745B}.mil-correct-pop b{font-size:2.5rem}.mil-correct-pop span{font-size:1.15rem;font-weight:700}@keyframes mil-correct{0%{opacity:0;transform:scale(.65)}25%{opacity:1;transform:scale(1.08)}42%,65%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.12)}}.mil-audience{position:fixed;inset:0;z-index:4;background:#4F41595C;backdrop-filter:blur(7px);padding:24px;display:grid;place-items:center;overflow:auto}.mil-audience-card{max-width:440px;width:100%;padding:28px;background:#FFFBF1;border:1px solid #DAC9E2;border-radius:28px;text-align:center;box-shadow:0 20px 70px #3B304A33}.mil-audience-card h2{font-size:1.4rem}.mil-audience-card p{font-size:.78rem;line-height:1.7;color:#897390}.mil-audience-card>small{display:block;margin:18px;color:#897390}.mil-votes{display:grid;gap:16px;margin:25px 0}.mil-votes>div{display:flex;align-items:center;gap:12px}.mil-votes strong{width:46px;text-align:right;font-size:.85rem}.mil-vote-track{height:20px;flex:1;background:#EEE8F3;border-radius:8px;overflow:hidden}.mil-vote-track span{display:block;height:100%;background:#BFA6D8;border-radius:8px}.mil-votes>div:nth-child(2) .mil-vote-track span{background:#B5D9C5}.mil-votes>div:nth-child(3) .mil-vote-track span{background:#EDD19D}.mil-votes>div:nth-child(4) .mil-vote-track span{background:#E1B5C7}
+@media(max-width:700px){.mil-header{flex-wrap:wrap;gap:12px}.mil-header>.mil-eyebrow{flex:1;max-width:none}.mil-clock{padding:9px 12px;font-size:.9rem}.mil-score{width:100%;text-align:center}.mil-modes{grid-template-columns:1fr}.mil-modes button{min-height:90px}.mil-audience-card{padding:22px}.mil-correct-pop>div{padding:24px 30px}}
+
+#millionaireDialog .mil-emblem{background:none;border:0;box-shadow:none;width:100px;height:100px;border-radius:0}.mil-emblem svg{display:block;width:100%;height:100%}#millionaireDialog .mil-jokers{justify-content:center;margin:14px 0 16px}#millionaireDialog .mil-jokers button{flex:0 1 auto}
+#millionaireDialog .mil-jokers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));max-width:530px;margin:14px auto 16px;gap:10px}#millionaireDialog .mil-jokers button{justify-content:center;padding:10px 12px;gap:9px;background:#F6EDDB!important}#millionaireDialog #milAudience{background:#EBE1F3!important;border-color:#CEBCDF!important}#millionaireDialog #milPhone{background:#DFECF6!important;border-color:#B9D1E3!important}.mil-joker-art{display:block;width:36px;height:36px;flex-shrink:0}.mil-jokers button>span{text-align:left;font-size:.77rem;font-weight:700;line-height:1.45}.mil-jokers small{display:block;font-size:.62rem;font-weight:500;opacity:.7}.mil-phone-card{max-width:560px}.mil-phone-card>.mil-joker-art{width:58px;height:58px;margin:0 auto;animation:mil-phone-ring 2s ease-in-out infinite}.mil-phone-clock{font-size:3rem;font-weight:800;font-variant-numeric:tabular-nums;color:#6083A3;background:#E7F0F8;border:1px solid #BBD0E2;border-radius:20px;padding:8px 24px;width:max-content;margin:16px auto}.mil-phone-clock.urgent{color:#B05D70;background:#F7E3E7}.mil-phone-card .mil-phone-question{font-size:1rem;font-weight:700;color:#53476B}.mil-phone-answers{display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:left;font-size:.78rem}.mil-phone-answers>span{background:#F0EAF5;border-radius:10px;padding:10px;line-height:1.5}.mil-phone-answers b{color:#9375AA;margin-right:4px}@keyframes mil-phone-ring{0%,35%,100%{transform:rotate(0)}8%,24%{transform:rotate(-8deg)}16%,30%{transform:rotate(8deg)}}
+@media(max-width:700px){#millionaireDialog .mil-jokers{gap:7px}#millionaireDialog .mil-jokers button{flex-direction:column;padding:9px 5px;gap:4px;min-width:0}.mil-jokers button>span{text-align:center;font-size:.68rem}.mil-joker-art{width:32px;height:32px}.mil-phone-answers{grid-template-columns:1fr}.mil-phone-card{padding:18px}.mil-phone-card h2{margin:10px}.mil-phone-card>small{margin:12px}}
+
+#millionaireDialog .mil-clock{font-size:1.2rem;padding:15px 22px;animation:mil-clock-breathe 4.2s ease-in-out infinite;transform-origin:center}
+@keyframes mil-clock-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.09)}}
+@media(max-width:700px){#millionaireDialog .mil-clock{font-size:1.05rem;padding:11px 15px}}
+@media(prefers-reduced-motion:reduce){#millionaireDialog .mil-clock{animation:none}}
+
+/* Keep the photo visible while giving game content stronger contrast. */
+#millionaireDialog .mil-intro{background:#FFFDF3F5}
+#millionaireDialog .mil-question-card{background:#FFFDFAFA}
+#millionaireDialog .mil-answer{background:#FFFDF5F8}
+#millionaireDialog .mil-ladder{background:#FFFCF2FF}
+#millionaireDialog .mil-jokers button{background:#FFF3D8!important}
+#millionaireDialog #milAudience{background:#EEE3F7!important}
+#millionaireDialog #milPhone{background:#E3F0FA!important}
+#millionaireDialog .mil-bottom button{background:#F4ECFA}
+#millionaireDialog .mil-bottom #milConfirm{background:#DCEFE3}
+#millionaireDialog .mil-bottom #milWithdraw{background:#F4E9D7}
+#millionaireDialog button:disabled{opacity:.76}
+#millionaireDialog .mil-modes button :is(b,span){font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:0}
+
+#millionaireDialog .mil-notice{display:table;margin:4px auto 10px;padding:8px 18px;min-height:0;border:1px solid #D9C9E7;border-radius:999px;background:#FFFDFAF5;color:#514166;box-shadow:0 4px 14px #40384D12}
+#millionaireDialog .mil-answer{transition:transform .25s ease,opacity .25s ease,background .25s ease,box-shadow .25s ease}
+#millionaireDialog .mil-answer.selected{animation:mil-answer-select .48s ease both;box-shadow:0 0 0 3px #C3A7D944,0 7px 18px #4B3D5A20}
+#millionaireDialog .mil-answer.correct{position:relative;z-index:1;transform:scale(1.055);box-shadow:0 8px 24px #4C916B45;animation:mil-answer-correct .62s cubic-bezier(.2,.8,.2,1) both}
+.mil-question-enter{animation:mil-question-in .65s ease both}
+.mil-answers.mil-question-enter .mil-answer:nth-child(2){animation-delay:.07s}
+.mil-answers.mil-question-enter .mil-answer:nth-child(3){animation-delay:.14s}
+.mil-answers.mil-question-enter .mil-answer:nth-child(4){animation-delay:.21s}
+@keyframes mil-question-in{0%{opacity:0;transform:translateY(12px) scale(.985)}45%{opacity:.45}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes mil-answer-select{0%{opacity:.35;transform:scale(.97)}45%{opacity:.65}100%{opacity:1;transform:scale(1)}}
+@keyframes mil-answer-correct{0%{opacity:.65;transform:scale(1)}55%{opacity:1;transform:scale(1.075)}100%{opacity:1;transform:scale(1.055)}}
+
+@media(prefers-reduced-motion:reduce){#millionaireDialog .mil-question-enter,#millionaireDialog .mil-answer.selected,#millionaireDialog .mil-answer.correct{animation:none!important}}
+
+#millionaireDialog .mil-bottom button{opacity:1;background:#EFE5F6;border-color:#CDB9DD;box-shadow:0 4px 0 #B9A2CA55}
+#millionaireDialog .mil-bottom #milConfirm{background:#D4EBDD;border-color:#9CC5AA;color:#315844}
+#millionaireDialog .mil-bottom #milWithdraw{background:#F4E4C9;border-color:#D8BA83;color:#715527}
+#millionaireDialog .mil-bottom button:disabled{opacity:.92}
+
+#millionaireDialog .mil-question-card{background:#FFFDFAFF!important}
+#millionaireDialog .mil-answer{background:#FFFDF5FF!important}
+#millionaireDialog .mil-answer.selected{background:#F8E6BCFF!important}
+#millionaireDialog .mil-answer.correct{background:#CBE8D7FF!important}
+#millionaireDialog .mil-answer.wrong{background:#F2CCD0FF!important}
+
+#millionaireDialog #milConfirm.mil-confirm-ready{animation:mil-confirm-breathe 2.4s ease-in-out infinite;transform-origin:center}
+@keyframes mil-confirm-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+@media(prefers-reduced-motion:reduce){#millionaireDialog #milConfirm.mil-confirm-ready{animation:none!important}}
+
+#millionaireDialog .mil-decision-card{animation:mil-pop .24s ease-out}
+#millionaireDialog .mil-decision-card h2{margin:16px 0 8px;color:#514166}
+#millionaireDialog .mil-decision-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:22px}
+#millionaireDialog #milDecisionNo{background:#EEE7F5;border-color:#CDBBDB}
+#millionaireDialog #milDecisionYes{background:#D8EBDD;border-color:#9BC5A7}
+
+#millionaireDialog .mil-close{z-index:6}
+
+/* A brief entrance; returning to the mode cards repeats only their soft reveal. */
+#millionaireDialog::before{content:"";position:fixed;inset:0;background:url("millionaire-background.jpg") center/cover no-repeat;opacity:.42;pointer-events:none;z-index:0}#millionaireDialog .mil-main{position:relative;z-index:1}
+#millionaireDialog .mil-intro{animation:mil-intro-enter .42s cubic-bezier(.2,.75,.25,1) both}
+@keyframes mil-dialog-enter{from{opacity:0}to{opacity:1}}
+@keyframes mil-intro-enter{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(prefers-reduced-motion:reduce){#millionaireDialog .mil-intro{animation:none}}
+
+#millionaireDialog .mil-safety{display:table;margin:12px auto 0;padding:7px 13px;border:1px solid #D9C9E7;border-radius:999px;background:#FFFDF9;color:#594A69;font-size:.78rem;font-weight:700;box-shadow:0 3px 12px #40384D14}
+
+#millionaireDialog .mil-header .mil-eyebrow{color:#4D4166}
+#millionaireDialog .mil-score small{color:#51465C;font-weight:700}
+#millionaireDialog .mil-score strong{color:#70501F}
+
+#millionaireDialog .mil-header>.mil-eyebrow{display:inline-flex;align-items:center;min-height:42px;padding:10px 14px;border:1px solid #D8C7E5;border-radius:14px;background:#FFFCF5;color:#4D4166;box-shadow:0 4px 14px #34264F24}
+#millionaireDialog .mil-score{padding:7px 13px;border:1px solid #DECDAF;border-radius:14px;background:#FFFBF0;box-shadow:0 4px 14px #34264F24}
+#millionaireDialog .mil-score small{color:#51465C}
+
+#millionaireDialog .mil-header>.mil-eyebrow{font-family:"Plus Jakarta Sans",sans-serif;font-size:.82rem;font-weight:700;letter-spacing:0;text-transform:none}
+#millionaireDialog .mil-score small{font-family:"Plus Jakarta Sans",sans-serif;font-size:.72rem;font-weight:600;letter-spacing:0}
+#millionaireDialog .mil-score strong{font-family:"Plus Jakarta Sans",sans-serif;font-weight:700;letter-spacing:-.02em}
+
+/* Slightly richer pastels for the game controls. */
+#millionaireDialog .mil-clock{background:#FFEBC1;border-color:#CDA965;color:#71501F}
+#millionaireDialog .mil-clock.urgent{background:#F5CFD4;border-color:#CE8290;color:#8D3445}
+#millionaireDialog .mil-jokers button{background:#FFF0C8!important;border-color:#DCBE7A!important}
+#millionaireDialog #milAudience{background:#E9D9F4!important;border-color:#BDA0D5!important}
+#millionaireDialog #milPhone{background:#DCECF9!important;border-color:#A9C8E4!important}
+#millionaireDialog .mil-bottom #milConfirm{background:#CDE8D7;border-color:#87BA9D;color:#295740}
+#millionaireDialog .mil-bottom #milWithdraw{background:#F4DFBA;border-color:#D1A86A;color:#6B4A20}
+#millionaireDialog .mil-safety{background:#F3EAF9;border-color:#CEB9E1;color:#4D3C61}
+
+#millionaireDialog .mil-clock{font-family:"Plus Jakarta Sans",sans-serif;font-size:1.5rem;font-weight:800;letter-spacing:-.035em;line-height:1.15;padding:15px 24px}
+@media(max-width:700px){#millionaireDialog .mil-clock{font-size:1.28rem;padding:12px 18px}}
+
+/* Keep the reading passage calm and give the actual question its own line. */
+#millionaireDialog .mil-question-card h2{font-weight:400;font-size:clamp(1.06rem,1.9vw,1.38rem);line-height:1.6;min-height:0}
+#millionaireDialog .mil-question-card .mil-passage{display:block;font-weight:400;color:#514860}
+#millionaireDialog .mil-question-card .mil-prompt{display:block;font-size:clamp(1.18rem,2.2vw,1.65rem);font-weight:800;line-height:1.45;color:#3E3555}
+#millionaireDialog .mil-question-card .mil-has-passage .mil-prompt{margin-top:14px}
