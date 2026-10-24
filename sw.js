@@ -1,5 +1,5 @@
 // NoTik — Service Worker
-const CACHE = 'classlog-v546';
+const CACHE = 'classlog-v547';
 const STATIC = [
   './game-presentation.css?v=49',
   './parent-games-loader.js?v=7',
@@ -19,7 +19,7 @@ const STATIC = [
   './admin.js',
   './admin.js?v=39',
   './admin-layout.js?v=21',
-  './admin-layout.css?v=42',
+  './admin-layout.css?v=43',
   './application-backup.js?v=1',
   './record-export.js?v=1',
   './parent.js',
