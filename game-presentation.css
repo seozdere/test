@@ -274,3 +274,11 @@
 
 /* Slightly smaller pass artwork in DUO only. */
 #spellingDialog.punct-theme .punct-actions button.spell-pass{--spell-action-width:56px;--spell-action-height:59.5px}
+
+/* Keep the new-game ribbon above the card artwork and neighboring cards. */
+#toolsPanel #gamesSectionBody>.tool-card:has(.game-new-ribbon){position:relative;overflow:visible;z-index:3}
+#toolsPanel #gamesSectionBody .game-new-ribbon{z-index:5}
+
+#toolsPanel #gamesSectionBody>.tool-word-hunter{order:-4}
+#toolsPanel #gamesSectionBody>.tool-punctuation{order:-3}
+#toolsPanel #gamesSectionBody>.tool-millionaire{order:-2}

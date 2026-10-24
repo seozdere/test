@@ -1,5 +1,5 @@
 /* All game rules are scoped; existing game layouts stay independent. */
-#toolsPanel #gamesSectionBody>.tool-word-hunter{background:#DCEDE5;border-color:#C8B076;position:relative;overflow:visible;order:-1;animation:game-gold-glow 3.8s ease-in-out infinite}
+#toolsPanel #gamesSectionBody>.tool-word-hunter{background:#DCEDE5;border-color:#C8B076;position:relative;overflow:visible;order:-4;animation:game-gold-glow 3.8s ease-in-out infinite}
 .tool-word-hunter .wh-lens{transform-origin:83px 55px;animation:wh-search 3s ease-in-out infinite}
 @keyframes wh-search{50%{transform:translate(-5px,-2px) rotate(-5deg)}}
 #wordHunterDialog{position:fixed;inset:0;width:100%;height:100dvh;max-width:none;max-height:none;margin:0;padding:36px 24px 28px;border:0;overflow:auto;overscroll-behavior:contain;color:#4B435F;background:linear-gradient(#FFFCF788,#FFFCF788),url('assets/game-backgrounds/school-4.jpg') center/cover;font-family:'Plus Jakarta Sans',sans-serif}
@@ -115,3 +115,68 @@
 #wordHunterDialog .wh-modes span{font-size:.95rem;line-height:1.6}
 @media(max-width:650px){#wordHunterDialog .wh-modes{gap:10px}#wordHunterDialog .wh-modes button{min-height:215px;padding:18px 10px}#wordHunterDialog .wh-modes strong{font-size:1.2rem}#wordHunterDialog .wh-modes span{font-size:.8rem}#wordHunterDialog .wh-modes svg{width:62px;height:55px}}
 @media(max-height:550px) and (orientation:landscape){#wordHunterDialog .wh-modes button{min-height:130px;padding:10px}#wordHunterDialog .wh-modes svg{width:48px;height:42px}#wordHunterDialog .wh-modes strong{font-size:1.1rem}}
+
+/* Independent side-by-side lanes; each player advances at their own pace. */
+#wordHunterDialog .wh-duel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:stretch}
+#wordHunterDialog .wh-duel .wh-question{min-width:0;padding:18px}
+#wordHunterDialog .wh-player-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:700}
+#wordHunterDialog .wh-duel .wh-options{grid-template-columns:1fr}
+#wordHunterDialog .wh-duel .wh-options button{min-height:90px;padding:12px}
+#wordHunterDialog .wh-duel .wh-term-card{padding:12px;min-height:150px}
+#wordHunterDialog .wh-duel h2{font-size:clamp(1rem,2.4vw,1.6rem)}
+#wordHunterDialog .wh-duel .wh-prompt{font-size:1rem}
+#wordHunterDialog .wh-duel .wh-feedback{min-height:90px;overflow-wrap:anywhere}
+@media(max-width:600px){
+ #wordHunterDialog .wh-duel{gap:8px}
+ #wordHunterDialog .wh-duel .wh-question{padding:10px 7px;border-radius:16px}
+ #wordHunterDialog .wh-player-heading{flex-direction:column;font-size:.8rem;gap:4px}
+ #wordHunterDialog .wh-duel .wh-term-card{padding:10px 6px}
+ #wordHunterDialog .wh-duel .wh-kind{padding:5px 7px;font-size:.7rem}
+ #wordHunterDialog .wh-duel .wh-prompt{font-size:.85rem}
+ #wordHunterDialog .wh-duel .wh-options button{padding:10px 6px;gap:6px;font-size:.78rem;overflow-wrap:anywhere}
+ #wordHunterDialog .wh-duel .wh-letter{width:25px;height:25px;font-size:.8rem}
+}
+
+/* Board-friendly duel: use the same broad arena as Punctuation Duel. */
+#wordHunterDialog .wh-stage:has(.wh-duel){width:min(1500px,100%)}
+@media(min-width:900px){
+ #wordHunterDialog:has(.wh-duel){box-sizing:border-box;padding:20px 28px 22px}
+ #wordHunterDialog .wh-duel{gap:20px}
+ #wordHunterDialog .wh-duel .wh-question{padding:24px;border-radius:26px}
+ #wordHunterDialog .wh-duel .wh-player-heading{font-size:1.15rem;align-items:center}
+ #wordHunterDialog .wh-duel .wh-player-score{padding:8px 12px;border-radius:12px;background:#FFFDF7;font-size:1rem}
+ #wordHunterDialog .wh-duel .wh-turn{margin:14px 0}
+ #wordHunterDialog .wh-duel .wh-term-card{min-height:170px;padding:20px 24px;display:flex;flex-direction:column;justify-content:center;align-items:center}
+ #wordHunterDialog .wh-duel h2{font-size:clamp(1.5rem,1.9vw,2.1rem);line-height:1.4}
+ #wordHunterDialog .wh-duel .wh-prompt{font-size:1.15rem;margin:16px 0}
+ #wordHunterDialog .wh-duel .wh-options{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+ #wordHunterDialog .wh-duel .wh-options button{min-height:120px;padding:18px 14px;font-size:clamp(1rem,1.2vw,1.25rem);line-height:1.5}
+ #wordHunterDialog .wh-duel .wh-feedback{min-height:76px;padding-top:16px;font-size:1.05rem}
+ #wordHunterDialog:has(.wh-duel) .wh-actions{margin-top:18px}
+}
+
+/* Phone landscape only: compact two-player arena fits the short viewport. */
+@media(orientation:landscape) and (max-height:600px) and (max-width:1200px){
+ #wordHunterDialog:has(.wh-duel){box-sizing:border-box;padding:8px 12px}
+ #wordHunterDialog:has(.wh-duel) .wh-heading{padding:0 42px;margin:0 0 6px}
+ #wordHunterDialog:has(.wh-duel) .wh-heading h1{font-size:1.2rem;margin:0;line-height:1.2}
+ #wordHunterDialog:has(.wh-duel) .wh-heading>span{font-size:.7rem}
+ #wordHunterDialog:has(.wh-duel) .wh-close{width:36px;height:36px;top:6px;right:8px;padding:8px;box-sizing:border-box}
+ #wordHunterDialog .wh-duel{gap:10px}
+ #wordHunterDialog .wh-duel .wh-question{padding:8px 10px;border-radius:18px}
+ #wordHunterDialog .wh-duel .wh-player-heading{flex-direction:row;font-size:.85rem;gap:6px}
+ #wordHunterDialog .wh-duel .wh-player-score{font-size:.75rem;padding:4px 7px}
+ #wordHunterDialog .wh-duel .wh-turn{font-size:.7rem;min-height:0;margin:4px 0}
+ #wordHunterDialog .wh-duel .wh-term-card{min-height:66px;padding:7px 10px;border-radius:14px}
+ #wordHunterDialog .wh-duel .wh-kind{font-size:.65rem;padding:3px 8px}
+ #wordHunterDialog .wh-duel h2{font-size:1.05rem;line-height:1.3;margin:5px 0 0}
+ #wordHunterDialog .wh-duel .wh-prompt{font-size:.8rem;margin:6px 0}
+ #wordHunterDialog .wh-duel .wh-options{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ #wordHunterDialog .wh-duel .wh-options button{min-height:70px;padding:8px 6px;font-size:.75rem;line-height:1.35;gap:6px;border-radius:12px}
+ #wordHunterDialog .wh-duel .wh-letter{width:25px;height:25px;font-size:.8rem}
+ #wordHunterDialog .wh-duel .wh-feedback{min-height:42px;padding-top:6px;font-size:.75rem;line-height:1.3}
+ #wordHunterDialog:has(.wh-duel) .wh-actions{margin-top:6px}
+ #wordHunterDialog:has(.wh-duel) .wh-restart{min-height:34px;padding:6px 14px;font-size:.75rem}
+}
+
+#wordHunterDialog .wh-duel .wh-options button{touch-action:none;user-select:none;-webkit-user-select:none}

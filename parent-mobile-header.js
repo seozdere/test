@@ -10,6 +10,14 @@
  const ids={homework:'homeworkView',class:'classView',leader:'leaderPanel',tools:'toolsPanel'};
  const tools=document.getElementById('btnTools'),anchor=document.createComment('games shortcut');
  tools.before(anchor);
+ const subjects=document.getElementById('subjectTabsParent');
+ function placeTools(){
+  const portraitMulti=matchMedia('(max-width:640px) and (orientation:portrait)').matches&&subjects.querySelectorAll('.subject-tab-parent').length>=2;
+  root.classList.toggle('portrait-multi-subject',portraitMulti);
+  if(wide.matches||portraitMulti){const target=nav.querySelector('.view-toggle-wrap');if(tools.parentElement!==target)target.append(tools);}
+  else if(tools.previousSibling!==anchor)anchor.after(tools);
+ }
+
 
 
  // Progressive experiment: unsupported browsers retain the previous controller below.
@@ -21,7 +29,7 @@
    frame=0;
    root.classList.toggle('header-wide-touch',wide.matches);
    root.classList.toggle('header-collapsible',mobile.matches);
-   if(wide.matches)nav.querySelector('.view-toggle-wrap').append(tools);else anchor.after(tools);
+   placeTools();
    root.classList.toggle('header-scroll-driven',mobile.matches);
    if(!mobile.matches){panels.forEach(el=>el.classList.remove('panel-scroll-active'));return;}
    const height=header.offsetHeight;
@@ -48,6 +56,7 @@
     window.scheduleLatestHomeworkMarker?.();
    }
   };
+  new MutationObserver(schedule).observe(subjects,{childList:true});
   new ResizeObserver(schedule).observe(header);
   window.addEventListener('resize',schedule,{passive:true});
   mobile.addEventListener('change',schedule);wide.addEventListener('change',schedule);
@@ -57,8 +66,7 @@
  function syncLayout(){
   root.classList.toggle('header-wide-touch',wide.matches);
   root.classList.toggle('header-collapsible',mobile.matches);
-  if(wide.matches)nav.querySelector('.view-toggle-wrap').append(tools);
-  else anchor.after(tools);
+  placeTools();
   if(!mobile.matches||wide.matches)setCompact(false);
   window.scheduleLatestHomeworkMarker?.();
  }
@@ -136,6 +144,8 @@
   if(!compact&&y>48&&y>previous&&panel.scrollHeight-panel.clientHeight>wrap.offsetHeight+64)setCompact(true);
   else if(compact&&y<=1&&y<previous)setCompact(false);
  },{capture:true,passive:true});
+ new MutationObserver(syncLayout).observe(subjects,{childList:true});
+ window.addEventListener('resize',syncLayout,{passive:true});
  mobile.addEventListener('change',syncLayout);wide.addEventListener('change',syncLayout);syncLayout();
  window.addEventListener('pageshow',()=>{userUntil=0;setCompact(false);});
 })();

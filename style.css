@@ -1820,3 +1820,13 @@ body.admin-page #installBanner { background:var(--palette-lavender); color:var(-
 }
 
 .admin-page .note-btn svg{display:block;margin:auto;pointer-events:none}
+
+.parent-page .excel-header .header-right{position:relative}
+.parent-page #subjectTabsParent{scrollbar-width:none;-ms-overflow-style:none}
+.parent-page #subjectTabsParent::-webkit-scrollbar{display:none}
+.subject-scroll-hint{position:absolute;right:0;z-index:2;width:28px;height:28px;display:grid;place-items:center;padding:0;border:1px solid #ffffff40;border-radius:50%;background:#355589;color:white;cursor:pointer;transform:translateY(-50%);box-shadow:0 0 8px #20325270}
+.subject-scroll-hint[hidden]{display:none}
+.subject-scroll-hint svg{animation:subject-hint-pulse 1.2s ease-in-out infinite}
+.subject-scroll-hint:focus-visible{outline:2px solid white;outline-offset:2px}
+@keyframes subject-hint-pulse{0%,100%{transform:scale(.8)}50%{transform:scale(1.15)}}
+@media(prefers-reduced-motion:reduce){.subject-scroll-hint svg{animation:none}}

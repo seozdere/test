@@ -5,14 +5,25 @@
  const header=container.querySelector('header'),main=container.querySelector('main');
  const sheet=document.createElement('dialog');sheet.id='adminMenuSheet';sheet.innerHTML='<header><strong>Yönetim</strong><button type="button" aria-label="Menüyü kapat">×</button></header><div class="menu-body"></div>';document.body.append(sheet);
  sheet.querySelector('button').innerHTML=icon('close');const close=()=>sheet.close();sheet.querySelector('button').onclick=close;sheet.addEventListener('click',e=>{if(e.target===sheet)close();});
- const menu=document.createElement('button');menu.className='tbtn layout-menu';menu.type='button';menu.innerHTML='<svg width="26" height="18" viewBox="0 0 26 18" fill="currentColor" aria-hidden="true" focusable="false"><circle cx="5" cy="9" r="2.5"/><circle cx="13" cy="9" r="2.5"/><circle cx="21" cy="9" r="2.5"/></svg>';menu.setAttribute('aria-label','Yönetim menüsü');menu.onclick=()=>{if(typeof ClassLogAuth!=='undefined'&&!ClassLogAuth.isAdmin()){sheet.querySelectorAll('.menu-category,.admin-topbar-left>.badge,#recordExportStatus,#fullBackupStatus').forEach(el=>{el.style.display='none';});}const mobileMenu=matchMedia('(max-width:640px)').matches;const panel=$('adminManagementPanel');panel.querySelector('summary').hidden=!mobileMenu;if(mobileMenu)sheet.querySelectorAll('details').forEach(el=>{el.open=false;});else panel.open=true;sheet.showModal();};
+ const menu=document.createElement('button');menu.className='tbtn layout-menu';menu.type='button';menu.innerHTML='<svg width="26" height="18" viewBox="0 0 26 18" fill="currentColor" aria-hidden="true" focusable="false"><circle cx="5" cy="9" r="2.5"/><circle cx="13" cy="9" r="2.5"/><circle cx="21" cy="9" r="2.5"/></svg>';menu.setAttribute('aria-label','Yönetim menüsü');menu.onclick=()=>{if(typeof ClassLogAuth!=='undefined'&&!ClassLogAuth.isAdmin()){sheet.querySelectorAll('.menu-category,.admin-topbar-left>.badge,#recordExportStatus,#fullBackupStatus').forEach(el=>{el.style.display='none';});}const panel=$('adminManagementPanel');panel.querySelector('summary').hidden=false;sheet.querySelectorAll('details').forEach(el=>{el.open=false;});sheet.showModal();};
  const tabs=header.querySelector('.admin-tabs');tabs.append(menu);header.prepend(tabs);
  const body=sheet.querySelector('.menu-body');
- const management=$('adminManagementPanel');body.append(management);management.open=true;management.querySelector('summary').hidden=true;
+ const management=$('adminManagementPanel');body.append(management);management.open=false;management.querySelector('summary').hidden=false;
  const top=management.querySelector('.admin-topbar-left');
  top.querySelector('.badge')?.classList.add('admin-only');
  const groups=[['Sınıf ve ders',['teacherMgrBtn','subjectMgrBtn','termMgrBtn']],['Tahta ve veli',['copyLinkBtn','qrBtn','pushToBoardBtn','downloadParentBtn','closeBoardBtn']],['Yedek',['exportHomeworkBtn','exportClassBtn','fullBackupBtn']]];
- groups.forEach(([label,ids])=>{const section=document.createElement('section');section.className='menu-category admin-only';const title=document.createElement('h3');title.textContent=label;section.append(title);ids.forEach(id=>{const el=$(id);if(el)section.append(el);});top.append(section);});
+ groups.forEach(([label,ids],index)=>{
+  const collapsible=index>0;
+  const section=document.createElement(collapsible?'details':'section');
+  section.className='menu-category admin-only';
+  const title=document.createElement(collapsible?'summary':'h3');
+  title.textContent=label;
+  if(collapsible){title.className='menu-category-summary';title.insertAdjacentHTML('beforeend',icon('down'));}
+  section.append(title);
+  const controls=document.createElement('div');controls.className='menu-category-controls';
+  ids.forEach(id=>{const el=$(id);if(el)controls.append(el);});
+  section.append(controls);top.append(section);
+ });
  body.append($('adminInfoPanel'),$('speechAdmin'));
  body.addEventListener('click',e=>{if(e.target.closest('#teacherMgrBtn,#subjectMgrBtn,#termMgrBtn,#qrBtn,#pushToBoardBtn,#changePwBtn'))close();});
  // One announcement surface, preserving each channel's inputs, drafts and save handlers.
@@ -30,8 +41,11 @@
  new MutationObserver(updatePreview).observe($('homeworkDescriptionContext'),{childList:true,subtree:true,characterData:true});updatePreview();
  const dateCard=editor.parentElement;dateCard.classList.add('layout-date-card');dateCard.prepend(dateCard.querySelector('.date-selector'));dateCard.querySelector('.date-selector').append(editor);
  const rail=document.createElement('aside');rail.className='admin-rail';container.prepend(rail);
+ const railExit=document.createElement('button');railExit.type='button';railExit.className='tbtn rail-exit';railExit.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 4H5v16h5m5-12 4 4-4 4m-6-4h10"/></svg><span>Çıkış</span>';railExit.onclick=()=>$('logoutBtn').click();
+ const mobileExit=railExit.cloneNode(true);mobileExit.className='tbtn mobile-bottom-exit';mobileExit.onclick=()=>$('logoutBtn').click();container.append(mobileExit);
+
  const headerAnchor=document.createComment('header'),dateAnchor=document.createComment('date');header.before(headerAnchor);dateCard.before(dateAnchor);
- const wide=matchMedia('(min-width:1100px)');function layout(){if(wide.matches){rail.append(header,dateCard);}else{headerAnchor.after(header);dateAnchor.after(dateCard);}}wide.addEventListener('change',layout);layout();
+ const wide=matchMedia('(min-width:1100px)');function layout(){if(wide.matches){rail.append(header,dateCard,railExit);}else{headerAnchor.after(header);dateAnchor.after(dateCard);}}wide.addEventListener('change',layout);layout();
  // Calendar reads existing homework dates and dispatches the existing date change event.
  const calendar=document.createElement('dialog');calendar.id='adminCalendar';document.body.append(calendar);let month;
  const calendarButton=document.createElement('button');calendarButton.type='button';calendarButton.className='tbtn calendar-open';calendarButton.textContent='Takvim';$('currentDate').parentElement.after(calendarButton);
@@ -65,8 +79,13 @@
  $('manageStudentsBtn').innerHTML='<svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><circle cx="13" cy="10" r="5" fill="#F6DDB5" stroke="#79638E" stroke-width="1.6"/><path d="M3 27v-4a10 10 0 0 1 20 0v4Z" fill="#DCEDE4" stroke="#79638E" stroke-width="1.6"/><circle cx="25" cy="23" r="6" fill="#E6DDF7" stroke="#79638E" stroke-width="1.5"/><path d="M25 20v6m-3-3h6" stroke="#79638E" stroke-width="1.8" stroke-linecap="round"/></svg>';
  $('manageStudentsBtn').setAttribute('aria-label','Öğrenci ekle ve düzenle');
 
- const todayButton=document.createElement('button');todayButton.type='button';todayButton.className='date-today';todayButton.title='Bugüne git';todayButton.setAttribute('aria-label','Bugüne git');todayButton.innerHTML='<svg width="23" height="27" viewBox="0 0 28 34" aria-hidden="true" focusable="false"><path d="M14 2C7.4 2 3 7 3 13c0 7 11 19 11 19s11-12 11-19C25 7 20.6 2 14 2Z" fill="#E74249"/><path d="M14 3C8 3 4 7.5 4 13" fill="none" stroke="#FF7974" stroke-width="2" stroke-linecap="round"/><path d="M24 14c-2 7-7 13-10 18l-4-6c7-4 11-8 14-12Z" fill="#CF303C"/><circle cx="14" cy="12" r="5" fill="#FFF8F4"/></svg>';
+ const todayButton=document.createElement('button');todayButton.type='button';todayButton.className='date-today';todayButton.title='Bugüne git';todayButton.setAttribute('aria-label','Bugüne git');todayButton.innerHTML='<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="3"/><path d="M8 3v4m8-4v4M4 10h16m-12 4h3v3H8z"/></svg><span class="homework-jump-label">Bugün</span>';
  $('nextDate').after(todayButton);todayButton.onclick=()=>{const now=new Date();$('currentDate').value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');$('currentDate').dispatchEvent(new Event('change',{bubbles:true}));};
+ const updateTodayVisibility=()=>{const now=new Date();const localToday=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');todayButton.hidden=!$('currentDate').value||$('currentDate').value===localToday;};
+ $('currentDate').addEventListener('change',updateTodayVisibility);
+ new MutationObserver(updateTodayVisibility).observe(document.getElementById('studentList'),{childList:true});
+ document.addEventListener('visibilitychange',updateTodayVisibility);
+ updateTodayVisibility();
  $('clearStudentSearch').innerHTML=icon('close');
 
  const compactTabs=matchMedia('(max-width:640px)');
@@ -75,6 +94,6 @@
  const homeworkRibbon=document.createElement('span');homeworkRibbon.className='admin-homework-ribbon';homeworkRibbon.textContent='Ödev';dateCard.querySelector('.date-homework-row').prepend(homeworkRibbon);
 
  const pinAnchor=document.createComment('today pin position');todayButton.before(pinAnchor);
- const alignDesktopPin=()=>{if(wide.matches)dateCard.querySelector('.date-homework-row').append(todayButton);else pinAnchor.after(todayButton);};
+ const alignDesktopPin=()=>{dateCard.querySelector('.date-homework-row').append(todayButton);};
  wide.addEventListener('change',alignDesktopPin);alignDesktopPin();
 })();

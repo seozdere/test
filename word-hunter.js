@@ -5,11 +5,12 @@ const bank=window.NoTikWordHunterBank,core=window.NoTikWordHunterCore;
 const dialog=document.createElement('dialog');dialog.id='wordHunterDialog';dialog.setAttribute('aria-label','Söz Avcısı – Deyim ve Atasözü');document.body.append(dialog);
 const $=s=>dialog.querySelector(s),key='notik-word-hunter-seen-v1';
 let state=null,timer=null,opener=null,seen=[];
+const duelTimers=new Set();
 try{const saved=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(saved))seen=saved.filter(id=>bank.some(q=>q.id===id));}catch{}
 const art='<svg viewBox="0 0 120 92" fill="none" stroke="#827297" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 21q23-9 44 1 22-10 45-1v53q-23-8-45 1-21-9-44-1z" fill="#FFF2CE"/><path d="M59 24v48M25 35h23m-23 12h17m28-12h22"/><g class="wh-lens"><circle cx="83" cy="55" r="18" fill="#D6EBDF"/><path d="m96 69 13 13" stroke-width="7"/><path d="m76 55 5 5 10-12" stroke="#59876C" stroke-width="3"/></g></svg>';
 const person=n=>'<svg viewBox="0 0 80 70" fill="none" stroke="#88749B" stroke-width="2" aria-hidden="true">'+(n===2?'<circle cx="22" cy="20" r="10" fill="#FFF1CF"/><path d="M5 59V47a17 17 0 0 1 34 0v12z" fill="#DBEBDD"/><circle cx="57" cy="20" r="10" fill="#FFF1CF"/><path d="M40 59V47a17 17 0 0 1 34 0v12z" fill="#E2D6EE"/>':'<circle cx="40" cy="20" r="12" fill="#FFF1CF"/><path d="M18 60V49a22 22 0 0 1 44 0v11z" fill="#DBEBDD"/>')+'</svg>';
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function clear(){clearTimeout(timer);timer=null;}
+function clear(){clearTimeout(timer);timer=null;duelTimers.forEach(clearTimeout);duelTimers.clear();}
 function remember(id){
  if(seen.length>=bank.length)seen=[];
  seen=seen.filter(x=>x!==id);seen.push(id);
@@ -19,8 +20,42 @@ function shell(html){clear();dialog.innerHTML='<button type="button" class="wh-c
 function close(){clear();state=null;dialog.close();opener?.focus();}
 dialog.addEventListener('cancel',e=>{e.preventDefault();close();});dialog.addEventListener('close',()=>{clear();state=null;});
 window.openWordHunter=function(){opener=document.activeElement;menu();if(!dialog.open)dialog.showModal();};
-function menu(){state=null;shell('<section class="wh-intro"><div class="wh-art">'+art+'</div><h1>Söz Avcısı</h1><p class="wh-subtitle">Deyim &amp; Atasözü</p><p>Deyim ve atasözlerini doğru anlamlarıyla eşleştir!</p><div class="wh-modes"><button data-mode="1">'+person(1)+'<strong>Tek oyuncu</strong><span>10 soruda kendini dene.</span></button><button data-mode="2">'+person(2)+'<strong>İki oyuncu</strong><span>Sırayla oynayın, kişi başına 10 soru.</span></button></div></section>');dialog.scrollTop=0;dialog.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>start(Number(b.dataset.mode)));}
-function start(mode){clear();state=core.makeRound(bank,mode,seen);render();dialog.scrollTop=0;}
+function menu(){state=null;shell('<section class="wh-intro"><div class="wh-art">'+art+'</div><h1>Söz Avcısı</h1><p class="wh-subtitle">Deyim &amp; Atasözü</p><p>Deyim ve atasözlerini doğru anlamlarıyla eşleştir!</p><div class="wh-modes"><button data-mode="1">'+person(1)+'<strong>Tek oyuncu</strong><span>10 soruda kendini dene.</span></button><button data-mode="2">'+person(2)+'<strong>İki oyuncu</strong><span>Yan yana yarışın, kişi başına 10 soru.</span></button></div></section>');dialog.scrollTop=0;dialog.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>start(Number(b.dataset.mode)));}
+function start(mode){clear();state=core.makeRound(bank,mode,seen);if(mode===2)startDuel();else render();dialog.scrollTop=0;}
+function startDuel(){
+ const round=state;
+ round.players=[0,1].map(player=>({mode:1,questions:round.questions.filter(q=>q.player===player).map(q=>({...q,player:0})),index:0,scores:[0],answered:false}));
+ shell('<header class="wh-heading"><h1>Söz Avcısı</h1><span>İki oyuncu · Aynı anda yarışın</span></header><div class="wh-duel"><section class="wh-question" data-player="0" aria-label="1. Oyuncu"></section><section class="wh-question wh-purple" data-player="1" aria-label="2. Oyuncu"></section></div><footer class="wh-actions"><button type="button" class="wh-restart">Baştan başla</button></footer>');
+ $('.wh-restart').onclick=()=>start(2);round.players.forEach((_,i)=>renderPlayer(i));
+}
+function renderPlayer(i){
+ const player=state.players[i],area=$('[data-player="'+i+'"]');
+ const heading='<div class="wh-player-heading"><strong>'+(i+1)+'. Oyuncu</strong><span class="wh-player-score">'+player.scores[0]+' puan</span></div>';
+ if(player.index>=player.questions.length){area.innerHTML=heading+'<h2>Tamamlandı!</h2><p>Diğer oyuncu bekleniyor…</p>';return;}
+ const q=player.questions[player.index];remember(q.id);
+ area.innerHTML=heading+'<div class="wh-turn">Soru '+(player.index+1)+' / 10</div><div class="wh-term-card"><span class="wh-kind">'+q.kind+'</span><h2>'+escape(q.term)+'</h2></div><p class="wh-prompt">Bu söz ne anlama geliyor?</p><div class="wh-options">'+q.options.map((o,j)=>'<button type="button" data-option="'+j+'"><span class="wh-letter">'+(j?'B':'A')+'</span><span>'+escape(o)+'</span></button>').join('')+'</div><div class="wh-feedback" role="status" aria-live="polite"></div>';
+ area.querySelectorAll('[data-option]').forEach(b=>bindDuelAnswer(b,()=>choosePlayer(i,Number(b.dataset.option))));
+}
+function bindDuelAnswer(button,answer){
+ button.addEventListener('pointerdown',event=>{
+  if(event.pointerType!=='touch'&&event.pointerType!=='pen')return;
+  event.preventDefault();
+  if(!button.disabled&&button.isConnected)answer();
+ },{passive:false});
+ button.onclick=event=>{
+  if(event.pointerType&&event.pointerType!=='mouse'&&event.detail!==0)return;
+  if(!button.disabled&&button.isConnected)answer();
+ };
+}
+function choosePlayer(i,option){
+ const round=state;if(!round?.players)return;
+ const player=round.players[i],result=core.answer(player,option);if(!result)return;
+ const area=$('[data-player="'+i+'"]'),q=player.questions[player.index];
+ round.scores[i]=player.scores[0];area.querySelector('.wh-player-score').textContent=player.scores[0]+' puan';
+ area.querySelectorAll('[data-option]').forEach(b=>{b.disabled=true;if(q.options[Number(b.dataset.option)]===q.meaning)b.classList.add('is-correct');else if(Number(b.dataset.option)===option)b.classList.add('is-wrong');});
+ const feedback=area.querySelector('.wh-feedback');feedback.classList.add(result.correct?'wh-good':'wh-bad');feedback.textContent=result.correct?'✓ Doğru! +10 puan':'Doğrusu: '+result.meaning;
+ const pending=setTimeout(()=>{duelTimers.delete(pending);if(state!==round||!dialog.open)return;core.advance(player);if(round.players.every(p=>p.index===p.questions.length))finish();else renderPlayer(i);},1500);duelTimers.add(pending);
+}
 function render(){
  const q=state.questions[state.index];remember(q.id);
  const turn=Math.floor(state.index/state.mode)+1;

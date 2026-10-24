@@ -697,6 +697,7 @@ const ClassLogData = {
     },
 
     async sync() {
+        const syncContext=this._dbId(), syncRecords=this.records, syncClassRecords=this.classRecords;
         if (!ClassLogAuth.isLoggedIn()) {
             this._setError('Oturum bulunamadı. Lütfen yeniden giriş yapın.');
             return false;
@@ -713,6 +714,7 @@ const ClassLogData = {
                 this._setError('Öğretmen verileri yüklenemedi.', error || data);
                 return false;
             }
+            if(this._dbId()!==syncContext || this.records!==syncRecords || this.classRecords!==syncClassRecords)return false;
             this._applyViewPayload(data);
             await this._loadTeacherParentNotice(this.currentClass);
             await this._loadTeacherParentTicker(this.currentClass);
@@ -727,7 +729,17 @@ const ClassLogData = {
         }
     },
 
-    async syncParent(parentToken = this.parentToken) {
+    syncParent(parentToken = this.parentToken) {
+        const subject=this.currentSubject,key=JSON.stringify([parentToken,subject]);
+        this._parentRequests ||= new Map();
+        if(this._parentRequests.has(key))return this._parentRequests.get(key);
+        const task=(this._parentSyncTail||Promise.resolve()).catch(()=>{}).then(()=>{
+            if(this.currentSubject!==subject)return false;
+            return this._syncParentOnce(parentToken,subject);
+        }).finally(()=>this._parentRequests.delete(key));
+        this._parentSyncTail=task;this._parentRequests.set(key,task);return task;
+    },
+    async _syncParentOnce(parentToken, subject) {
         if (!parentToken) {
             this._setError('Veli baglantisi eksik.');
             return false;
@@ -742,11 +754,13 @@ const ClassLogData = {
                 this._setError('Veli verileri yuklenemedi.', error || data);
                 return false;
             }
+            if(this.currentSubject!==subject)return false;
             this.parentToken = parentToken;
             this._applyViewPayload(data);
-            await this._loadParentNoticeByToken(parentToken);
-            await this._loadParentTickerByToken(parentToken);
+            if(!Object.hasOwn(data, 'parent_notice'))await this._loadParentNoticeByToken(parentToken);
+            if(!Object.hasOwn(data, 'parent_ticker'))await this._loadParentTickerByToken(parentToken);
             await this.loadHomeworkDescriptions(parentToken);
+            if(this.currentSubject!==subject)return false;
             this._applySyncMeta(data, 'parent');
             this._clearError();
             return true;
@@ -1006,8 +1020,8 @@ const ClassLogData = {
     },
 
     getStudents() { return _cloneData(this.students) || []; },
-    getRecords() { return _cloneData(this.records) || {}; },
-    getClassRecords() { return _cloneData(this.classRecords) || {}; },
+    getRecords() { return ClassLogMarkQueue.overlay('records', this.records); },
+    getClassRecords() { return ClassLogMarkQueue.overlay('classRecords', this.classRecords); },
     getNotes() { return _cloneData(this.notes) || {}; },
     getSyncMeta() { return _cloneData(this.syncMeta) || {}; },
 
@@ -1018,19 +1032,8 @@ const ClassLogData = {
         return ok;
     },
 
-    async saveRecords(records, payload = {}) {
-        this.records = this._sanitizeStatusMap(records, 'homework');
-        const ok = await this._pushRecords();
-        if (ok) await this._afterWrite([this._dbId()], this.currentClass, payload);
-        return ok;
-    },
-
-    async saveClassRecords(classRecords, payload = {}) {
-        this.classRecords = this._sanitizeStatusMap(classRecords, 'class');
-        const ok = await this._pushClassRecords();
-        if (ok) await this._afterWrite([this._dbId()], this.currentClass, payload);
-        return ok;
-    },
+    saveRecords(records, payload = {}) { return ClassLogMarkQueue.add('records', records, payload); },
+    saveClassRecords(records, payload = {}) { return ClassLogMarkQueue.add('classRecords', records, payload); },
 
     async saveNotes(notes) {
         this.notes = this._sanitizeNotes(notes);
@@ -1109,3 +1112,30 @@ const ClassLogData = {
         return `${ac} Egitim Ogretim Yili ${t}`;
     }
 };
+
+// Serial, context-bound writes. Failed heads stay queued until explicit retry.
+const ClassLogMarkQueue = (() => {
+ const pending=[],history=[];let timer=null,running=false;let listener=()=>{};
+ const state=()=>({pending:pending.length,error:pending.some(o=>o.status==='Kayıt hatası'),history:history.map(o=>({...o,patch:undefined,token:undefined}))});
+ const emit=()=>listener(state());
+ function patch(target,op){for(const [name,value] of Object.entries(op.patch)){target[op.date] ||= {};if(value===undefined)delete target[op.date][name];else target[op.date][name]=_cloneData(value);if(!Object.keys(target[op.date]).length)delete target[op.date];}return target;}
+ function overlay(kind,base){const out=_cloneData(base)||{};pending.filter(o=>o.id===ClassLogData._dbId()&&o.kind===kind).forEach(o=>patch(out,o));return out;}
+ async function drain(){if(running||!pending.length||pending[0].status==='Kayıt hatası')return;running=true;const op=pending[0];op.status='Kaydediliyor';emit();
+ try{
+ const {data:view,error:readError}=await _supabase.rpc('cl_get_teacher_view',{p_token:op.token,p_class_name:op.cls,p_subject_id:op.subj,p_term_id:op.term});
+ if(readError||!view?.ok)throw readError||new Error('Kayıt okunamadı');
+ const homework=_cloneData(view.records)||{},participation=_cloneData(view.classRecords)||{};patch(op.kind==='records'?homework:participation,op);
+ const {data,error}=await _supabase.rpc('cl_save_records',{p_token:op.token,p_id:op.id,p_records:homework,p_class_records:participation});
+ if(error||data!==true)throw error||new Error('Kayıt onaylanmadı');
+ if(ClassLogData._dbId()===op.id){ClassLogData.records=homework;ClassLogData.classRecords=participation;}
+ pending.shift();ClassLogData._clearError();op.status='Kaydedildi';op.resolve(true);emit();
+ void ClassLogData._afterWrite([op.id],op.cls,{date:op.date,view:op.kind==='records'?'homework':'class',students:Object.keys(op.patch),subjectId:op.subj}).catch(()=>{});
+ }catch(error){op.status='Kayıt hatası';ClassLogData._setError('İşaretleme kaydedilemedi.',error);emit();}
+ finally{running=false;if(pending.length&&pending[0].status!=='Kayıt hatası')void drain();}
+ }
+ return {state,overlay,subscribe(fn){listener=fn;},retry(){pending.filter(o=>o.status==='Kayıt hatası').forEach(o=>o.status='Bekliyor');emit();void drain();},add(kind,records,payload){
+ const op={id:ClassLogData._dbId(),cls:ClassLogData.currentClass,subj:ClassLogData.currentSubject,term:ClassLogData._activeTid(),token:ClassLogAuth.getSessionToken(),date:payload.date,kind,patch:{},student:(payload.students||[]).join(', '),time:new Date().toLocaleTimeString('tr-TR'),status:'Bekliyor'};
+ for(const name of payload.students||[])op.patch[name]=_cloneData(records[payload.date]?.[name]);
+ const promise=new Promise(resolve=>op.resolve=resolve);pending.push(op);history.unshift(op);history.splice(5);emit();clearTimeout(timer);timer=setTimeout(drain,125);return promise;
+ }};
+})();

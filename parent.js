@@ -135,10 +135,20 @@ async function syncParentState() {
 }
 
 let parentLastStateHash = '';
+let parentRefreshPending=false,parentEventTimer=null;
+const parentChannelHealth={subject:false,global:false};
+function queueParentRefresh(){clearTimeout(parentEventTimer);parentEventTimer=setTimeout(()=>{if(!document.hidden)void refreshParentView(true);else parentRefreshPending=true;},100);}
+function scheduleParentPoll(){
+ clearTimeout(parentPollTimer);parentPollTimer=null;
+ if(document.hidden)return;
+ parentPollTimer=setTimeout(async()=>{await refreshParentView();scheduleParentPoll();},Object.values(parentChannelHealth).every(Boolean)?30000:3000);
+}
+function parentChannelStatus(key,status){parentChannelHealth[key]=status==='SUBSCRIBED';scheduleParentPoll();if(status==='SUBSCRIBED')queueParentRefresh();}
+
 
 async function refreshParentView(force = false) {
     const now = Date.now();
-    if (parentRefreshInFlight) return false;
+    if (parentRefreshInFlight) { parentRefreshPending=true; return false; }
     if (!force && now - lastParentRefreshAt < 1200) return false;
 
     parentRefreshInFlight = true;
@@ -184,6 +194,7 @@ async function refreshParentView(force = false) {
         return false;
     } finally {
         parentRefreshInFlight = false;
+        if(parentRefreshPending&&!document.hidden){parentRefreshPending=false;queueParentRefresh();}
     }
 }
 
@@ -967,42 +978,42 @@ function subscribeRealtime() {
     }
     if (!currentParentToken) return;
 
-    const handler = async () => { await refreshParentView(true); };
+    parentChannelHealth.subject=false;parentChannelHealth.global=false;
+    const handler = queueParentRefresh;
 
     parentSubjectChannel = _supabase
         .channel(_parentSyncChannelName(currentParentToken))
         .on('broadcast', { event: 'refresh' }, handler)
-        .subscribe();
+        .subscribe(status=>parentChannelStatus('subject',status));
 
     parentGlobalChannel = _supabase
         .channel(CLASSLOG_PARENT_GLOBAL_CHANNEL)
         .on('broadcast', { event: 'refresh' }, handler)
-        .subscribe();
+        .subscribe(status=>parentChannelStatus('global',status));
 
     parentLocalRealtimeCleanup = _listenLocalRealtime(CLASSLOG_LOCAL_PARENT_EVENT, payload => {
         if (!payload) return;
         const matchesToken = payload.parentToken && payload.parentToken === currentParentToken;
         const matchesClass = payload.className && payload.className === ClassLogData.currentClass;
         if (!payload.settings && !matchesToken && !matchesClass) return;
-        void refreshParentView(true);
+        queueParentRefresh();
     });
 
     window.addEventListener('focus', parentWindowFocusRefresh);
     document.addEventListener('visibilitychange', parentVisibilityRefresh);
     window.addEventListener('online', parentWindowFocusRefresh);
 
-    parentPollTimer = setInterval(() => {
-        if (document.hidden) return;
-        void refreshParentView();
-    }, 3000);
+    scheduleParentPoll();
 }
 
 function parentWindowFocusRefresh() {
-    void refreshParentView(true);
+    scheduleParentPoll();
+    if(!document.hidden)queueParentRefresh();
 }
 
 function parentVisibilityRefresh() {
-    if (document.visibilityState === 'visible') void refreshParentView(true);
+    scheduleParentPoll();
+    if (!document.hidden) {parentRefreshPending=false;void refreshParentView(true);}
 }
 
 function scheduleParentScrollHint() {
@@ -1211,4 +1222,23 @@ window.collapseStudentHistory = function(button) {
   if(next>=0&&next<active.length)window.switchSubjectParent(active[next].id);
  },{passive:true});
  strip.addEventListener('touchcancel',()=>{start=null;},{passive:true});
+})();
+
+// Overflow hint stays outside the scrolling strip so it remains at its right edge.
+(() => {
+ const strip=document.getElementById('subjectTabsParent');if(!strip)return;
+ const hint=document.createElement('button');hint.type='button';hint.className='subject-scroll-hint';hint.hidden=true;
+ hint.setAttribute('aria-label','Sağdaki dersleri göster');
+ hint.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>';
+ strip.parentElement.append(hint);
+ const update=()=>{
+  const remaining=strip.scrollWidth-strip.clientWidth-strip.scrollLeft;
+  hint.hidden=strip.clientWidth===0||remaining<=2;
+  hint.style.top=(strip.offsetTop+strip.offsetHeight/2)+'px';
+ };
+ hint.onclick=()=>strip.scrollBy({left:Math.max(100,strip.clientWidth*.65),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+ strip.addEventListener('scroll',update,{passive:true});
+ new ResizeObserver(update).observe(strip);
+ new MutationObserver(update).observe(strip,{childList:true,subtree:true,attributes:true});
+ update();
 })();

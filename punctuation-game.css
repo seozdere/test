@@ -47,7 +47,7 @@
 }
 @media(prefers-reduced-motion:reduce){:is(#punctuationDialog,#spellingDialog.punct-theme) *, .punct-art-marks{animation:none!important}}
 
-#toolsPanel #gamesSectionBody>.tool-punctuation{order:-1;position:relative;overflow:visible;border-color:#D9BC78;animation:game-gold-glow 3.8s ease-in-out infinite}
+#toolsPanel #gamesSectionBody>.tool-punctuation{order:-3;position:relative;overflow:visible;border-color:#DFB9C8;animation:none}
 :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-close{display:flex;align-items:center;justify-content:center;line-height:1;transform:none}
 :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-close svg{display:block;width:26px;height:26px;flex:none}
 .punct-intro{max-width:800px;background:transparent;border:0;padding:12px;animation:none}
@@ -197,4 +197,9 @@
  #spellingDialog.punct-theme #spellClose{width:40px;height:40px;top:8px;right:max(10px,env(safe-area-inset-right))}
  #spellingDialog.punct-theme .spell-logo{width:72px;height:48px}
  #spellingDialog.punct-theme .spell-remaining{margin-top:5px;font-size:.75rem}
+}
+
+@media(orientation:landscape) and (max-height:600px) and (max-width:1200px){
+ #punctuationDialog .punct-close{display:grid;place-items:center;width:40px;height:40px;min-width:40px;min-height:40px;padding:0;box-sizing:border-box;line-height:1;transform:none}
+ #punctuationDialog .punct-close svg{display:block;width:22px;height:22px;margin:0}
 }

@@ -134,3 +134,17 @@
 @media(max-width:640px){
  .parent-page .excel-header-inner:has(.subject-tabs-wrap > :nth-child(2)){row-gap:8px}
 }
+
+
+/* Only multi-subject phone portrait moves Games into the view row. */
+@media(max-width:640px) and (orientation:portrait){
+ .parent-page .portrait-multi-subject .excel-header-inner{padding:6px 0;row-gap:5px}
+ .parent-page .portrait-multi-subject .class-branding-row{min-height:0;padding-right:0}
+ .parent-page .portrait-multi-subject .header-right{gap:5px;width:100%}
+ .parent-page .portrait-multi-subject .view-toggle-wrap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:100%;box-sizing:border-box;gap:3px;padding:3px}
+ .parent-page .portrait-multi-subject .view-toggle-wrap>.view-toggle-btn{min-width:0;padding:5px 2px;font-size:.7rem}
+ .parent-page .portrait-multi-subject .view-toggle-wrap>.tools-shortcut{position:relative;inset:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:auto;min-width:0;height:auto;min-height:44px;margin:0;padding:5px 2px;border:0;background:transparent}
+ .parent-page .portrait-multi-subject .tools-shortcut>svg{width:24px;height:24px}
+ .parent-page .portrait-multi-subject .tools-shortcut-label{display:block;font-size:.7rem}
+ .parent-page .portrait-multi-subject .tools-new-ribbon{top:-7px;right:-3px;scale:.5;transform-origin:right top}
+}

@@ -1,73 +1,34 @@
 // NoTik — Service Worker
-const CACHE = 'classlog-v519';
+const CACHE = 'classlog-v546';
 const STATIC = [
-  './word-hunter.css?v=3',
-  './word-hunter-data.js?v=1',
-  './word-hunter-core.js?v=2',
-  './word-hunter.js?v=2',
-  './parent-mobile-header.css?v=18',
-  './parent-mobile-header.js?v=14',
+  './game-presentation.css?v=49',
+  './parent-games-loader.js?v=7',
+  './parent-mobile-header.css?v=20',
+  './parent-mobile-header.js?v=15',
   './assets/tool-backgrounds/timer.jpg',
   './assets/tool-backgrounds/student-picker.jpg',
   './assets/tool-backgrounds/grade-calculator.jpg',
-  './punctuation-game.css?v=17',
-  './punctuation-game-data.js?v=4',
-  './punctuation-game.js?v=15',
-  './game-presentation.js?v=1',
-  './game-presentation.css?v=47',
-  './assets/game-backgrounds/school-1.jpg',
-  './assets/game-backgrounds/school-2.jpg',
-  './assets/game-backgrounds/school-3.jpg',
-  './assets/game-backgrounds/school-4.jpg',
-  './assets/game-backgrounds/school-5.jpg',
-  './assets/game-backgrounds/school-6.jpg',
-  './assets/game-backgrounds/school-7.jpg',
 
-  './spelling-game.css?v=2',
-  './spelling-game-data.js?v=4',
-  './spelling-game.js?v=16',
   './',
   './index.html',
   './admin.html',
   './style.css',
-  './style.css?v=217',
+  './style.css?v=218',
   './data.js',
-  './data.js?v=17',
+  './data.js?v=19',
   './admin.js',
-  './admin.js?v=33',
-  './admin-layout.js?v=16',
-  './admin-layout.css?v=27',
+  './admin.js?v=39',
+  './admin-layout.js?v=21',
+  './admin-layout.css?v=42',
   './application-backup.js?v=1',
   './record-export.js?v=1',
   './parent.js',
-  './parent.js?v=100',
+  './parent.js?v=102',
   './tools-sections.js?v=2',
   './parent-recovery.js?v=1',
   './speech-topics.js?v=5',
   './grade-calculator.js?v=3',
   './student-picker.js?v=8',
-  './turkish-game-dictionary.js?v=4',
-  './word-market-data.js?v=1',
-  './secret-word-data.js?v=1',
-  './classroom-games.js?v=36',
-  './classroom-games.css?v=39',
-  './sentence-game-data.js?v=1',
-  './sentence-game.js?v=4',
-  './chess-game.js?v=4',
-  './chess-game.css?v=4',
-  './learning-games.css?v=7',
-  './millionaire-game.css?v=26',
-  './millionaire-game.js?v=16',
-  './millionaire-general-bank.js?v=2',
-  './millionaire-general2-bank.js?v=1',
-  './millionaire-turkish-bank.js?v=2',
-  './millionaire-turkish-docx-bank.js?v=2',
-  './millionaire-turkish-extra-bank.js?v=1',
-  './millionaire-turkish-sorular3-bank.js?v=2',
-  './millionaire-background.jpg',
-  './puzzle-core.js?v=1',
-  './learning-games.js?v=17',
-  './vendor/chess/chess.mjs',
   './pwa.js',
   './pwa.js?v=4',
   './manifest.json',
@@ -131,9 +92,14 @@ self.addEventListener('install', e => {
 
 self.addEventListener('activate', e => {
   e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    )
+    caches.keys().then(async keys => {
+      const current=await caches.open(CACHE);
+      for(const key of keys.filter(k=>k!==CACHE&&k.startsWith('classlog-'))){
+        const old=await caches.open(key);
+        for(const request of await old.keys())if(!await current.match(request))await current.put(request,await old.match(request));
+        await caches.delete(key);
+      }
+    })
   );
   self.clients.claim();
 });

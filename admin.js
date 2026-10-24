@@ -816,9 +816,22 @@ function formatClock(value) {
 
 function setBadgeState(element, text, state) {
     if (!element) return;
+    if (element === realtimeStatusBadge) {
+        element.dataset.fullStatus = text;
+        element.dataset.statusState = state;
+        if (text.startsWith('Canlı bağlantı:')) {
+            text = text.replace('Canlı bağlantı: canlı', 'Canlı').replace('Canlı bağlantı:', 'Canlı:');
+        }
+    }
     element.textContent = text;
     element.className = `status-pill ${state}`;
 }
+
+matchMedia('(min-width:1100px)').addEventListener('change', () => {
+    if (realtimeStatusBadge?.dataset.fullStatus) {
+        setBadgeState(realtimeStatusBadge, realtimeStatusBadge.dataset.fullStatus, realtimeStatusBadge.dataset.statusState);
+    }
+});
 
 function renderSyncMeta() {
     if (!syncMetaText) return;
@@ -826,10 +839,27 @@ function renderSyncMeta() {
     const syncAt = formatClock(meta.lastSyncAt);
     const serverAt = formatClock(meta.serverTs || meta.subjectUpdatedAt || meta.baseUpdatedAt);
     const source = meta.source === 'parent' ? 'veli' : meta.source === 'teacher' ? 'öğretmen' : 'istemci';
-    syncMetaText.textContent = `Son eşitleme: ${syncAt} · Sunucu güncellemesi: ${serverAt} · Kaynak: ${source}`;
+    const text = `Son eşitleme: ${syncAt} · Sunucu güncellemesi: ${serverAt} · Kaynak: ${source}`;
+    let track = syncMetaText.querySelector('.sync-meta-track');
+    if (!track) {
+        track = document.createElement('span');
+        track.className = 'sync-meta-track';
+        syncMetaText.replaceChildren(track);
+        const updateScroll = () => {
+            const distance = Math.max(0, track.scrollWidth - (syncMetaText.clientWidth - 16));
+            track.style.setProperty('--sync-scroll-distance', `${-distance}px`);
+            track.style.setProperty('--sync-scroll-duration', `${distance / 50 + 2.5}s`);
+            track.classList.toggle('is-scrolling', distance > 0);
+        };
+        new ResizeObserver(updateScroll).observe(syncMetaText);
+        new ResizeObserver(updateScroll).observe(track);
+    }
+    track.textContent = text;
+    syncMetaText.title = text;
 }
 
 function setSaveStatus(text, state, sticky = false) {
+    if(ClassLogMarkQueue.state().pending)return;
     setBadgeState(saveStatusBadge, text, state);
     if (_saveStatusTimer) {
         clearTimeout(_saveStatusTimer);
@@ -921,212 +951,21 @@ async function resyncAdminState() {
 }
 
 // ─── Ödev İşareti ─────────────────────────────────────────────────────────────
-window.setMark = async function(studentName, status) {
-    if (ClassLogData.viewingTermId !== null && ClassLogData.viewingTermId !== ClassLogData.activeTermId) {
-        setBadgeState(realtimeStatusBadge, 'Canlı bağlantı: arşiv modunda kapalı', 'status-muted');
-        return;
-    }
-    setSaveStatus('Kaydediliyor...', 'status-saving', true);
-    const date = currentDateInput.value;
-    const nextRecords = cloneDataValue(records) || {};
-    if (!nextRecords[date]) nextRecords[date] = {};
-    if (nextRecords[date][studentName] === status) delete nextRecords[date][studentName];
-    else nextRecords[date][studentName] = status;
-    if (!Object.keys(nextRecords[date]).length) delete nextRecords[date];
-    const newStatus = nextRecords[date] ? nextRecords[date][studentName] : undefined;
-    records = nextRecords;
-    _isApplyingLocalMark = true;
-    updateCardButtons(studentName, newStatus);
-    playCardAnimation(studentName, newStatus);
-    const ok = await ClassLogData.saveRecords(nextRecords, {
-        date,
-        view: 'homework',
-        students: [studentName]
-    });
-    if (!ok) {
-        _isApplyingLocalMark = false;
-        setSaveStatus('Kayıt hatası', 'status-error');
-        alert(`${getDataErrorMessage('Kayıt kaydedilemedi.')}\nVeri yeniden yükleniyor.`);
-        await resyncAdminState();
-        return;
-    }
-    records = ClassLogData.getRecords();
-    _isApplyingLocalMark = false;
-    renderSyncMeta();
-    setSaveStatus('Kaydedildi', 'status-ok');
-};
-
-// ─── Ders İçi İşareti ────────────────────────────────────────────────────────
-window.setClassMark = async function(studentName, status) {
-    if (ClassLogData.viewingTermId !== null && ClassLogData.viewingTermId !== ClassLogData.activeTermId) {
-        setBadgeState(realtimeStatusBadge, 'Canlı bağlantı: arşiv modunda kapalı', 'status-muted');
-        return;
-    }
-    setSaveStatus('Kaydediliyor...', 'status-saving', true);
-    const date = currentDateInput.value;
-    const nextClassRecords = cloneDataValue(classRecords) || {};
-    if (!nextClassRecords[date]) nextClassRecords[date] = {};
-    const nextEntry = applyClassMarkDelta(nextClassRecords[date][studentName], status);
-    if (nextEntry) nextClassRecords[date][studentName] = nextEntry;
-    else delete nextClassRecords[date][studentName];
-    if (!Object.keys(nextClassRecords[date]).length) delete nextClassRecords[date];
-    const newStatus = nextClassRecords[date] ? nextClassRecords[date][studentName] : undefined;
-    classRecords = nextClassRecords;
-    _isApplyingLocalMark = true;
-    updateCardButtons(studentName, newStatus);
-    playCardAnimation(studentName, status);
-    const ok = await ClassLogData.saveClassRecords(nextClassRecords, {
-        date,
-        view: 'class',
-        students: [studentName]
-    });
-    if (!ok) {
-        _isApplyingLocalMark = false;
-        setSaveStatus('Kayıt hatası', 'status-error');
-        alert(`${getDataErrorMessage('Kayıt kaydedilemedi.')}\nVeri yeniden yükleniyor.`);
-        await resyncAdminState();
-        return;
-    }
-    classRecords = ClassLogData.getClassRecords();
-    _isApplyingLocalMark = false;
-    renderSyncMeta();
-    setSaveStatus('Kaydedildi', 'status-ok');
-};
-
-async function applyBulkStatus(status) {
-    if (!students.length) return;
-    if (ClassLogData.viewingTermId !== null && ClassLogData.viewingTermId !== ClassLogData.activeTermId) {
-        setBadgeState(realtimeStatusBadge, 'Canlı bağlantı: arşiv modunda kapalı', 'status-muted');
-        return;
-    }
-
-    const date = currentDateInput.value;
-    setSaveStatus('Toplu kayıt yapılıyor...', 'status-saving', true);
-
-    if (adminTab === 'homework') {
-        const nextRecords = cloneDataValue(records) || {};
-        nextRecords[date] = nextRecords[date] || {};
-        students.forEach(studentName => {
-            nextRecords[date][studentName] = status;
-        });
-        records = nextRecords;
-        _isApplyingLocalMark = true;
-        renderStudents();
-        renderMarkingInfo();
-        const ok = await ClassLogData.saveRecords(nextRecords, {
-            date,
-            view: 'homework',
-            students: [...students]
-        });
-        if (!ok) {
-            _isApplyingLocalMark = false;
-            setSaveStatus('Kayıt hatası', 'status-error');
-            alert(`${getDataErrorMessage('Toplu ödev kaydı kaydedilemedi.')}\nVeri yeniden yükleniyor.`);
-            await resyncAdminState();
-            return;
-        }
-        records = ClassLogData.getRecords();
-    } else {
-        const nextClassRecords = cloneDataValue(classRecords) || {};
-        nextClassRecords[date] = nextClassRecords[date] || {};
-        students.forEach(studentName => {
-            const nextEntry = applyClassMarkDelta(nextClassRecords[date][studentName], status);
-            if (nextEntry) nextClassRecords[date][studentName] = nextEntry;
-            else delete nextClassRecords[date][studentName];
-        });
-        if (!Object.keys(nextClassRecords[date]).length) delete nextClassRecords[date];
-        classRecords = nextClassRecords;
-        _isApplyingLocalMark = true;
-        renderStudents();
-        renderMarkingInfo();
-        const ok = await ClassLogData.saveClassRecords(nextClassRecords, {
-            date,
-            view: 'class',
-            students: [...students]
-        });
-        if (!ok) {
-            _isApplyingLocalMark = false;
-            setSaveStatus('Kayıt hatası', 'status-error');
-            alert(`${getDataErrorMessage('Toplu ders içi kaydı kaydedilemedi.')}\nVeri yeniden yükleniyor.`);
-            await resyncAdminState();
-            return;
-        }
-        classRecords = ClassLogData.getClassRecords();
-    }
-
-    _isApplyingLocalMark = false;
-    renderStudents();
-    renderMarkingInfo();
-    renderSyncMeta();
-    setSaveStatus(`Tüm sınıfa ${status === 1 ? '+' : '−'} uygulandı`, 'status-ok');
+function enqueueMarks(kind,names,status,bulk=false,clear=false){
+ if(!names.length)return;
+ if(ClassLogData.viewingTermId!==null&&ClassLogData.viewingTermId!==ClassLogData.activeTermId)return;
+ const date=currentDateInput.value,next=cloneDataValue(kind==='records'?records:classRecords)||{};next[date] ||= {};
+ names.forEach(name=>{if(clear)delete next[date][name];else if(kind==='classRecords'){const value=applyClassMarkDelta(next[date][name],status);if(value)next[date][name]=value;else delete next[date][name];}else if(!bulk&&next[date][name]===status)delete next[date][name];else next[date][name]=status;});
+ if(!Object.keys(next[date]).length)delete next[date];
+ if(kind==='records')records=next;else classRecords=next;
+ if(bulk||clear)renderStudents();else {updateCardButtons(names[0],next[date]?.[names[0]]);playCardAnimation(names[0],status);}
+ filterStudentList();
+ void ClassLogData[kind==='records'?'saveRecords':'saveClassRecords'](next,{date,students:names});
 }
-
-window.bulkSetMark = function(status) {
-    void applyBulkStatus(status);
-};
-
-async function applyBulkClear() {
-    if (!students.length) return;
-    if (ClassLogData.viewingTermId !== null && ClassLogData.viewingTermId !== ClassLogData.activeTermId) {
-        setBadgeState(realtimeStatusBadge, 'Canlı bağlantı: arşiv modunda kapalı', 'status-muted');
-        return;
-    }
-
-    const date = currentDateInput.value;
-    setSaveStatus('Temizleniyor...', 'status-saving', true);
-
-    if (adminTab === 'homework') {
-        const nextRecords = cloneDataValue(records) || {};
-        delete nextRecords[date];
-        records = nextRecords;
-        _isApplyingLocalMark = true;
-        renderStudents();
-        renderMarkingInfo();
-        const ok = await ClassLogData.saveRecords(nextRecords, {
-            date,
-            view: 'homework',
-            students: [...students]
-        });
-        if (!ok) {
-            _isApplyingLocalMark = false;
-            setSaveStatus('Kayıt hatası', 'status-error');
-            alert(`${getDataErrorMessage('Seçili günün ödev kayıtları temizlenemedi.')}\nVeri yeniden yükleniyor.`);
-            await resyncAdminState();
-            return;
-        }
-        records = ClassLogData.getRecords();
-    } else {
-        const nextClassRecords = cloneDataValue(classRecords) || {};
-        delete nextClassRecords[date];
-        classRecords = nextClassRecords;
-        _isApplyingLocalMark = true;
-        renderStudents();
-        renderMarkingInfo();
-        const ok = await ClassLogData.saveClassRecords(nextClassRecords, {
-            date,
-            view: 'class',
-            students: [...students]
-        });
-        if (!ok) {
-            _isApplyingLocalMark = false;
-            setSaveStatus('Kayıt hatası', 'status-error');
-            alert(`${getDataErrorMessage('Seçili günün ders içi kayıtları temizlenemedi.')}\nVeri yeniden yükleniyor.`);
-            await resyncAdminState();
-            return;
-        }
-        classRecords = ClassLogData.getClassRecords();
-    }
-
-    _isApplyingLocalMark = false;
-    renderStudents();
-    renderMarkingInfo();
-    renderSyncMeta();
-    setSaveStatus('Seçili gün sıfırlandı', 'status-ok');
-}
-
-window.bulkClearMarks = function() {
-    void applyBulkClear();
-};
+window.setMark=(name,status)=>enqueueMarks('records',[name],status);
+window.setClassMark=(name,status)=>enqueueMarks('classRecords',[name],status);
+window.bulkSetMark=status=>enqueueMarks(adminTab==='homework'?'records':'classRecords',[...students],status,true);
+window.bulkClearMarks=()=>enqueueMarks(adminTab==='homework'?'records':'classRecords',[...students],null,true,true);
 
 function playCardAnimation(studentName, newStatus) {
     if (newStatus !== 1 && newStatus !== -1) return;
@@ -1527,7 +1366,7 @@ classPickerButton.onclick = () => {
         if (!groups.has(grade)) groups.set(grade, []);
         groups.get(grade).push(option.value);
     });
-    classPickerDialog.innerHTML = `<div class="class-picker-heading"><h2 id="classPickerTitle">Sınıf Seç</h2><button type="button" data-close aria-label="Kapat">×</button></div>`
+    classPickerDialog.innerHTML = `<div class="class-picker-heading"><h2 id="classPickerTitle">Sınıf Seç</h2><button type="button" data-close aria-label="Kapat"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>`
         + [...groups].sort(([a], [b]) => a.localeCompare(b, 'tr', { numeric:true })).map(([grade, classes]) =>
             `<section><h3>${_htmlEncode(grade)}${grade === 'Diğer' ? '' : '. Sınıflar'}</h3><div class="class-picker-grid">${classes.map(name =>
                 `<button type="button" data-class="${_htmlEncode(name)}" aria-pressed="${name === classSelector.value}">${_htmlEncode(name)}</button>`).join('')}</div></section>`).join('');
@@ -2424,3 +2263,43 @@ document.getElementById('renameStudentBtn').onclick=async()=>{
  }catch(_){status.textContent='Sonuç doğrulanamadı. Tekrar denemeden önce listeyi yenileyin.';}
  finally{button.disabled=false;saveStudentsBtn.disabled=false;}
 };
+
+// Memory-only save history. Native popover provides outside-click and Escape dismissal.
+(() => {
+ const badge=saveStatusBadge,pop=document.createElement('div');pop.id='markSaveHistory';pop.setAttribute('popover','auto');pop.style.cssText='position:fixed;inset:auto;margin:0;width:min(340px,calc(100vw - 32px));padding:14px;border:1px solid #536080;border-radius:14px;background:#202b42;color:#eef2ff;font:13px "Plus Jakarta Sans",sans-serif;z-index:9999';document.body.append(pop);
+ badge.tabIndex=0;badge.setAttribute('role','button');badge.setAttribute('aria-label','Son kayıt işlemleri');badge.setAttribute('aria-controls',pop.id);
+ function render(){pop.replaceChildren();const title=document.createElement('strong');title.textContent='Son 5 işlem';pop.append(title);const state=ClassLogMarkQueue.state();state.history.forEach(op=>{const row=document.createElement('p');row.style.cssText='margin:10px 0 0;padding-top:10px;border-top:1px solid #35415b;line-height:1.6';row.textContent=op.student+' · '+(op.kind==='records'?'Ödev':'Ders içi')+' · '+op.time+' · '+op.status;pop.append(row);});if(state.error){const retry=document.createElement('button');retry.textContent='Tekrar dene';retry.className='tbtn';retry.onclick=()=>ClassLogMarkQueue.retry();pop.append(retry);}}
+ function positionHistory(){
+  if(!pop.matches(':popover-open'))return;
+  const anchor=badge.closest('.admin-status-strip')||badge;
+  const rect=anchor.getBoundingClientRect();
+  const width=Math.min(340,rect.width,document.documentElement.clientWidth-24);
+  pop.style.width=width+'px';
+  pop.style.left=Math.max(12,Math.min(rect.left,document.documentElement.clientWidth-width-12))+'px';
+  const top=Math.max(12,rect.bottom+8);
+  if(top>=window.innerHeight-32){pop.hidePopover();return;}
+  pop.style.top=top+'px';
+  pop.style.maxHeight=Math.max(0,window.innerHeight-top-12)+'px';
+ }
+ window.addEventListener('resize',positionHistory,{passive:true});
+ document.addEventListener('scroll',event=>{if(!pop.contains(event.target))positionHistory();},{passive:true,capture:true});
+ function toggle(){render();pop.togglePopover();positionHistory();}badge.onclick=toggle;badge.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}};
+ pop.addEventListener('toggle',()=>badge.setAttribute('aria-expanded',String(pop.matches(':popover-open'))));
+ badge.setAttribute('aria-expanded','false');
+ badge.style.cursor='pointer';
+ badge.setAttribute('aria-live','polite');
+ pop.setAttribute('aria-label','Son kayıt işlemleri');
+ pop.style.maxHeight='calc(100dvh - 100px)';
+ pop.style.overflowY='auto';
+ pop.style.boxSizing='border-box';
+ pop.style.overflowWrap='anywhere';
+ ClassLogMarkQueue.subscribe(state=>{
+  const wasPending=_isApplyingLocalMark;
+  clearTimeout(_saveStatusTimer);_saveStatusTimer=null;
+  _isApplyingLocalMark=state.pending>0;
+  setBadgeState(badge,state.error?'Kayıt hatası':state.pending?'Kaydediliyor ('+state.pending+')':'Kaydedildi',state.error?'status-error':state.pending?'status-saving':'status-ok');
+  if(pop.matches(':popover-open')){render();positionHistory();}
+  // Reconcile remote events deferred while local changes were pending.
+  if(wasPending&&!state.pending)void resyncAdminState();
+ });
+})();
