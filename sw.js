@@ -1,9 +1,9 @@
 // NoTik — Service Worker
-const CACHE = 'classlog-v559';
+const CACHE = 'classlog-v560';
 const STATIC = [
-  "./figures-game.css?v=3", "./figures-game-data.js?v=2", "./figures-game.js?v=1", "./punctuation-game.css?v=21", "./punctuation-game-data.js?v=4", "./punctuation-game.js?v=17",
+  "./figures-game.css?v=4", "./figures-game-data.js?v=2", "./figures-game.js?v=2", "./punctuation-game.css?v=21", "./punctuation-game-data.js?v=4", "./punctuation-game.js?v=18",
   './game-presentation.css?v=49',
-  './parent-games-loader.js?v=9',
+  './parent-games-loader.js?v=10',
   './parent-mobile-header.css?v=20',
   './parent-mobile-header.js?v=15',
   './assets/tool-backgrounds/timer.jpg',
