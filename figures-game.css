@@ -1,0 +1,93 @@
+#toolsPanel #gamesSectionBody>.tool-figures{order:-5;background:#F7EDD5;border-color:#D9BF7F;box-shadow:0 0 18px #E4BD6355;position:relative;overflow:visible}
+.figures-compass{transform-origin:60px 46px;animation:figures-explore 3s ease-in-out infinite}
+@keyframes figures-explore{50%{transform:rotate(12deg) scale(1.06)}}
+#figuresDialog#figuresDialog .punct-options{grid-template-columns:repeat(2,minmax(0,1fr))}
+#figuresDialog#figuresDialog .punct-options button{font-size:clamp(.85rem,1.5vw,1.2rem);padding:10px;min-width:0;touch-action:none}
+#figuresDialog#figuresDialog .punct-sentence-text{font-size:clamp(1.2rem,2.2vw,1.9rem);line-height:1.5}
+#figuresDialog#figuresDialog .figures-prompt{font-size:.9rem;margin:0 0 12px;color:#78648C}
+#figuresDialog#figuresDialog .punct-gap[hidden]{display:none}
+@media(orientation:landscape) and (max-height:600px){#figuresDialog#figuresDialog .punct-options button{min-height:34px;padding:5px;font-size:.8rem}#figuresDialog#figuresDialog .punct-sentence-text{font-size:1rem;line-height:1.3}#figuresDialog#figuresDialog .figures-prompt{font-size:.7rem;margin:0 0 5px}}
+@media(prefers-reduced-motion:reduce){.figures-compass{animation:none}}
+
+#figuresDialog#figuresDialog .punct-player{min-width:0}
+#figuresDialog#figuresDialog .punct-sentence{min-width:0;min-height:250px}
+#figuresDialog#figuresDialog .punct-solution{flex-wrap:wrap;gap:6px}
+#figuresDialog#figuresDialog .punct-solution button{padding:8px;min-width:0;font-size:.8rem}
+#figuresDialog#figuresDialog .punct-feedback{height:60px;min-height:60px;padding-top:5px}
+@media(orientation:landscape) and (max-height:600px){
+ #figuresDialog#figuresDialog{padding:8px 12px}
+ #figuresDialog#figuresDialog .punct-header{margin:0 auto 5px;gap:10px}
+ #figuresDialog#figuresDialog .punct-header h2{font-size:1.1rem;margin:0}
+ #figuresDialog#figuresDialog .punct-player{padding:8px}
+ #figuresDialog#figuresDialog .punct-sentence{min-height:135px;padding:8px}
+ #figuresDialog#figuresDialog .punct-feedback{height:28px;min-height:28px;font-size:.7rem}
+ #figuresDialog#figuresDialog .punct-correction{padding:3px;font-size:.7rem}
+ #figuresDialog#figuresDialog .punct-options{gap:6px;margin-top:6px}
+ #figuresDialog#figuresDialog .punct-pass{margin:5px auto 0;padding:3px 10px;min-height:28px}
+ #figuresDialog#figuresDialog .punct-footer{margin-top:5px}
+ #figuresDialog#figuresDialog .punct-restart{min-height:28px;padding:4px 12px;font-size:.8rem}
+}
+#figuresDialog#figuresDialog .punct-options button{overflow-wrap:anywhere}
+#figuresDialog#figuresDialog .punct-solution>*{max-width:100%;box-sizing:border-box}
+#figuresDialog#figuresDialog .punct-next{white-space:normal}
+@media(max-width:650px){#figuresDialog#figuresDialog .punct-arena:not(.punct-solo){grid-template-columns:minmax(0,1fr)} }
+@media(orientation:landscape) and (max-height:600px){
+ #figuresDialog#figuresDialog .punct-arena:not(.punct-solo){grid-template-columns:repeat(2,minmax(0,1fr))}
+ #figuresDialog#figuresDialog .punct-player-head{margin-bottom:3px}
+ #figuresDialog#figuresDialog .punct-progress{margin:3px}
+ #figuresDialog#figuresDialog .punct-actions{margin:0}
+ #figuresDialog#figuresDialog .punct-sentence{min-height:110px}
+ #figuresDialog#figuresDialog .punct-solution{margin-top:0;min-height:28px}
+ #figuresDialog#figuresDialog .punct-solution button{height:28px;min-height:28px;padding:2px 8px}
+ #figuresDialog#figuresDialog .punct-solution svg{width:20px;height:20px}
+ #figuresDialog#figuresDialog .punct-clock{padding:4px 10px;font-size:1rem}
+}
+@media(orientation:landscape) and (max-height:600px){#figuresDialog#figuresDialog{padding:4px 12px}#figuresDialog#figuresDialog .punct-footer{margin:0 auto}#figuresDialog#figuresDialog .punct-sentence{padding:5px 8px}}
+/* Keep expanded explanations in normal flow and both players in equal columns. */
+#figuresDialog#figuresDialog .punct-close{width:44px;height:44px;min-width:44px;min-height:44px;max-width:44px;max-height:44px;aspect-ratio:1;border-radius:50%;padding:0;display:grid;place-items:center}
+#figuresDialog#figuresDialog .punct-arena:not(.punct-solo){grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}
+#figuresDialog#figuresDialog .punct-solution{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);height:auto;min-height:0;gap:10px;margin-top:12px}
+#figuresDialog#figuresDialog .punct-solution-toggle{grid-column:1;grid-row:1}
+#figuresDialog#figuresDialog .punct-next{grid-column:2;grid-row:1}
+#figuresDialog#figuresDialog .punct-solution-detail{position:static;grid-column:1/-1;grid-row:2;height:auto;min-width:0;line-height:1.5;overflow-wrap:anywhere;margin:0}
+#figuresDialog#figuresDialog .punct-feedback{height:auto;min-height:60px;flex-shrink:0}
+@media(max-width:650px){
+ #figuresDialog#figuresDialog{padding:60px 6px 16px}
+ #figuresDialog#figuresDialog .punct-arena{gap:6px}
+ #figuresDialog#figuresDialog .punct-player{padding:10px 6px;min-width:0}
+ #figuresDialog#figuresDialog .punct-sentence{padding:10px 6px;min-height:240px}
+ #figuresDialog#figuresDialog .punct-sentence-text{font-size:1rem;line-height:1.5}
+ #figuresDialog#figuresDialog .figures-prompt{font-size:.75rem;line-height:1.4}
+ #figuresDialog#figuresDialog .punct-options{gap:6px}
+ #figuresDialog#figuresDialog .punct-options button{padding:6px 3px;font-size:.72rem;min-height:54px;line-height:1.3}
+ #figuresDialog#figuresDialog .punct-solution{grid-template-columns:minmax(0,1fr);gap:8px}
+ #figuresDialog#figuresDialog .punct-next{grid-column:1;grid-row:2}
+ #figuresDialog#figuresDialog .punct-solution-detail{grid-row:3;padding:8px;font-size:.8rem}
+ #figuresDialog#figuresDialog .punct-solution button{height:auto;min-height:40px;max-width:100%;font-size:.75rem;padding:5px}
+ #figuresDialog#figuresDialog .punct-solution svg{width:22px;height:22px;flex-shrink:0}
+ #figuresDialog#figuresDialog .punct-correction{font-size:.78rem;padding:6px;overflow-wrap:anywhere}
+}
+@media(orientation:landscape) and (max-height:600px){
+ #figuresDialog#figuresDialog .punct-header{padding-right:48px}
+ #figuresDialog#figuresDialog .punct-solution button{height:auto;min-height:30px}
+ #figuresDialog#figuresDialog .punct-sentence{height:auto}
+ #figuresDialog#figuresDialog .punct-feedback{height:auto;min-height:28px}
+ #figuresDialog#figuresDialog .punct-solution-detail{padding:8px;font-size:.8rem}
+}
+
+/* Shared ribbon placement applies at every viewport size. */
+#toolsPanel #gamesSectionBody .tool-card .game-new-ribbon{right:2px;top:-18px}
+@media(max-width:650px) and (orientation:portrait){
+ #figuresDialog#figuresDialog .figures-prompt{font-size:.95rem;line-height:1.5;margin-bottom:14px}
+ #figuresDialog#figuresDialog .punct-sentence-text{font-size:1.18rem;line-height:1.6}
+ #figuresDialog#figuresDialog .punct-solo .figures-prompt{font-size:1.05rem}
+ #figuresDialog#figuresDialog .punct-solo .punct-sentence-text{font-size:1.35rem}
+ #figuresDialog#figuresDialog .punct-solution{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-items:stretch}
+ #figuresDialog#figuresDialog .punct-solution-toggle{grid-column:1;grid-row:1;justify-self:stretch}
+ #figuresDialog#figuresDialog .punct-next{grid-column:2;grid-row:1;justify-self:stretch}
+ #figuresDialog#figuresDialog .punct-solution-detail{grid-column:1/-1;grid-row:2}
+ #figuresDialog#figuresDialog .punct-solution button{width:100%;height:auto;min-height:44px;display:flex;align-items:center;justify-content:center;gap:3px;transform:none;white-space:normal;line-height:1.3}
+ #figuresDialog#figuresDialog .punct-arena:not(.punct-solo) .punct-solution button{flex-direction:column;font-size:.72rem}
+ #figuresDialog#figuresDialog .punct-sentence{min-height:0}
+ #figuresDialog#figuresDialog .punct-feedback{min-height:44px}
+}

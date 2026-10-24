@@ -386,6 +386,14 @@ body.admin-page,body.admin-page :is(button,input,textarea,select,.s-name,.modal-
 #adminMenuSheet .menu-category[open]>.menu-category-summary{margin-bottom:10px}
 #adminMenuSheet .menu-category[open]>.menu-category-summary svg{transform:rotate(180deg)}
 #adminMenuSheet .menu-category-summary:focus-visible{outline:2px solid #a6a9ff;outline-offset:2px}
+@media(max-width:640px){
+ #adminMenuSheet>header{margin:0;padding:0 12px 8px}
+ #adminMenuSheet .menu-body{width:100%;padding:0 0 18px;overflow-x:hidden}
+ #adminMenuSheet .menu-body>.announcement-details{width:100%;box-sizing:border-box;margin:0 0 8px;padding:0;border:1px solid #415071;border-radius:13px;background:#293650;overflow:hidden}
+ #adminMenuSheet .menu-body>.announcement-details>.announcement-summary{width:100%;min-height:46px;padding:13px 16px;border:0;background:transparent;color:var(--a-text);font-size:.85rem;font-weight:700}
+ #adminMenuSheet .menu-body>.announcement-details>.announcement-summary>span{display:inline-flex;align-items:center;gap:3px}
+ #adminMenuSheet .admin-management-content{padding:12px 12px 14px;box-sizing:border-box}
+}
 
 .admin-page .date-today{background:#293650;border:1px solid #415071;border-radius:11px;color:#dce5f7}
 .admin-page .date-today:hover{background:#354563}
@@ -468,3 +476,44 @@ body.admin-page,body.admin-page :is(button,input,textarea,select,.s-name,.modal-
  .admin-page .student-card{height:auto;min-height:62px}
  .admin-page .student-card .s-name{font-size:.95rem}
 }
+
+/* Match class-picker lettering and scale marking controls with the cards. */
+.admin-page .student-card .s-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;letter-spacing:.1px;line-height:1.4}
+.admin-page .student-card .controls{align-items:center;gap:4px}
+.admin-page .student-card .controls .btn{height:40px;min-height:40px;padding:0;display:flex;align-items:center;justify-content:center;line-height:1;font-size:1.1rem;box-sizing:border-box;border-radius:10px}
+.admin-page .student-card .note-btn{height:40px;min-height:40px;display:grid;place-items:center;padding:0;box-sizing:border-box}
+.admin-page .student-card .note-btn svg{width:22px;height:22px;margin:0}
+@media(max-width:640px){
+ .admin-page .student-card .controls .btn{width:clamp(32px,8.5vw,38px)!important;min-width:32px;flex:none}
+ .admin-page .student-card .note-btn{width:28px;flex:0 0 28px}
+}
+@media(min-width:1100px){
+ .admin-page .student-card .controls .btn{width:38px!important;min-width:38px;flex:none}
+ .admin-page .student-card .note-btn{width:32px;flex:0 0 32px}
+}
+
+/* Short filter label leaves the remaining width to student search. */
+.admin-page .layout-search-toolbar{grid-template-columns:minmax(0,1fr) max-content auto}
+.admin-page .layout-search-toolbar #homeworkCheckBar{width:auto;padding-left:10px;padding-right:10px}
+.admin-page .layout-search-toolbar #homeworkCheckBar label{display:flex;align-items:center;gap:6px;white-space:nowrap}
+@media(min-width:1100px){
+ .admin-page .layout-search-toolbar{grid-template-columns:minmax(0,1fr) max-content}
+}
+
+/* Match search, filter and bulk-toggle edges. */
+.admin-page .layout-search-toolbar #homeworkCheckBar{border-radius:12px}
+.admin-page .layout-search-toolbar .bulk-toggle{align-self:stretch;height:auto;min-height:44px;width:44px;margin:0;padding:6px;box-sizing:border-box;border-radius:12px}
+.admin-page .layout-search-toolbar .bulk-toggle svg{display:block;width:28px;height:30px;margin:0}
+
+/* Mobile marking stays individual; reclaim the bulk-control column for search. */
+@media(max-width:1099px){
+ .admin-page .layout-search-toolbar .bulk-toggle,
+ .admin-page .bulk-action-row{display:none!important}
+ .admin-page .layout-search-toolbar{grid-template-columns:minmax(0,1fr) max-content}
+ .admin-page .layout-search-toolbar:has(#homeworkCheckBar[hidden]){grid-template-columns:minmax(0,1fr)}
+}
+
+/* A compact, vertically balanced explanation field. */
+.admin-page .layout-date-card .date-selector .homework-preview{display:flex;align-items:center;gap:8px;width:100%;min-height:36px;box-sizing:border-box;margin:0;padding:7px 10px;border:1px solid #35415b;border-radius:9px;background:#1e2940;line-height:20px}
+.admin-page .layout-date-card .homework-preview .homework-edit-icon{flex-shrink:0;width:19px;height:19px;display:block}
+.admin-page .layout-date-card .homework-description-editor.is-editing .homework-preview{display:none}

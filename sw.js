@@ -1,8 +1,9 @@
 // NoTik — Service Worker
-const CACHE = 'classlog-v547';
+const CACHE = 'classlog-v559';
 const STATIC = [
+  "./figures-game.css?v=3", "./figures-game-data.js?v=2", "./figures-game.js?v=1", "./punctuation-game.css?v=21", "./punctuation-game-data.js?v=4", "./punctuation-game.js?v=17",
   './game-presentation.css?v=49',
-  './parent-games-loader.js?v=7',
+  './parent-games-loader.js?v=9',
   './parent-mobile-header.css?v=20',
   './parent-mobile-header.js?v=15',
   './assets/tool-backgrounds/timer.jpg',
@@ -18,8 +19,8 @@ const STATIC = [
   './data.js?v=19',
   './admin.js',
   './admin.js?v=39',
-  './admin-layout.js?v=21',
-  './admin-layout.css?v=43',
+  './admin-layout.js?v=23',
+  './admin-layout.css?v=52',
   './application-backup.js?v=1',
   './record-export.js?v=1',
   './parent.js',

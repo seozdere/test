@@ -1,18 +1,18 @@
 #toolsPanel .tool-punctuation{background:#E5E8F8;border-color:#C8CEE7}
 .punct-art-marks{transform-origin:60px 45px;animation:punct-art 3s ease-in-out infinite}
 @keyframes punct-art{50%{transform:translateY(-4px) rotate(5deg)}}
-:is(#punctuationDialog,#spellingDialog.punct-theme){position:fixed;inset:0;width:100%;height:100dvh;max-width:none;max-height:none;margin:0;padding:34px 24px 22px;border:0;color:#4B435F;background:linear-gradient(#FFFCF755,#FFFCF755),url('assets/game-backgrounds/school-1.jpg') center/cover;overflow:auto}
-:is(#punctuationDialog,#spellingDialog.punct-theme),:is(#punctuationDialog,#spellingDialog.punct-theme) *{box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif}
-:is(#punctuationDialog,#spellingDialog.punct-theme)::backdrop{background:#51485C}
-:is(#punctuationDialog,#spellingDialog.punct-theme) button{font:inherit;min-height:46px;padding:12px 22px;border:1px solid #CBBADA;border-radius:15px;background:#EBE2F4;color:#62517B;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-:is(#punctuationDialog,#spellingDialog.punct-theme) button:focus-visible{outline:3px solid #8770AF;outline-offset:3px}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-close{position:fixed;right:16px;top:16px;width:50px;height:50px;padding:0;border-radius:50%;background:#FFFDF9;font-size:32px;z-index:5;display:grid;place-items:center;line-height:1}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog){position:fixed;inset:0;width:100%;height:100dvh;max-width:none;max-height:none;margin:0;padding:34px 24px 22px;border:0;color:#4B435F;background:linear-gradient(#FFFCF755,#FFFCF755),url('assets/game-backgrounds/school-1.jpg') center/cover;overflow:auto}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog),:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) *{box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog)::backdrop{background:#51485C}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) button{font:inherit;min-height:46px;padding:12px 22px;border:1px solid #CBBADA;border-radius:15px;background:#EBE2F4;color:#62517B;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) button:focus-visible{outline:3px solid #8770AF;outline-offset:3px}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-close{position:fixed;right:16px;top:16px;width:50px;height:50px;padding:0;border-radius:50%;background:#FFFDF9;font-size:32px;z-index:5;display:grid;place-items:center;line-height:1}
 .punct-intro{max-width:650px;text-align:center;margin:7vh auto;padding:25px;background:#FFFCF7F0;border:1px solid #DED4E8;border-radius:28px;animation:punct-enter .25s ease-out}
 .punct-intro h2,.punct-header h2{font-size:clamp(1.4rem,3vw,2rem);margin:12px 0;color:#4B435F}
 .punct-intro p{line-height:1.7}.punct-rules,.punct-team-labels{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:24px 0}
 .punct-rules span{background:#F4EBD9;border-radius:14px;padding:8px 12px;font-size:.85rem}
 .punct-team-labels span{padding:15px 26px;border-radius:16px;background:#D6EBDD;font-weight:700}.punct-team-labels span+span{background:#E6DDF3}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-start{font-weight:800;background:#C9E5D4;border-color:#A0C8AE;color:#42674F;padding:15px 34px;animation:punct-start 2.5s ease-in-out infinite}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-start{font-weight:800;background:#C9E5D4;border-color:#A0C8AE;color:#42674F;padding:15px 34px;animation:punct-start 2.5s ease-in-out infinite}
 @keyframes punct-start{50%{transform:scale(1.06)}}
 .punct-header{display:flex;justify-content:center;align-items:center;gap:24px;padding-right:48px;margin:0 auto 16px;max-width:1500px}
 .punct-clock{font-size:1.5rem;font-weight:800;background:#FFE9B7;color:#89632E;border:1px solid #E4C68B;border-radius:18px;padding:12px 20px;font-variant-numeric:tabular-nums}
@@ -24,12 +24,12 @@
 .punct-sentence{display:block;min-height:210px;background:#FFFEFA;border:1px solid #D6CDDF;border-radius:22px;padding:24px;font-size:clamp(1.1rem,1.8vw,1.65rem);line-height:2;text-align:center;overflow-wrap:anywhere}
 .punct-gap{display:inline-grid;place-items:center;vertical-align:middle;min-width:42px;min-height:48px;margin:0 4px;border:2px dashed #B49BC7;border-radius:10px;background:#F1EAF8;color:#7D6095;font-weight:800}
 .punct-options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:20px 0 0}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-options button{font-size:2.1rem;font-weight:700;min-height:70px;padding:8px;background:#FFF4D9;border-color:#DDC79F;box-shadow:0 4px 0 #D6C5A6;user-select:none}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-options button:nth-child(2){background:#DCEAF9;border-color:#B3CCE5;box-shadow:0 4px 0 #B3CCE5}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-options button:nth-child(3){background:#F4DDE5;border-color:#DAB8C4;box-shadow:0 4px 0 #DAB8C4}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-options button:nth-child(4){background:#E6DDF4;border-color:#C8B8DE;box-shadow:0 4px 0 #C8B8DE}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-options button.is-right,.punct-gap.is-right{background:#C9E8D3;color:#36664A;border-color:#8CBA9C}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-options button.is-wrong,.punct-gap.is-wrong{background:#F5D4DC;color:#9B465A;border-color:#D59EAA}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-options button{font-size:2.1rem;font-weight:700;min-height:70px;padding:8px;background:#FFF4D9;border-color:#DDC79F;box-shadow:0 4px 0 #D6C5A6;user-select:none}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-options button:nth-child(2){background:#DCEAF9;border-color:#B3CCE5;box-shadow:0 4px 0 #B3CCE5}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-options button:nth-child(3){background:#F4DDE5;border-color:#DAB8C4;box-shadow:0 4px 0 #DAB8C4}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-options button:nth-child(4){background:#E6DDF4;border-color:#C8B8DE;box-shadow:0 4px 0 #C8B8DE}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-options button.is-right,.punct-gap.is-right{background:#C9E8D3;color:#36664A;border-color:#8CBA9C}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-options button.is-wrong,.punct-gap.is-wrong{background:#F5D4DC;color:#9B465A;border-color:#D59EAA}
 .punct-feedback{height:48px;margin-top:12px;display:grid;place-items:center;font-size:1.35rem;font-weight:800;pointer-events:none}
 .punct-feedback.is-right{color:#38724F;animation:punct-feedback .65s both}.punct-feedback.is-wrong{color:#A04D61;animation:punct-feedback 1.1s both}
 @keyframes punct-feedback{0%{opacity:0;transform:scale(.75)}22%,70%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.04)}}
@@ -39,41 +39,41 @@
 .punct-result{background:#FFFCF7;border:1px solid #D9CBE6;border-radius:28px;padding:30px;text-align:center;width:min(540px,100%);animation:punct-enter .3s ease-out}
 .punct-final-scores{display:flex;justify-content:center;gap:24px}.punct-final-scores strong{display:block;font-size:1.6rem;margin:12px 0}
 @media(max-width:650px){
- :is(#punctuationDialog,#spellingDialog.punct-theme){padding:65px 8px 18px}.punct-header{gap:12px;padding-right:0}.punct-header h2{font-size:1.15rem}.punct-clock{font-size:1.1rem;padding:8px 12px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog){padding:65px 8px 18px}.punct-header{gap:12px;padding-right:0}.punct-header h2{font-size:1.15rem}.punct-clock{font-size:1.1rem;padding:8px 12px}
  .punct-arena{gap:8px}.punct-player{padding:12px 8px;border-radius:18px}.punct-player-head{flex-direction:column;font-size:.95rem}.punct-player-head span{font-size:.8rem;padding:6px 10px}
  .punct-sentence{padding:12px 8px;font-size:1rem;min-height:240px;line-height:1.8;border-radius:15px}.punct-gap{min-width:30px;min-height:38px;margin:0 2px}
- .punct-options{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-options button{min-height:54px;font-size:1.7rem}
+ .punct-options{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-options button{min-height:54px;font-size:1.7rem}
  .punct-feedback{font-size:1rem}.punct-intro{margin:3vh auto;padding:20px 12px}.punct-team-labels span{padding:12px 18px}.punct-final-scores{gap:15px}
 }
-@media(prefers-reduced-motion:reduce){:is(#punctuationDialog,#spellingDialog.punct-theme) *, .punct-art-marks{animation:none!important}}
+@media(prefers-reduced-motion:reduce){:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) *, .punct-art-marks{animation:none!important}}
 
 #toolsPanel #gamesSectionBody>.tool-punctuation{order:-3;position:relative;overflow:visible;border-color:#DFB9C8;animation:none}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-close{display:flex;align-items:center;justify-content:center;line-height:1;transform:none}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-close svg{display:block;width:26px;height:26px;flex:none}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-close{display:flex;align-items:center;justify-content:center;line-height:1;transform:none}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-close svg{display:block;width:26px;height:26px;flex:none}
 .punct-intro{max-width:800px;background:transparent;border:0;padding:12px;animation:none}
 .punct-intro h2{display:table;margin:12px auto;padding:12px 24px;background:#FFFDF8;border:1px solid #DDD0E7;border-radius:20px}
 .punct-intro>p{margin:20px 0 30px}
 .punct-modes{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-modes button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;min-height:245px;padding:26px;background:#DDEEE3;border-color:#B6D6C1;border-radius:26px;color:#426955;transition:transform .2s,box-shadow .2s}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-modes button+button{background:#E7DDF2;border-color:#CABADD;color:#7A6093}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-modes button:hover{transform:translateY(-4px);box-shadow:0 10px 24px #68557920}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-modes button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;min-height:245px;padding:26px;background:#DDEEE3;border-color:#B6D6C1;border-radius:26px;color:#426955;transition:transform .2s,box-shadow .2s}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-modes button+button{background:#E7DDF2;border-color:#CABADD;color:#7A6093}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-modes button:hover{transform:translateY(-4px);box-shadow:0 10px 24px #68557920}
 .punct-modes svg{width:80px;height:70px}.punct-modes strong{font-size:1.6rem}.punct-modes span{font-size:.95rem;line-height:1.6}
 .punct-solo{grid-template-columns:1fr;max-width:850px}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-restart{background:#C7E4D1;border-color:#94BEA3;color:#38654A;font-size:1.1rem;font-weight:800;padding:15px 30px;min-height:54px;box-shadow:0 4px 0 #9FC6AB}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-restart{background:#C7E4D1;border-color:#94BEA3;color:#38654A;font-size:1.1rem;font-weight:800;padding:15px 30px;min-height:54px;box-shadow:0 4px 0 #9FC6AB}
 .punct-winner{font-size:clamp(1.5rem,4vw,2.2rem);color:#A77B2F;text-shadow:0 2px 12px #E6BC5F55;margin:4px 0 18px}
 .punct-trophy{display:block;width:125px;height:115px;margin:0 auto;transform-origin:50% 85%;animation:punct-cup-sway 2.2s ease-in-out infinite;filter:drop-shadow(0 6px 12px #D8B15B44)}
 @keyframes punct-cup-sway{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg) translateY(-4px)}}
-@media(max-width:650px){.punct-modes{gap:10px}:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-modes button{min-height:215px;padding:18px 10px}.punct-modes strong{font-size:1.2rem}.punct-modes span{font-size:.8rem}.punct-modes svg{width:62px;height:55px}.punct-solo .punct-sentence{min-height:180px}.punct-solo .punct-options{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:650px){.punct-modes{gap:10px}:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-modes button{min-height:215px;padding:18px 10px}.punct-modes strong{font-size:1.2rem}.punct-modes span{font-size:.8rem}.punct-modes svg{width:62px;height:55px}.punct-solo .punct-sentence{min-height:180px}.punct-solo .punct-options{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(prefers-reduced-motion:reduce){#toolsPanel #gamesSectionBody>.tool-punctuation{animation:none}}
 
 #toolsPanel .tool-punctuation{background:#F5DDE6;border-color:#DFB9C8}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-rules{width:fit-content;max-width:100%;margin:24px auto 0;padding:12px 18px;gap:10px 20px;border:1px solid #D8C8E4;border-radius:18px;background:#FFFDF7;box-shadow:0 4px 14px #67567B0D}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-rules span{padding:0;background:none;font-weight:600}
-:is(#punctuationDialog,#spellingDialog.punct-theme),:is(#punctuationDialog,#spellingDialog.punct-theme) button,:is(#punctuationDialog,#spellingDialog.punct-theme) span,:is(#punctuationDialog,#spellingDialog.punct-theme) strong{font-family:'Plus Jakarta Sans',sans-serif}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-rules{width:fit-content;max-width:100%;margin:24px auto 0;padding:12px 18px;gap:10px 20px;border:1px solid #D8C8E4;border-radius:18px;background:#FFFDF7;box-shadow:0 4px 14px #67567B0D}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-rules span{padding:0;background:none;font-weight:600}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog),:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) button,:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) span,:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) strong{font-family:'Plus Jakarta Sans',sans-serif}
 #toolsPanel .tool-punctuation .game-card-art{animation:game-intro-float 3.4s ease-in-out infinite}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-options button,.punct-gap{font-weight:900}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-options button,.punct-gap{font-weight:900}
 .punct-solo .punct-player-head{justify-content:center}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-pass{display:block;margin:4px auto 0;background:#F8DEBD;border-color:#DDB788;color:#896339;min-width:95px;font-weight:700}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-pass{display:block;margin:4px auto 0;background:#F8DEBD;border-color:#DDB788;color:#896339;min-width:95px;font-weight:700}
 .punct-feedback{font-size:1rem;height:34px}
 .punct-answer-pop{position:fixed;z-index:6;display:grid;place-items:center;min-width:210px;max-width:90vw;pointer-events:none;background:#FFFDF7F5;border:1px solid #BCD7C5;border-radius:26px;padding:24px 36px;color:#4A805D;box-shadow:0 14px 55px #4A735C30;animation:punct-correct-pop .82s ease-in-out both;text-align:center}
 .punct-answer-pop strong{font-size:2rem;line-height:1.3;font-weight:800}
@@ -82,103 +82,103 @@
 @media(prefers-reduced-motion:reduce){.punct-answer-pop{transform:translate(-50%,-50%)}#toolsPanel .tool-punctuation .game-card-art{animation:none}}
 
 /* Reserve feedback space inside each white sentence card. */
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-feedback{height:88px;min-height:88px;margin:6px 0 0;text-align:center;line-height:1.4}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-options{margin-top:16px}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-answer-pop{position:static;min-width:210px;max-width:100%;padding:14px 30px;transform:none;animation:punct-local-correct .65s ease-in-out both}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-feedback{height:88px;min-height:88px;margin:6px 0 0;text-align:center;line-height:1.4}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-options{margin-top:16px}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-answer-pop{position:static;min-width:210px;max-width:100%;padding:14px 30px;transform:none;animation:punct-local-correct .65s ease-in-out both}
 @keyframes punct-local-correct{0%{opacity:0;transform:scale(.68)}22%{opacity:1;transform:scale(1.06)}38%,65%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.94)}}
-@media(max-width:650px){:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-answer-pop{min-width:0;width:100%;padding:14px 8px}}
+@media(max-width:650px){:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-answer-pop{min-width:0;width:100%;padding:14px 8px}}
 
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-sentence{display:flex;flex-direction:column}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-sentence .punct-feedback{margin-top:auto;padding-top:12px;height:88px;min-height:88px;flex-shrink:0}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-pass{margin:22px auto 0}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-sentence{display:flex;flex-direction:column}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-sentence .punct-feedback{margin-top:auto;padding-top:12px;height:88px;min-height:88px;flex-shrink:0}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-pass{margin:22px auto 0}
 
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-correction{display:block;width:fit-content;max-width:100%;padding:12px 18px;border:1px solid #D9A9B6;border-radius:15px;background:#F8E1E8;color:#873D53;font-size:1.05rem;font-weight:800;line-height:1.4;box-shadow:0 3px 0 #E8C9D2;text-align:center}
-@media(max-width:650px){:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-correction{padding:8px 10px;font-size:.9rem}}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-correction{display:block;width:fit-content;max-width:100%;padding:12px 18px;border:1px solid #D9A9B6;border-radius:15px;background:#F8E1E8;color:#873D53;font-size:1.05rem;font-weight:800;line-height:1.4;box-shadow:0 3px 0 #E8C9D2;text-align:center}
+@media(max-width:650px){:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-correction{padding:8px 10px;font-size:.9rem}}
 
 /* Match the reading typography used by Yazım Dedektifi. */
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-sentence-text{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(1.15rem,2.7vw,1.65rem);font-weight:500;line-height:2;color:#47445B}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-intro h2,:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-header h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(1.6rem,4vw,2.3rem);color:#48445F}
-@media(max-width:650px){:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-header{flex-wrap:wrap}:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-header h2{max-width:100%;text-align:center}}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-sentence-text{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(1.15rem,2.7vw,1.65rem);font-weight:500;line-height:2;color:#47445B}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-intro h2,:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-header h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(1.6rem,4vw,2.3rem);color:#48445F}
+@media(max-width:650px){:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-header{flex-wrap:wrap}:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-header h2{max-width:100%;text-align:center}}
 
 /* Use the same light fade/scale language as Yazım Dedektifi, once per transition. */
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-intro,:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-player{animation:none}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-result,:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-gap.is-right{animation:punct-spell-fix .3s ease-out}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-intro,:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-player{animation:none}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-result,:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-gap.is-right{animation:punct-spell-fix .3s ease-out}
 @keyframes punct-spell-fix{from{opacity:.4;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
 
 /* Share the exact first-open animation used by the spelling dialog. */
-:is(#punctuationDialog,#spellingDialog.punct-theme)[open]{animation:speech-enter .4s ease-out both}
-@media(prefers-reduced-motion:reduce){:is(#punctuationDialog,#spellingDialog.punct-theme)[open]{animation:none}}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog)[open]{animation:speech-enter .4s ease-out both}
+@media(prefers-reduced-motion:reduce){:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog)[open]{animation:none}}
 
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:22px}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-actions .punct-pass{margin:0;background:#F5D2D8;border-color:#D99BA8;color:#8D4053;box-shadow:0 3px 0 #DDB0BA}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-next{background:#CBE7D8;border-color:#9CC6AD;color:#365D4B;font-weight:700;box-shadow:0 3px 0 #ABCBB8}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-next:disabled{opacity:.5;cursor:default;box-shadow:none}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-restart{background:#E4DCF2;border-color:#C3AEDB;color:#655080;box-shadow:0 4px 0 #CBBBDC}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-solution{display:flex;align-items:flex-start;gap:12px;text-align:left;margin-top:8px;line-height:1.5}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-solution-toggle{flex:none;display:flex;align-items:center;gap:5px;padding:5px 12px 5px 7px;min-height:42px;background:#DCEFF1;border-color:#A6CED3;border-radius:10px 16px 16px 10px;box-shadow:0 3px 0 #B7D6DA;transform:rotate(-3deg);font-size:.9rem;font-weight:800;color:#416E76}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:22px}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-actions .punct-pass{margin:0;background:#F5D2D8;border-color:#D99BA8;color:#8D4053;box-shadow:0 3px 0 #DDB0BA}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-next{background:#CBE7D8;border-color:#9CC6AD;color:#365D4B;font-weight:700;box-shadow:0 3px 0 #ABCBB8}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-next:disabled{opacity:.5;cursor:default;box-shadow:none}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-restart{background:#E4DCF2;border-color:#C3AEDB;color:#655080;box-shadow:0 4px 0 #CBBBDC}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-solution{display:flex;align-items:flex-start;gap:12px;text-align:left;margin-top:8px;line-height:1.5}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-solution-toggle{flex:none;display:flex;align-items:center;gap:5px;padding:5px 12px 5px 7px;min-height:42px;background:#DCEFF1;border-color:#A6CED3;border-radius:10px 16px 16px 10px;box-shadow:0 3px 0 #B7D6DA;transform:rotate(-3deg);font-size:.9rem;font-weight:800;color:#416E76}
 .punct-solution-toggle svg{width:30px;height:30px}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-solution-detail{flex:1;min-width:0;padding:10px 14px;background:#EFF8F8;border:1px solid #C3DFE1;border-radius:12px;font-size:.95rem;color:#41636C;animation:punct-solution-open .22s ease-out}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-solution-detail{flex:1;min-width:0;padding:10px 14px;background:#EFF8F8;border:1px solid #C3DFE1;border-radius:12px;font-size:.95rem;color:#41636C;animation:punct-solution-open .22s ease-out}
 .punct-solution-detail[hidden]{display:none}
 @keyframes punct-solution-open{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:translateX(0)}}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-feedback.is-wrong{animation:none}
-@media(max-width:650px){:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-solution{flex-wrap:wrap;gap:8px}:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-solution-detail{flex-basis:100%;font-size:.85rem}:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-actions{gap:10px}:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-actions button{padding:10px 12px}}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-feedback.is-wrong{animation:none}
+@media(max-width:650px){:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-solution{flex-wrap:wrap;gap:8px}:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-solution-detail{flex-basis:100%;font-size:.85rem}:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-actions{gap:10px}:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-actions button{padding:10px 12px}}
 
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-next{background:#9ED6AE;border-color:#71AD84;color:#245438;box-shadow:0 4px 0 #79AF8A}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-next-attention{animation:punct-next-nudge .65s ease-in-out;transform-origin:center}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-next{background:#9ED6AE;border-color:#71AD84;color:#245438;box-shadow:0 4px 0 #79AF8A}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-next-attention{animation:punct-next-nudge .65s ease-in-out;transform-origin:center}
 @keyframes punct-next-nudge{0%,100%{transform:translateX(0) rotate(0) scale(1)}20%{transform:translateX(-3px) rotate(-3deg) scale(1.05)}40%{transform:translateX(3px) rotate(3deg) scale(1.05)}60%{transform:translateX(-2px) rotate(-2deg) scale(1.03)}80%{transform:translateX(2px) rotate(2deg) scale(1.02)}}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-restart{min-height:40px;min-width:0;padding:9px 18px;font-size:.9rem;border-radius:13px}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-restart{min-height:40px;min-width:0;padding:9px 18px;font-size:.9rem;border-radius:13px}
 
 /* Footer controls stay in flow so expanded solutions enlarge the white card. */
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-solution{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px 12px}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-solution-toggle{grid-column:1;grid-row:1;justify-self:start}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-solution .punct-next{grid-column:3;grid-row:1;justify-self:end;display:flex;align-items:center;justify-content:center;gap:6px;padding:6px 9px 6px 13px;min-height:42px;border-radius:16px 10px 10px 16px;font-size:.9rem;line-height:1.3;font-weight:800}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-next svg{width:30px;height:30px;flex-shrink:0}
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-solution-detail{grid-column:1 / -1;grid-row:2;width:100%;min-width:0}
-@media(max-width:650px){:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-solution{grid-template-columns:minmax(0,1fr);gap:12px}:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-solution .punct-next{grid-column:1;grid-row:2}:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-solution-detail{grid-column:1;grid-row:3}}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-solution{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px 12px}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-solution-toggle{grid-column:1;grid-row:1;justify-self:start}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-solution .punct-next{grid-column:3;grid-row:1;justify-self:end;display:flex;align-items:center;justify-content:center;gap:6px;padding:6px 9px 6px 13px;min-height:42px;border-radius:16px 10px 10px 16px;font-size:.9rem;line-height:1.3;font-weight:800}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-next svg{width:30px;height:30px;flex-shrink:0}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-solution-detail{grid-column:1 / -1;grid-row:2;width:100%;min-width:0}
+@media(max-width:650px){:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-solution{grid-template-columns:minmax(0,1fr);gap:12px}:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-solution .punct-next{grid-column:1;grid-row:2}:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-solution-detail{grid-column:1;grid-row:3}}
 
-:is(#punctuationDialog,#spellingDialog.punct-theme) .punct-solution .punct-next[hidden]{display:none}
+:is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-solution .punct-next[hidden]{display:none}
 
 /* Short landscape screens: keep both players side by side with reachable controls. */
 @media(orientation:landscape) and (max-height:600px) and (max-width:1200px){
- :is(#punctuationDialog,#spellingDialog.punct-theme){padding:10px max(12px,env(safe-area-inset-right)) 12px max(12px,env(safe-area-inset-left))}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-close{width:40px;height:40px;top:8px;right:max(10px,env(safe-area-inset-right))}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-header{flex-wrap:nowrap;gap:12px;margin-bottom:8px;padding-right:45px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-header h2{font-size:1.25rem;margin:0}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-clock{font-size:1.1rem;padding:6px 12px;border-radius:12px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-arena{gap:10px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-player{padding:10px 12px;border-radius:18px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-player-head{flex-direction:row;font-size:.85rem}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-player-head span{font-size:.8rem;padding:4px 9px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-progress{font-size:.75rem;margin:5px 0}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-sentence{min-height:0;padding:10px;border-radius:15px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-sentence-text{font-size:1.05rem;line-height:1.65}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-gap{min-width:28px;min-height:32px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-sentence .punct-feedback{height:54px;min-height:54px;padding-top:4px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-answer-pop{padding:5px 18px;min-width:140px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-answer-pop strong{font-size:1.5rem}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-correction{font-size:.85rem;padding:5px 9px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-solution{grid-template-columns:auto minmax(0,1fr) auto;gap:8px;margin-top:4px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-solution-toggle{grid-column:1;grid-row:1;font-size:.75rem;min-height:40px;padding:4px 8px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-solution .punct-next{grid-column:3;grid-row:1;font-size:.75rem;min-height:40px;padding:4px 8px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-solution svg{width:24px;height:24px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-solution-detail{grid-column:1 / -1;grid-row:2;font-size:.85rem}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-options{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-options button{min-height:44px;font-size:1.6rem;padding:2px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-actions{margin-top:12px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-actions button{min-height:40px;padding:6px 18px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-footer{margin-top:10px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-intro{margin:0 auto;padding:12px 20px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-intro .game-intro-art{width:72px;height:48px;margin:0 auto}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-intro h2{font-size:1.4rem;margin:5px 0}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-intro p{margin:6px 0}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-modes{margin:12px 0;gap:12px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-modes button{min-height:130px;padding:10px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-modes svg{width:48px;height:42px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-modes strong{font-size:1.1rem}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-rules{margin-top:12px;padding:8px 14px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-result-cover{overflow:auto;place-items:start center}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-result{padding:16px}
- :is(#punctuationDialog,#spellingDialog.punct-theme) .punct-trophy{width:75px;height:70px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog){padding:10px max(12px,env(safe-area-inset-right)) 12px max(12px,env(safe-area-inset-left))}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-close{width:40px;height:40px;top:8px;right:max(10px,env(safe-area-inset-right))}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-header{flex-wrap:nowrap;gap:12px;margin-bottom:8px;padding-right:45px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-header h2{font-size:1.25rem;margin:0}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-clock{font-size:1.1rem;padding:6px 12px;border-radius:12px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-arena{gap:10px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-player{padding:10px 12px;border-radius:18px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-player-head{flex-direction:row;font-size:.85rem}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-player-head span{font-size:.8rem;padding:4px 9px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-progress{font-size:.75rem;margin:5px 0}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-sentence{min-height:0;padding:10px;border-radius:15px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-sentence-text{font-size:1.05rem;line-height:1.65}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-gap{min-width:28px;min-height:32px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-sentence .punct-feedback{height:54px;min-height:54px;padding-top:4px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-answer-pop{padding:5px 18px;min-width:140px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-answer-pop strong{font-size:1.5rem}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-correction{font-size:.85rem;padding:5px 9px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-solution{grid-template-columns:auto minmax(0,1fr) auto;gap:8px;margin-top:4px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-solution-toggle{grid-column:1;grid-row:1;font-size:.75rem;min-height:40px;padding:4px 8px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-solution .punct-next{grid-column:3;grid-row:1;font-size:.75rem;min-height:40px;padding:4px 8px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-solution svg{width:24px;height:24px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-solution-detail{grid-column:1 / -1;grid-row:2;font-size:.85rem}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-options{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-options button{min-height:44px;font-size:1.6rem;padding:2px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-actions{margin-top:12px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-actions button{min-height:40px;padding:6px 18px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-footer{margin-top:10px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-intro{margin:0 auto;padding:12px 20px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-intro .game-intro-art{width:72px;height:48px;margin:0 auto}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-intro h2{font-size:1.4rem;margin:5px 0}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-intro p{margin:6px 0}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-modes{margin:12px 0;gap:12px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-modes button{min-height:130px;padding:10px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-modes svg{width:48px;height:42px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-modes strong{font-size:1.1rem}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-rules{margin-top:12px;padding:8px 14px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-result-cover{overflow:auto;place-items:start center}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-result{padding:16px}
+ :is(#punctuationDialog,#spellingDialog.punct-theme,#figuresDialog) .punct-trophy{width:75px;height:70px}
 }
 
 /* Spelling duel uses the same components, with word targets instead of four signs. */
