@@ -539,7 +539,7 @@ body.admin-page,body.admin-page :is(button,input,textarea,select,.s-name,.modal-
 
 @media(prefers-reduced-motion:reduce){.admin-page .layout-search-toolbar #homeworkCheckBar,.admin-page .layout-search-toolbar #homeworkCheckBar label{transition:none}}
 
-.sync-meta-loop{display:inline-flex;width:max-content;white-space:nowrap;animation:sync-meta-loop 9s linear infinite;will-change:transform}
-.sync-meta-loop>span{flex:none;padding-right:28px}
-@keyframes sync-meta-loop{to{transform:translateX(-50%)}}
+.sync-meta-loop{display:inline-flex;width:max-content;white-space:nowrap;animation:sync-meta-loop 4.5s linear infinite;will-change:transform}
+.sync-meta-loop>span{flex:none;padding-right:12px;font-variant-numeric:tabular-nums}
+@keyframes sync-meta-loop{to{transform:translateX(-12.5%)}}
 @media(prefers-reduced-motion:reduce){.sync-meta-loop{animation:none}.sync-meta-loop>span+span{display:none}}

@@ -1,12 +1,12 @@
 // NoTik — Service Worker
-const CACHE = 'classlog-v565';
+const CACHE = 'classlog-v570';
 const STATIC = [
- "./word-hunter.css?v=8",
+ "./word-hunter.css?v=10",
  "./assets/icons/game-pass.svg", "./assets/icons/button-gloss.svg",
  "./game-restart-ui.js?v=1", "./game-restart-ui.css?v=3", "./assets/icons/game-restart.svg", "./assets/icons/unmarked.svg",
-  "./figures-game.css?v=4", "./figures-game-data.js?v=2", "./figures-game.js?v=2", "./punctuation-game.css?v=21", "./punctuation-game-data.js?v=4", "./punctuation-game.js?v=18",
+  "./figures-game.css?v=6", "./figures-game-data.js?v=2", "./figures-game.js?v=2", "./punctuation-game.css?v=21", "./punctuation-game-data.js?v=4", "./punctuation-game.js?v=19",
   './game-presentation.css?v=49',
-  './parent-games-loader.js?v=11',
+  './parent-games-loader.js?v=13',
   './parent-mobile-header.css?v=20',
   './parent-mobile-header.js?v=15',
   './assets/tool-backgrounds/timer.jpg',
@@ -21,9 +21,9 @@ const STATIC = [
   './data.js',
   './data.js?v=20',
   './admin.js',
-  './admin.js?v=41',
+  './admin.js?v=42',
   './admin-layout.js?v=24',
-  './admin-layout.css?v=57',
+  './admin-layout.css?v=59',
   './application-backup.js?v=1',
   './record-export.js?v=1',
   './parent.js',

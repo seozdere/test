@@ -1,7 +1,7 @@
 // Shared data layer for NoTik
 
-const SUPABASE_URL = "https://hshpppvwuuklewinvjeu.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzaHBwcHZ3dXVrbGV3aW52amV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxODE1NTcsImV4cCI6MjA5MTc1NzU1N30.gW2UC46GwVUfDMnxceAP_vslXsNRnAuQMqcofhwqsmA";
+const SUPABASE_URL = "https://ezmkcmvluvwfutdejree.supabase.co";
+const SUPABASE_KEY = "sb_publishable_gbtJwcdMzZXucYCdUtajeg_Jx4WVvRH";
 
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const CLASSLOG_CLIENT_ID = (() => {

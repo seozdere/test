@@ -187,3 +187,18 @@
 #wordHunterDialog .wh-options button{height:auto;max-width:100%;white-space:normal;overflow-wrap:anywhere;word-break:normal;align-self:stretch}
 #wordHunterDialog .wh-options button>span:not(.wh-letter){min-width:0;flex:1 1 0;white-space:normal;overflow-wrap:anywhere}
 #wordHunterDialog .wh-options .wh-letter{flex-shrink:0}
+
+/* Compact score displays only on upright phones. */
+@media(max-width:650px) and (orientation:portrait){
+ #wordHunterDialog .wh-scores{margin:6px 0;gap:8px}
+ #wordHunterDialog .wh-score{flex:0 1 auto;flex-direction:row;align-items:center;justify-content:center;gap:8px;padding:5px 10px;border-radius:12px;max-width:100%}
+ #wordHunterDialog .wh-score span{font-size:.8rem;line-height:1.3}
+ #wordHunterDialog .wh-score strong{font-size:1.05rem;line-height:1.3}
+ #wordHunterDialog .wh-score small{font-size:.72rem}
+ #wordHunterDialog .wh-duel .wh-player-heading{flex-direction:row;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:3px 6px;font-size:.78rem;line-height:1.3}
+ #wordHunterDialog .wh-duel .wh-player-score{padding:3px 5px;font-size:.75rem;line-height:1.3;white-space:nowrap}
+}
+
+/* Both discovery cards share the exact same gold border and pulse. */
+#toolsPanel #gamesSectionBody>:is(.tool-word-hunter,.tool-figures){border-color:#C8B076;animation:game-gold-glow 3.8s ease-in-out infinite}
+@media(prefers-reduced-motion:reduce){#toolsPanel #gamesSectionBody>:is(.tool-word-hunter,.tool-figures){animation:none}}

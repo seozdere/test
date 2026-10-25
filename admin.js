@@ -840,7 +840,7 @@ function renderSyncMeta() {
     const time = formatClock(meta.serverTs || meta.subjectUpdatedAt || meta.baseUpdatedAt || meta.lastSyncAt);
     const text = `Son güncelleme: ${time}`;
     let track=syncMetaText.querySelector('.sync-meta-loop');
-    if(!track){track=document.createElement('span');track.className='sync-meta-loop';track.setAttribute('aria-hidden','true');track.append(document.createElement('span'),document.createElement('span'));syncMetaText.replaceChildren(track);}
+    if(!track){track=document.createElement('span');track.className='sync-meta-loop';track.setAttribute('aria-hidden','true');for(let i=0;i<8;i++)track.append(document.createElement('span'));syncMetaText.replaceChildren(track);}
     for(const copy of track.children)if(copy.textContent!==text)copy.textContent=text;
     syncMetaText.setAttribute('aria-label',text);
     syncMetaText.title = text;
