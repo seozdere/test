@@ -517,3 +517,29 @@ body.admin-page,body.admin-page :is(button,input,textarea,select,.s-name,.modal-
 .admin-page .layout-date-card .date-selector .homework-preview{display:flex;align-items:center;gap:8px;width:100%;min-height:36px;box-sizing:border-box;margin:0;padding:7px 10px;border:1px solid #35415b;border-radius:9px;background:#1e2940;line-height:20px}
 .admin-page .layout-date-card .homework-preview .homework-edit-icon{flex-shrink:0;width:19px;height:19px;display:block}
 .admin-page .layout-date-card .homework-description-editor.is-editing .homework-preview{display:none}
+
+.admin-page #onlyUncheckedStudents{border:0;border-radius:3px;background:transparent url('assets/icons/unmarked.svg') center/contain no-repeat;box-shadow:none}
+.admin-page #onlyUncheckedStudents:checked{background: #394365 url('assets/icons/unmarked.svg') center/contain no-repeat;box-shadow:0 0 0 1px #C7C5FF}
+.admin-page #onlyUncheckedStudents:checked:after{content:none}
+
+.admin-page .layout-search-toolbar #homeworkCheckBar:has(#onlyUncheckedStudents:checked){background:#E3E5EB;color:#303A50;border-color:#CDD2DD}
+.admin-page .layout-search-toolbar #homeworkCheckBar:has(#onlyUncheckedStudents:checked) label{color:#303A50}
+.admin-page #onlyUncheckedStudents:checked{background-color:transparent;box-shadow:none;filter:brightness(.52) saturate(.8)}
+@media(min-width:641px){
+ #adminMenuSheet .menu-body>#adminManagementPanel{padding:0;border:0;background:transparent}
+ #adminMenuSheet #adminManagementPanel>.admin-management-content{padding:12px 14px 14px}
+}
+
+.admin-page .layout-search-toolbar #homeworkCheckBar{position:relative;cursor:pointer;transition:background-color 180ms ease,color 180ms ease,border-color 180ms ease,box-shadow 180ms ease}
+.admin-page .layout-search-toolbar #homeworkCheckBar label{cursor:pointer;transition:color 180ms ease}
+.admin-page .layout-search-toolbar #homeworkCheckBar:has(#onlyUncheckedStudents:checked){box-shadow:inset 0 0 10px #FFFFFFB3}
+.admin-page .layout-search-toolbar #homeworkCheckBar:focus-within{outline:2px solid #B8A9DB;outline-offset:2px}
+
+#markSaveHistory p{overflow-wrap:anywhere}
+
+@media(prefers-reduced-motion:reduce){.admin-page .layout-search-toolbar #homeworkCheckBar,.admin-page .layout-search-toolbar #homeworkCheckBar label{transition:none}}
+
+.sync-meta-loop{display:inline-flex;width:max-content;white-space:nowrap;animation:sync-meta-loop 9s linear infinite;will-change:transform}
+.sync-meta-loop>span{flex:none;padding-right:28px}
+@keyframes sync-meta-loop{to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.sync-meta-loop{animation:none}.sync-meta-loop>span+span{display:none}}

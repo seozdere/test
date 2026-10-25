@@ -1,0 +1,42 @@
+/* One visual treatment, independent of each game's controls and scoring. */
+body button.game-restart-control{display:inline-flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;min-width:80px!important;max-width:100%;width:auto!important;height:auto!important;min-height:44px!important;padding:2px 6px 4px!important;border:0!important;border-radius:12px!important;background:transparent!important;box-shadow:none!important;color:#806397!important;font:700 .85rem/1.3 'Plus Jakarta Sans',sans-serif!important;text-align:center!important;white-space:normal!important;transform:none!important;box-sizing:border-box}
+body button.game-restart-control::before,body button.game-restart-control::after{content:none!important}
+body button.game-restart-control>.game-restart-art{display:block!important;width:52px!important;height:52px!important;max-width:none!important;margin:0!important;flex:none!important;pointer-events:none}
+body button.game-restart-control>.game-restart-label{display:block!important;margin:0!important;padding:0!important;font:inherit!important;color:inherit!important}
+body button.game-restart-control:focus-visible{outline:2px solid #9F89B6;outline-offset:3px}
+@media(orientation:landscape) and (max-height:600px){body button.game-restart-control{flex-direction:row!important;gap:5px!important;font-size:.75rem!important}body button.game-restart-control>.game-restart-art{width:32px!important;height:32px!important}}
+body button.game-restart-control[hidden]{display:none!important}
+
+/* Shared pass artwork, retaining the existing button and event handlers. */
+body :is(.punct-pass,.spell-pass,#spellPass,#chainPass,#geoSkip){display:inline-flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important;flex:none!important;width:112px!important;max-width:100%;height:48px!important;min-height:48px!important;min-width:0!important;padding:0 10px 3px 50px!important;border:0!important;border-radius:14px!important;background:transparent url('assets/icons/game-pass.svg') center/contain no-repeat!important;box-shadow:none!important;color:#9B4B62!important;font:800 .95rem/1.2 'Plus Jakarta Sans',sans-serif!important;white-space:nowrap!important}
+body :is(.punct-pass,.spell-pass,#spellPass,#chainPass,#geoSkip)::before,body :is(.punct-pass,.spell-pass,#spellPass,#chainPass,#geoSkip)::after{content:none!important}
+body :is(.punct-pass,.spell-pass,#spellPass,#chainPass,#geoSkip)[hidden]{display:none!important}
+body :is(.punct-pass,.spell-pass,#spellPass,#chainPass,#geoSkip):disabled{opacity:.45}
+body :is(.punct-next){background-image:url('assets/icons/button-gloss.svg')!important;background-size:100% 100%!important;background-repeat:no-repeat!important}
+
+/* Portrait solution controls share a row; explanation owns the row below. */
+@media(max-width:650px) and (orientation:portrait){
+ #punctuationDialog#punctuationDialog .punct-solution{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-items:stretch;height:auto}
+ #punctuationDialog#punctuationDialog .punct-solution-toggle{grid-column:1;grid-row:1;justify-self:stretch}
+ #punctuationDialog#punctuationDialog .punct-next{grid-column:2;grid-row:1;justify-self:stretch}
+ #punctuationDialog#punctuationDialog .punct-solution-detail{grid-column:1/-1;grid-row:2;position:static;min-width:0;overflow-wrap:anywhere}
+ #punctuationDialog#punctuationDialog .punct-solution button{width:100%;min-width:0;white-space:normal;max-width:100%;height:auto;justify-content:center;line-height:1.3}
+ #punctuationDialog#punctuationDialog .punct-solution svg{flex-shrink:0}
+ #punctuationDialog#punctuationDialog .punct-arena:not(.punct-solo) .punct-solution button{flex-direction:column}
+}
+/* Limit reading width only on short landscape screens; retain natural scrolling. */
+@media(orientation:landscape) and (max-height:600px) and (max-width:1200px){
+ :is(#punctuationDialog,#figuresDialog,#spellingDialog) .punct-arena,
+ #spellingDialog .spell-arena,
+ #wordHunterDialog .wh-stage,
+ #classroomGameDialog .game-stage,
+ .classroom-game .game-stage,
+ .sentence-game .sentence-stage,
+ #chessDialog .chess-stage,
+ #learningDialog>main,
+ #millionaireDialog .mil-main{width:100%!important;max-width:760px!important;min-width:0;box-sizing:border-box;margin-left:auto!important;margin-right:auto!important}
+ :is(#punctuationDialog,#figuresDialog,#spellingDialog) .punct-arena:not(.punct-solo),
+ #spellingDialog .spell-arena.spell-duel,
+ #wordHunterDialog .wh-stage:has(.wh-duel){max-width:960px!important}
+}
+@media(max-width:650px) and (orientation:portrait){#punctuationDialog#punctuationDialog .punct-solution button{transform:none;align-self:stretch}}

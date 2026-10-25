@@ -180,3 +180,10 @@
 }
 
 #wordHunterDialog .wh-duel .wh-options button{touch-action:none;user-select:none;-webkit-user-select:none}
+
+/* Let long answers determine their own row height without crossing columns. */
+#wordHunterDialog{box-sizing:border-box}
+#wordHunterDialog .wh-options{min-width:0;grid-auto-rows:auto;align-items:stretch}
+#wordHunterDialog .wh-options button{height:auto;max-width:100%;white-space:normal;overflow-wrap:anywhere;word-break:normal;align-self:stretch}
+#wordHunterDialog .wh-options button>span:not(.wh-letter){min-width:0;flex:1 1 0;white-space:normal;overflow-wrap:anywhere}
+#wordHunterDialog .wh-options .wh-letter{flex-shrink:0}

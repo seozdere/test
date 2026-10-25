@@ -836,25 +836,13 @@ matchMedia('(min-width:1100px)').addEventListener('change', () => {
 function renderSyncMeta() {
     if (!syncMetaText) return;
     const meta = ClassLogData.getSyncMeta();
-    const syncAt = formatClock(meta.lastSyncAt);
-    const serverAt = formatClock(meta.serverTs || meta.subjectUpdatedAt || meta.baseUpdatedAt);
-    const source = meta.source === 'parent' ? 'veli' : meta.source === 'teacher' ? 'öğretmen' : 'istemci';
-    const text = `Son eşitleme: ${syncAt} · Sunucu güncellemesi: ${serverAt} · Kaynak: ${source}`;
-    let track = syncMetaText.querySelector('.sync-meta-track');
-    if (!track) {
-        track = document.createElement('span');
-        track.className = 'sync-meta-track';
-        syncMetaText.replaceChildren(track);
-        const updateScroll = () => {
-            const distance = Math.max(0, track.scrollWidth - (syncMetaText.clientWidth - 16));
-            track.style.setProperty('--sync-scroll-distance', `${-distance}px`);
-            track.style.setProperty('--sync-scroll-duration', `${distance / 50 + 2.5}s`);
-            track.classList.toggle('is-scrolling', distance > 0);
-        };
-        new ResizeObserver(updateScroll).observe(syncMetaText);
-        new ResizeObserver(updateScroll).observe(track);
-    }
-    track.textContent = text;
+    // source identifies the view reader, not the person who made the change.
+    const time = formatClock(meta.serverTs || meta.subjectUpdatedAt || meta.baseUpdatedAt || meta.lastSyncAt);
+    const text = `Son güncelleme: ${time}`;
+    let track=syncMetaText.querySelector('.sync-meta-loop');
+    if(!track){track=document.createElement('span');track.className='sync-meta-loop';track.setAttribute('aria-hidden','true');track.append(document.createElement('span'),document.createElement('span'));syncMetaText.replaceChildren(track);}
+    for(const copy of track.children)if(copy.textContent!==text)copy.textContent=text;
+    syncMetaText.setAttribute('aria-label',text);
     syncMetaText.title = text;
 }
 
@@ -2264,11 +2252,11 @@ document.getElementById('renameStudentBtn').onclick=async()=>{
  finally{button.disabled=false;saveStudentsBtn.disabled=false;}
 };
 
-// Memory-only save history. Native popover provides outside-click and Escape dismissal.
+// Successful local saves, retained only for this tab in sessionStorage. Native popover provides outside-click and Escape dismissal.
 (() => {
  const badge=saveStatusBadge,pop=document.createElement('div');pop.id='markSaveHistory';pop.setAttribute('popover','auto');pop.style.cssText='position:fixed;inset:auto;margin:0;width:min(340px,calc(100vw - 32px));padding:14px;border:1px solid #536080;border-radius:14px;background:#202b42;color:#eef2ff;font:13px "Plus Jakarta Sans",sans-serif;z-index:9999';document.body.append(pop);
  badge.tabIndex=0;badge.setAttribute('role','button');badge.setAttribute('aria-label','Son kayıt işlemleri');badge.setAttribute('aria-controls',pop.id);
- function render(){pop.replaceChildren();const title=document.createElement('strong');title.textContent='Son 5 işlem';pop.append(title);const state=ClassLogMarkQueue.state();state.history.forEach(op=>{const row=document.createElement('p');row.style.cssText='margin:10px 0 0;padding-top:10px;border-top:1px solid #35415b;line-height:1.6';row.textContent=op.student+' · '+(op.kind==='records'?'Ödev':'Ders içi')+' · '+op.time+' · '+op.status;pop.append(row);});if(state.error){const retry=document.createElement('button');retry.textContent='Tekrar dene';retry.className='tbtn';retry.onclick=()=>ClassLogMarkQueue.retry();pop.append(retry);}}
+ function render(){pop.replaceChildren();const title=document.createElement('strong');title.textContent='Son 5 işlem';pop.append(title);const state=ClassLogMarkQueue.state();state.history.forEach(op=>{const row=document.createElement('p');row.style.cssText='margin:10px 0 0;padding-top:10px;border-top:1px solid #35415b;line-height:1.6';row.textContent=op.student+' · '+(op.kind==='records'?'Ödev':'Ders içi')+' · '+op.change+' · '+op.time;pop.append(row);});if(state.error){const retry=document.createElement('button');retry.textContent='Tekrar dene';retry.className='tbtn';retry.onclick=()=>ClassLogMarkQueue.retry();pop.append(retry);}}
  function positionHistory(){
   if(!pop.matches(':popover-open'))return;
   const anchor=badge.closest('.admin-status-strip')||badge;

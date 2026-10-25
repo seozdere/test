@@ -1115,8 +1115,12 @@ const ClassLogData = {
 
 // Serial, context-bound writes. Failed heads stay queued until explicit retry.
 const ClassLogMarkQueue = (() => {
- const pending=[],history=[];let timer=null,running=false;let listener=()=>{};
- const state=()=>({pending:pending.length,error:pending.some(o=>o.status==='Kayıt hatası'),history:history.map(o=>({...o,patch:undefined,token:undefined}))});
+ const pending=[];let timer=null,running=false;let listener=()=>{};
+ const historyKey='notik-mark-history-v1';
+ function readHistory(){try{const rows=JSON.parse(sessionStorage.getItem(historyKey)||'[]');return Array.isArray(rows)?rows.filter(r=>r&&typeof r.key==='string'&&typeof r.student==='string'&&typeof r.change==='string'&&typeof r.time==='string'&&['records','classRecords'].includes(r.kind)).slice(0,5):[];}catch(_){return [];}}
+ function remember(op){try{const rows=readHistory(),keys=new Set(rows.map(r=>r.key));for(const row of op.historyRows){if(!keys.has(row.key)){rows.unshift(row);keys.add(row.key);}}sessionStorage.setItem(historyKey,JSON.stringify(rows.slice(0,5)));}catch(_){} }
+
+ const state=()=>({pending:pending.length,error:pending.some(o=>o.status==='Kayıt hatası'),history:readHistory()});
  const emit=()=>listener(state());
  function patch(target,op){for(const [name,value] of Object.entries(op.patch)){target[op.date] ||= {};if(value===undefined)delete target[op.date][name];else target[op.date][name]=_cloneData(value);if(!Object.keys(target[op.date]).length)delete target[op.date];}return target;}
  function overlay(kind,base){const out=_cloneData(base)||{};pending.filter(o=>o.id===ClassLogData._dbId()&&o.kind===kind).forEach(o=>patch(out,o));return out;}
@@ -1128,7 +1132,7 @@ const ClassLogMarkQueue = (() => {
  const {data,error}=await _supabase.rpc('cl_save_records',{p_token:op.token,p_id:op.id,p_records:homework,p_class_records:participation});
  if(error||data!==true)throw error||new Error('Kayıt onaylanmadı');
  if(ClassLogData._dbId()===op.id){ClassLogData.records=homework;ClassLogData.classRecords=participation;}
- pending.shift();ClassLogData._clearError();op.status='Kaydedildi';op.resolve(true);emit();
+ pending.shift();ClassLogData._clearError();op.status='Kaydedildi';remember(op);op.resolve(true);emit();
  void ClassLogData._afterWrite([op.id],op.cls,{date:op.date,view:op.kind==='records'?'homework':'class',students:Object.keys(op.patch),subjectId:op.subj}).catch(()=>{});
  }catch(error){op.status='Kayıt hatası';ClassLogData._setError('İşaretleme kaydedilemedi.',error);emit();}
  finally{running=false;if(pending.length&&pending[0].status!=='Kayıt hatası')void drain();}
@@ -1136,6 +1140,14 @@ const ClassLogMarkQueue = (() => {
  return {state,overlay,subscribe(fn){listener=fn;},retry(){pending.filter(o=>o.status==='Kayıt hatası').forEach(o=>o.status='Bekliyor');emit();void drain();},add(kind,records,payload){
  const op={id:ClassLogData._dbId(),cls:ClassLogData.currentClass,subj:ClassLogData.currentSubject,term:ClassLogData._activeTid(),token:ClassLogAuth.getSessionToken(),date:payload.date,kind,patch:{},student:(payload.students||[]).join(', '),time:new Date().toLocaleTimeString('tr-TR'),status:'Bekliyor'};
  for(const name of payload.students||[])op.patch[name]=_cloneData(records[payload.date]?.[name]);
- const promise=new Promise(resolve=>op.resolve=resolve);pending.push(op);history.unshift(op);history.splice(5);emit();clearTimeout(timer);timer=setTimeout(drain,125);return promise;
+ const before=overlay(kind,ClassLogData[kind]),key=crypto.randomUUID();op.historyRows=[];
+ for(const [name,value] of Object.entries(op.patch)){
+  const old=before[op.date]?.[name];if(JSON.stringify(old)===JSON.stringify(value))continue;
+  let change;
+  if(kind==='records')change=value===undefined?'İşaret kaldırıldı':({'1':'Tamam','-1':'Eksik','2':'Yarım','0':'Kitap yok','3':'Gelmedi'}[value]||'Güncellendi');
+  else {const delta=getClassMarkNet(value)-getClassMarkNet(old);change=delta>0?'+'+delta:delta<0?'−'+Math.abs(delta):'Sıfırlandı';}
+  op.historyRows.push({key:key+':'+name,student:name,kind,change,time:op.time});
+ }
+ const promise=new Promise(resolve=>op.resolve=resolve);pending.push(op);emit();clearTimeout(timer);timer=setTimeout(drain,125);return promise;
  }};
 })();
