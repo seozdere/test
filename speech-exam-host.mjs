@@ -1,4 +1,5 @@
-import {LIVE_ENABLED, SpeechExamApi} from './speech-exam-api.mjs';
+// TEST DEPLOY ONLY. Do not copy this file into the live deployment.
+import {LIVE_ENABLED, SpeechExamApi} from './speech-exam-api.mjs?v=test-20261026';
 import {mountAdmin, mountBoard} from './speech-exam-ui.mjs?v=3';
 let styles;
 function loadStyles() {
