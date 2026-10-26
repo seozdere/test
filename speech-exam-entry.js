@@ -10,6 +10,6 @@
   }
   if (RELEASE_ENABLED) {
     // A separate server gate and real RPC authorization are still mandatory.
-    import('./speech-exam-host.mjs?v=auto-20261026-layout2').then(module => module.install()).catch(() => {});
+    import('./speech-exam-host.mjs?v=auto-20261026-layout3').then(module => module.install()).catch(() => {});
   }
 })();

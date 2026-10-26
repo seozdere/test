@@ -154,16 +154,33 @@ export function mountBoard(dialog, api, topic, {read = () => api.board(), manage
   const panel = el('section', undefined, 'se-board se-root'); panel.setAttribute('aria-label', 'Canlı konuşma değerlendirmesi');
   panel.id = 'se-board-' + crypto.randomUUID();
   const heading = el('header', undefined, 'se-board-heading'), liveLabel = el('p', undefined, 'se-live-label');
-  const dot = el('span', undefined, 'se-live-dot'); dot.setAttribute('aria-hidden', 'true'); liveLabel.append(dot, el('span', 'Değerlendirme'));
+  const dot = el('span', undefined, 'se-live-dot'); dot.setAttribute('aria-hidden', 'true'); liveLabel.append(dot, el('span', 'Aktif Sınav'));
   const content = el('div', undefined, 'se-board-content');
   const tab = button('', () => setOpen(tab.getAttribute('aria-expanded') !== 'true'), 'se-drawer-tab');
-  const arrow = el('span', '‹', 'se-drawer-arrow'); arrow.setAttribute('aria-hidden', 'true'); tab.append(arrow, el('span', 'Değerlendirme', 'se-drawer-tab-label'));
+  const arrow = el('span', '‹', 'se-drawer-arrow'); arrow.setAttribute('aria-hidden', 'true'); tab.append(arrow, el('span', 'Aktif Sınav', 'se-drawer-tab-label'));
   tab.setAttribute('aria-controls', panel.id); tab.setAttribute('aria-expanded', 'false'); tab.setAttribute('aria-label', 'Değerlendirmeyi aç');
   const close = button('', () => { setOpen(false); tab.focus(); }, 'se-drawer-close'); close.setAttribute('aria-label', 'Değerlendirmeyi kapat');
-  const closeIcon = el('span', '×'); closeIcon.setAttribute('aria-hidden', 'true'); close.append(closeIcon);
+  close.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg>';
   heading.append(liveLabel, close); panel.append(heading, content); panel.inert = true; panel.setAttribute('aria-hidden', 'true');
   dialog.classList.add('se-live'); dialog.append(panel, tab);
-  function setOpen(open) { dialog.classList.toggle('se-drawer-open', open); tab.setAttribute('aria-expanded', String(open)); tab.setAttribute('aria-label', open ? 'Değerlendirmeyi kapat' : 'Değerlendirmeyi aç'); arrow.textContent = open ? '›' : '‹'; panel.inert = !open; panel.setAttribute('aria-hidden', String(!open)); }
+  function setOpen(open) { dialog.classList.toggle('se-drawer-open', open); tab.setAttribute('aria-expanded', String(open)); tab.setAttribute('aria-label', open ? 'Değerlendirmeyi kapat' : 'Değerlendirmeyi aç'); arrow.textContent = open ? '›' : '‹'; panel.inert = !open; panel.setAttribute('aria-hidden', String(!open)); scheduleLayout(); }
+  // Measure the existing timer; no duplicate timer or changes to its state.
+  const portrait = matchMedia('(max-width:640px) and (orientation:portrait)');
+  let layoutFrame = 0;
+  function scheduleLayout() {
+    cancelAnimationFrame(layoutFrame);
+    layoutFrame = requestAnimationFrame(() => {
+      if (!portrait.matches) return;
+      const timer = dialog.querySelector('.speech-time-row'), name = content.querySelector('.se-board-student');
+      if (!timer || !name) return;
+      const timeRect = timer.getBoundingClientRect(), nameRect = name.getBoundingClientRect();
+      content.style.setProperty('--se-upper-height', Math.max(24, timeRect.top - 8 - nameRect.bottom) + 'px');
+      content.style.setProperty('--se-timer-height', (timeRect.height + 16) + 'px');
+    });
+  }
+  const layoutObserver = new ResizeObserver(scheduleLayout);
+  for (const node of [dialog.querySelector('.speech-time-row'), dialog.querySelector('.speech-stage'), panel]) if (node) layoutObserver.observe(node);
+  window.addEventListener('resize', scheduleLayout); portrait.addEventListener('change', scheduleLayout);
   const escape = event => { if (event.key === 'Escape' && tab.getAttribute('aria-expanded') === 'true') { event.preventDefault(); event.stopImmediatePropagation(); setOpen(false); tab.focus(); } };
   dialog.addEventListener('keydown', escape, true);
   let lastRevision = -1, lastId = null, lastStudent = null, lastScores = null, unsubscribe = () => {}, expired = false;
@@ -179,16 +196,17 @@ export function mountBoard(dialog, api, topic, {read = () => api.board(), manage
     if (!managed) scheduleExpiry(exam.expiresAt);
     panel.dataset.live = 'true'; content.replaceChildren();
     const student = exam.students.find(s => s.id === exam.activeStudentId);
-    content.append(el('h2', student?.name || 'Öğrenci seçimi bekleniyor', changed && !sameStudent ? 'se-update-pop' : ''));
+    const studentHeading = el('h2', undefined, 'se-board-student');
+    studentHeading.append(el('span', student?.name || 'Öğrenci seçimi bekleniyor', changed && student ? 'se-update-pop' : '')); content.append(studentHeading);
     const scores = exam.results[exam.activeStudentId]?.scores ?? emptyScores();
-    const list = el('ol', undefined, 'se-board-rubric');
-    let scoreChanged = false;
+    const list = el('ol', undefined, 'se-board-rubric se-board-upper'), lower = el('ol', undefined, 'se-board-rubric se-board-lower'); lower.start = 6;
+    const timerGap = el('div', undefined, 'se-timer-gap'); timerGap.setAttribute('aria-hidden', 'true');
     exam.rubric.criteria.forEach((criterion, i) => {
       const updated = changed && sameStudent && lastScores && scores[i] !== lastScores[i];
-      scoreChanged ||= updated;
-      const row = el('li', undefined, updated ? 'se-update-pop' : ''); row.append(el('span', criterion), el('strong', scores[i] === null ? '— / 10' : `${scores[i]} / 10`)); list.append(row);
+      const row = el('li'); row.append(el('span', criterion), el('strong', scores[i] === null ? '— / 10' : `${scores[i]} / 10`, updated ? 'se-update-pop' : '')); (i < 5 ? list : lower).append(row);
     });
-    content.append(list, el('output', totalLabel(scores), 'se-total' + (scoreChanged ? ' se-update-pop' : '')));
+    content.append(list, timerGap, lower, el('output', totalLabel(scores).replace('Geçici toplam:', 'Toplam:'), 'se-total'));
+    scheduleLayout();
     lastStudent = exam.activeStudentId; lastScores = [...scores];
   };
   const reader = coalescedReader(read, applySnapshot, () => { lastRevision = -1; clear('Bağlantı veya erişim doğrulanamadı. Yeniden bağlanın.'); });
@@ -200,7 +218,7 @@ export function mountBoard(dialog, api, topic, {read = () => api.board(), manage
   const refresh = () => { if (!document.hidden && !expired) reader.trigger(); };
   const offline = () => { reader.invalidate(); lastRevision = -1; clear('Bağlantı kesildi. Yeniden bağlanınca güncellenecek.'); };
   if (!managed) { document.addEventListener('visibilitychange', refresh); window.addEventListener('online', refresh); window.addEventListener('offline', offline); reader.trigger(); }
-  const dispose = () => { expired = true; clearTimeout(expiryTimer); reader.close(); unsubscribe(); document.removeEventListener('visibilitychange', refresh); window.removeEventListener('online', refresh); window.removeEventListener('offline', offline); dialog.removeEventListener('keydown', escape, true); panel.remove(); tab.remove(); dialog.classList.remove('se-live', 'se-drawer-open'); };
+  const dispose = () => { cancelAnimationFrame(layoutFrame); layoutObserver.disconnect(); window.removeEventListener('resize', scheduleLayout); portrait.removeEventListener('change', scheduleLayout); expired = true; clearTimeout(expiryTimer); reader.close(); unsubscribe(); document.removeEventListener('visibilitychange', refresh); window.removeEventListener('online', refresh); window.removeEventListener('offline', offline); dialog.removeEventListener('keydown', escape, true); panel.remove(); tab.remove(); dialog.classList.remove('se-live', 'se-drawer-open'); };
   dispose.update = exam => { if (!expired) applySnapshot(exam); };
   return dispose;
 }

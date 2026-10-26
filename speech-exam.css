@@ -43,7 +43,7 @@
 }
 @media(orientation:landscape) and (max-height:600px){.se-board{top:80px;bottom:12px}.speech-dialog.se-live{--se-drawer-width:min(460px,calc(100vw - 72px))}}
 .se-board .se-update-pop{animation:se-score-pop .65s ease-out}
-@keyframes se-score-pop{0%{transform:scale(.975);background-color:#9bddb2;box-shadow:inset 0 0 0 999px #7bd99c55}35%{transform:scale(1.015);background-color:#d1f0da;box-shadow:inset 0 0 0 999px #7bd99c33}100%{transform:scale(1);box-shadow:inset 0 0 0 999px #7bd99c00}}
+@keyframes se-score-pop{0%{transform:scale(.94);opacity:.55;color:#248957;text-shadow:0 0 0 #4bbf7c00}40%{transform:scale(1.08);opacity:1;color:#16854d;text-shadow:0 0 8px #4bbf7c80}100%{transform:scale(1);opacity:1}}
 @media(prefers-reduced-motion:reduce){.se-root button,.speech-dialog.se-live>.speech-stage,.se-board,.speech-dialog .se-drawer-tab{transition:none}.se-board[data-live=true] .se-live-dot,.se-board .se-update-pop{animation:none}}
 
 /* Approved device setup: test release, scoped to the exam UI. */
@@ -78,4 +78,25 @@
 @media(max-width:640px) and (orientation:portrait){
  .speech-dialog .se-board{background:rgba(255,253,248,.42);backdrop-filter:none;-webkit-backdrop-filter:none}
  .speech-dialog .se-board-content,.speech-dialog .se-board-heading{text-shadow:0 1px 2px #fff,0 0 4px #fff}
+}
+
+/* Board labels and update feedback; only names and changed score text animate. */
+.se-board-student{text-align:center}
+.se-board-student>span{display:inline-block}
+.se-board .se-drawer-close svg{display:block;flex:none}
+.se-board .se-update-pop{display:inline-block;transform-origin:center;border-radius:8px}
+.se-board-rubric.se-board-upper{margin-bottom:0}
+.se-board-rubric.se-board-lower{margin-top:0;counter-reset:criterion 5}
+.se-timer-gap{display:none}
+@media(max-width:640px) and (orientation:portrait){
+ .speech-dialog .se-board{top:68px}
+ .speech-dialog .se-board-heading{padding:4px 10px}
+ .speech-dialog .se-board-content{flex:1;display:grid;grid-template-rows:auto var(--se-upper-height,180px) var(--se-timer-height,96px) minmax(0,1fr) auto;padding:4px 10px 10px;overflow:hidden;min-height:0}
+ .speech-dialog .se-board-student{font-size:1rem;line-height:1.35;padding:3px 0 6px}
+ .speech-dialog .se-board-rubric{margin:0;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+ .speech-dialog .se-board-rubric li{font-size:.76rem;line-height:1.3;gap:6px;padding:3px 0;align-items:center}
+ .speech-dialog .se-board-upper{display:flex;flex-direction:column}
+ .speech-dialog .se-board-upper>li{flex:1 0 auto}
+ .speech-dialog .se-timer-gap{display:block;pointer-events:none}
+ .speech-dialog .se-board .se-total{min-height:46px;margin-top:8px;padding:8px;font-size:.87rem;border-radius:14px}
 }
