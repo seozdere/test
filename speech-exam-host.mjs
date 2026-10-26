@@ -1,10 +1,10 @@
-import {LIVE_ENABLED, SpeechExamApi} from './speech-exam-api.mjs?v=auto-20261026-layout1';
-import {mountAdmin, mountBoard} from './speech-exam-ui.mjs?v=auto-20261026-layout1';
-import {SpeechDeviceApi, mountDeviceAdmin, installAutomaticBoard} from './speech-exam-device.mjs?v=auto-20261026-layout1';
+import {LIVE_ENABLED, SpeechExamApi} from './speech-exam-api.mjs?v=auto-20261026-layout2';
+import {mountAdmin, mountBoard} from './speech-exam-ui.mjs?v=auto-20261026-layout2';
+import {SpeechDeviceApi, mountDeviceAdmin, installAutomaticBoard} from './speech-exam-device.mjs?v=auto-20261026-layout2';
 let styles;
 function loadStyles() {
   if (!styles) styles = new Promise((resolve, reject) => {
-    const link = document.createElement('link'); link.rel = 'stylesheet'; link.href = new URL('./speech-exam.css?v=auto-20261026-layout1', import.meta.url).href;
+    const link = document.createElement('link'); link.rel = 'stylesheet'; link.href = new URL('./speech-exam.css?v=auto-20261026-layout2', import.meta.url).href;
     link.onload = resolve; link.onerror = () => { link.remove(); styles = null; reject(Error('Sınav görünümü yüklenemedi.')); }; document.head.append(link);
   });
   return styles;
