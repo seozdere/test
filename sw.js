@@ -1,8 +1,7 @@
-// TEST DEPLOY ONLY. Do not copy this file into the live deployment.
 // NoTik — Service Worker
-const CACHE = 'classlog-test-speech-20261026';
+const CACHE = 'classlog-test-speech-auto-20261026';
 const STATIC = [
-  './speech-exam-entry.js?v=test-20261026',
+  './speech-exam-entry.js?v=auto-20261026',
  "./word-hunter.css?v=10",
  "./assets/icons/game-pass.svg", "./assets/icons/button-gloss.svg",
  "./game-restart-ui.js?v=1", "./game-restart-ui.css?v=3", "./assets/icons/game-restart.svg", "./assets/icons/unmarked.svg",

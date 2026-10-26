@@ -142,7 +142,7 @@ export function mountAdmin(root, api, context) {
 }
 
 // Optional drawer inside the EXISTING timer. Timer background/state stay intact.
-export function mountBoard(dialog, api, topic, {read = () => api.board()} = {}) {
+export function mountBoard(dialog, api, topic, {read = () => api.board(), managed = false} = {}) {
   const panel = el('section', undefined, 'se-board se-root'); panel.setAttribute('aria-label', 'Canlı konuşma değerlendirmesi');
   panel.id = 'se-board-' + crypto.randomUUID();
   const heading = el('header', undefined, 'se-board-heading'), liveLabel = el('p', undefined, 'se-live-label');
@@ -161,14 +161,14 @@ export function mountBoard(dialog, api, topic, {read = () => api.board()} = {}) 
   let lastRevision = -1, lastId = null, lastStudent = null, lastScores = null, unsubscribe = () => {}, expired = false;
   const note = el('p', 'Bağlanıyor…', 'se-status'); note.setAttribute('role', 'status'); content.append(note);
   function clear(message) { panel.dataset.live = 'false'; const status = el('p', message, 'se-status'); status.setAttribute('role', 'status'); content.replaceChildren(status); }
-  const reader = coalescedReader(read, exam => {
+  const applySnapshot = exam => {
     if (exam.status !== 'active') { clear('Sınav tamamlandı.'); expired = true; unsubscribe(); reader.close(); return; }
     if (exam.id === lastId && exam.revision <= lastRevision) return;
     const sameStudent = exam.id === lastId && exam.activeStudentId === lastStudent;
     const changed = lastRevision >= 0;
     lastId = exam.id; lastRevision = exam.revision;
-    if (!Number.isFinite(exam.expiresAt) || exam.expiresAt <= Date.now()) { clear('Tahta erişimi sona erdi.'); return; }
-    scheduleExpiry(exam.expiresAt);
+    if (!managed && (!Number.isFinite(exam.expiresAt) || exam.expiresAt <= Date.now())) { clear('Tahta erişimi sona erdi.'); return; }
+    if (!managed) scheduleExpiry(exam.expiresAt);
     panel.dataset.live = 'true'; content.replaceChildren();
     const student = exam.students.find(s => s.id === exam.activeStudentId);
     content.append(el('h2', student?.name || 'Öğrenci seçimi bekleniyor', changed && !sameStudent ? 'se-update-pop' : ''));
@@ -182,14 +182,17 @@ export function mountBoard(dialog, api, topic, {read = () => api.board()} = {}) 
     });
     content.append(list, el('output', totalLabel(scores), 'se-total' + (scoreChanged ? ' se-update-pop' : '')));
     lastStudent = exam.activeStudentId; lastScores = [...scores];
-  }, () => { lastRevision = -1; clear('Bağlantı veya erişim doğrulanamadı. Yeniden bağlanın.'); });
+  };
+  const reader = coalescedReader(read, applySnapshot, () => { lastRevision = -1; clear('Bağlantı veya erişim doğrulanamadı. Yeniden bağlanın.'); });
   let expiryTimer;
   function scheduleExpiry(expiry) { clearTimeout(expiryTimer); expiryTimer = setTimeout(() => { expired = true; clear('Tahta erişimi sona erdi.'); unsubscribe(); reader.close(); }, Math.min(2147483647, Math.max(0, expiry - Date.now()))); }
-  unsubscribe = api.subscribe(topic, () => { if (!document.hidden && !expired) reader.trigger(); }, state => {
+  if (!managed) unsubscribe = api.subscribe(topic, () => { if (!document.hidden && !expired) reader.trigger(); }, state => {
     if (state !== 'SUBSCRIBED') { reader.invalidate(); lastRevision = -1; clear('Canlı bağlantı kesildi. Yeniden bağlanınca güncellenecek.'); }
   });
   const refresh = () => { if (!document.hidden && !expired) reader.trigger(); };
   const offline = () => { reader.invalidate(); lastRevision = -1; clear('Bağlantı kesildi. Yeniden bağlanınca güncellenecek.'); };
-  document.addEventListener('visibilitychange', refresh); window.addEventListener('online', refresh); window.addEventListener('offline', offline); reader.trigger();
-  return () => { expired = true; clearTimeout(expiryTimer); reader.close(); unsubscribe(); document.removeEventListener('visibilitychange', refresh); window.removeEventListener('online', refresh); window.removeEventListener('offline', offline); dialog.removeEventListener('keydown', escape, true); panel.remove(); tab.remove(); dialog.classList.remove('se-live', 'se-drawer-open'); };
+  if (!managed) { document.addEventListener('visibilitychange', refresh); window.addEventListener('online', refresh); window.addEventListener('offline', offline); reader.trigger(); }
+  const dispose = () => { expired = true; clearTimeout(expiryTimer); reader.close(); unsubscribe(); document.removeEventListener('visibilitychange', refresh); window.removeEventListener('online', refresh); window.removeEventListener('offline', offline); dialog.removeEventListener('keydown', escape, true); panel.remove(); tab.remove(); dialog.classList.remove('se-live', 'se-drawer-open'); };
+  dispose.update = exam => { if (!expired) applySnapshot(exam); };
+  return dispose;
 }

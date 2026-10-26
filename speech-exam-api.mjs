@@ -1,4 +1,3 @@
-// TEST DEPLOY ONLY. Do not copy this file into the live deployment.
 // Release gate: do not enable until auth definitions and isolated DB tests pass.
 // A URL parameter/localStorage flag cannot enable live access.
 export const LIVE_ENABLED = true;
