@@ -1,7 +1,7 @@
 // NoTik — Service Worker
-const CACHE = 'classlog-test-speech-auto-20261026';
+const CACHE = 'classlog-test-speech-auto-20261026-layout1';
 const STATIC = [
-  './speech-exam-entry.js?v=auto-20261026',
+  './speech-exam-entry.js?v=auto-20261026-layout1',
  "./word-hunter.css?v=10",
  "./assets/icons/game-pass.svg", "./assets/icons/button-gloss.svg",
  "./game-restart-ui.js?v=1", "./game-restart-ui.css?v=3", "./assets/icons/game-restart.svg", "./assets/icons/unmarked.svg",
@@ -24,7 +24,7 @@ const STATIC = [
   './admin.js',
   './admin.js?v=42',
   './admin-layout.js?v=24',
-  './admin-layout.css?v=59',
+  './admin-layout.css?v=60-test',
   './application-backup.js?v=1',
   './record-export.js?v=1',
   './parent.js',

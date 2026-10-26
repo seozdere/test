@@ -20,6 +20,14 @@ export function mountAdmin(root, api, context) {
   const discard = button('Sunucudaki kaydı aç', () => {
     if (confirm('Kaydedilmemiş yerel puanları bırakıp sunucudaki son kaydı açmak istiyor musunuz?')) action(async () => { load(await api.get(exam.id)); });
   }); discard.hidden = true;
+  // Decorative SVGs keep the existing labels and action handlers intact.
+  const artwork = [[start, 'start', 'm8 5 11 7-11 7Z'], [finish, 'finish', 'M6 6h12v12H6Z'], [download, 'download', 'M12 3v12m-5-5 5 5 5-5M5 17v4h14v-4'], [reload, 'reload', 'M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-1l2 6M4 12l2 6a7 7 0 0 0 12-1']];
+  for (const [control, name, drawing] of artwork) {
+    control.classList.add('se-action', 'se-action-' + name);
+    const label = el('span', control.textContent), svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
+    const line = document.createElementNS(svg.namespaceURI, 'path'); line.setAttribute('d', drawing); svg.append(line); control.replaceChildren(svg, label);
+  }
   toolbar.append(start, finish, download, history, reload, retry);
   toolbar.append(discard);
   const pairing = el('div', undefined, 'se-pairing'); pairing.hidden = true;
