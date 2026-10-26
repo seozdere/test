@@ -1,0 +1,195 @@
+import {ScoreQueue, emptyScores, total, totalLabel, coalescedReader} from './speech-exam-core.mjs';
+const el = (tag, text, className) => { const node = document.createElement(tag); if (text !== undefined) node.textContent = text; if (className) node.className = className; return node; };
+function button(text, action, className) { const node = el('button', text, className); node.type = 'button'; node.addEventListener('click', action); return node; }
+
+export function mountAdmin(root, api, context) {
+  root.classList.add('se-root');
+  let exam = null, queue = null, busy = false, disposed = false;
+  const header = el('header', undefined, 'se-header'), heading = el('div');
+  heading.append(el('p', 'KONUŞMA DEĞERLENDİRMESİ', 'se-eyebrow'), el('h2', 'Canlı Konuşma Sınavı'));
+  const contextLabel = el('p', [context.className, context.subjectId, context.termId, context.date].filter(Boolean).join(' · '), 'se-context'); heading.append(contextLabel); header.append(heading);
+  const toolbar = el('div', undefined, 'se-toolbar'), status = el('p', 'Sınav seçin veya yeni sınav başlatın.', 'se-status'); status.setAttribute('role', 'status');
+  const history = el('select'); history.setAttribute('aria-label', 'Kayıtlı sınavlar');
+  const start = button('Sınavı Başlat', () => action(async () => { await flush(); load(await api.create(context)); await refreshHistory(); }));
+  const finish = button('Sınavı Bitir', () => {
+    if (exam && confirm('Sınav bitirilsin mi? Kaydedilmiş puanlar korunur; değerlendirme salt okunur olur.')) action(async () => { await flush(); load(await api.finish(exam.id, exam.revision)); await refreshHistory(); });
+  });
+  const download = button('Excel İndir', () => action(async () => { await flush(); const current = await api.get(exam.id); const {downloadExam} = await import('./speech-exam-xlsx.mjs'); downloadExam(current); }));
+  const retry = button('Kaydı yeniden dene', () => action(flush)); retry.hidden = true;
+  const reload = button('Kayıtlı sınavları yenile', () => action(async () => { await flush(); if (exam) load(await api.get(exam.id)); await refreshHistory(); }));
+  const discard = button('Sunucudaki kaydı aç', () => {
+    if (confirm('Kaydedilmemiş yerel puanları bırakıp sunucudaki son kaydı açmak istiyor musunuz?')) action(async () => { load(await api.get(exam.id)); });
+  }); discard.hidden = true;
+  toolbar.append(start, finish, download, history, reload, retry);
+  toolbar.append(discard);
+  const pairing = el('div', undefined, 'se-pairing'); pairing.hidden = true;
+  const key = el('input'); key.type = 'password'; key.readOnly = true; key.autocomplete = 'off'; key.setAttribute('aria-label', 'Sınava özel geçici tahta anahtarı');
+  const pairingNote = el('p', 'Bu anahtarı yalnızca yetkilendirdiğiniz tahtanın kronometresindeki bağlantı alanına yapıştırın. 15 dakika geçerlidir.');
+  const copy = button('Anahtarı kopyala', async () => { try { await navigator.clipboard.writeText(key.value); inform('Tahta anahtarı kopyalandı.'); } catch (_) { key.select(); inform('Anahtarı seçip kopyalayın.'); } });
+  pairing.append(pairingNote, key, copy);
+  const issue = button('Tahta erişimi oluştur', () => action(async () => { await flush(); const grant = await api.issueBoard(exam.id); key.value = grant.token; pairing.hidden = false; }));
+  const revoke = button('Tahta erişimini kapat', () => action(async () => { await api.revokeBoard(exam.id); key.value = ''; pairing.hidden = true; inform('Tahta erişimi kapatıldı.'); }));
+  if (api.issueBoard) toolbar.append(issue, revoke);
+  const layout = el('div', undefined, 'se-admin-layout'), roster = el('nav', undefined, 'se-roster'); roster.setAttribute('aria-label', 'Öğrenciler');
+  const picker = el('div', undefined, 'se-mobile-picker');
+  const pickerLabel = el('label', 'Öğrenci'), studentSelect = el('select'); studentSelect.setAttribute('aria-label', 'Değerlendirilecek öğrenci'); pickerLabel.append(studentSelect);
+  const previousStudent = button('‹', () => stepStudent(-1)), nextStudent = button('›', () => stepStudent(1));
+  previousStudent.setAttribute('aria-label', 'Önceki öğrenci'); nextStudent.setAttribute('aria-label', 'Sonraki öğrenci');
+  picker.append(previousStudent, pickerLabel, nextStudent);
+  studentSelect.addEventListener('change', () => chooseStudent(studentSelect.value));
+  function stepStudent(direction) { const index = exam?.students.findIndex(s => s.id === exam.activeStudentId) ?? -1; const student = exam?.students[index + direction]; if (student) chooseStudent(student.id); }
+  function chooseStudent(id) {
+    id = id || null;
+    if (busy || !exam || (id !== null && !exam.students.some(s => s.id === id))) return;
+    void action(async () => { await flush(); if (exam.status === 'active') load(await api.select(exam.id, id, exam.revision)); else { exam.activeStudentId = id; renderForm(); update(); } }).finally(() => { studentSelect.value = exam?.activeStudentId || ''; });
+  }
+  const form = el('section', undefined, 'se-form'); layout.append(picker, roster, form); root.append(header, toolbar, status, pairing, layout);
+  function inform(text) { status.textContent = text; }
+  function controls() { start.disabled = busy || exam?.status === 'active'; finish.disabled = busy || !exam || exam.status !== 'active'; download.disabled = busy || !exam; history.disabled = busy; reload.disabled = busy; retry.disabled = busy; discard.disabled = busy; issue.disabled = finish.disabled; revoke.disabled = busy || !exam; studentSelect.disabled = busy || !exam; const index = exam?.students.findIndex(s => s.id === exam.activeStudentId) ?? -1; previousStudent.disabled = busy || index <= 0; nextStudent.disabled = busy || !exam || index >= exam.students.length - 1; }
+  async function action(fn) {
+    if (busy || disposed) return;
+    busy = true; controls();
+    try { await fn(); } catch (error) { inform(error.message); }
+    finally { busy = false; controls(); }
+  }
+  async function flush() { if (queue?.dirty) await queue.flush(); }
+  async function refreshHistory() {
+    const records = await api.list(context); history.replaceChildren();
+    const placeholder = el('option', 'Kayıtlı sınav seçin'); placeholder.value = ''; history.append(placeholder);
+    for (const item of records) { const option = el('option', `${item.date} · ${item.status === 'active' ? 'Devam ediyor' : 'Tamamlandı'} · ${item.id.slice(0, 6)}`); option.value = item.id; history.append(option); }
+    history.value = exam?.id || '';
+    const active = records.find(item => item.status === 'active');
+    if (!exam && active) load(await api.get(active.id));
+  }
+  history.addEventListener('change', () => {
+    const target = history.value;
+    if (!target) return;
+    action(async () => { await flush(); load(await api.get(target)); }).finally(() => { history.value = exam?.id || ''; });
+  });
+  function load(value) {
+    exam = value;
+    key.value = ''; pairing.hidden = true; retry.hidden = true; discard.hidden = true;
+    queue = new ScoreQueue({
+      save: job => api.save(exam.id, job),
+      revision: id => exam.results[id]?.revision ?? 0,
+      onSaved(id, saved) {
+        exam.results[id].revision = saved.revision; exam.revision = Math.max(exam.revision, saved.examRevision ?? exam.revision);
+        if (saved.activeStudentId === null && exam.activeStudentId === id) { exam.activeStudentId = null; renderForm(); }
+        update();
+      },
+      onState(state, error) {
+        retry.hidden = state !== 'error';
+        discard.hidden = state !== 'error';
+        inform({pending: 'Kaydedilmeyi bekliyor…', saving: 'Kaydediliyor…', saved: 'Kaydedildi.', error: error?.code === 'conflict' ? 'Başka oturumda değişiklik var. Taslağınız korunuyor. Puanlarınızı not alıp sunucudaki kaydı açarak yeniden değerlendirebilirsiniz.' : 'Kaydedilemedi. Bağlantıyı kontrol edip yeniden deneyin; taslağınız korunuyor.'}[state]);
+      }
+    });
+    inform(exam.status === 'active' ? 'Öğrenci seçerek değerlendirmeye başlayın.' : 'Tamamlanmış sınav · Puanlar korunuyor.');
+    contextLabel.textContent = [exam.className, exam.subjectId, exam.termId, exam.date].filter(Boolean).join(' · ');
+    renderRoster(); renderForm(); controls();
+  }
+  function renderRoster() {
+    roster.replaceChildren(el('h3', 'Öğrenciler'));
+    studentSelect.replaceChildren(); const placeholder = el('option', 'Öğrenci seçin'); placeholder.value = ''; studentSelect.append(placeholder);
+    for (const student of exam.students) {
+      const option = el('option', student.name); option.value = student.id; studentSelect.append(option);
+      const item = button('', () => chooseStudent(exam.activeStudentId === student.id ? null : student.id), 'se-student');
+      item.dataset.studentId = student.id; item.append(el('span', student.name), el('small')); roster.append(item);
+    }
+    update();
+  }
+  function renderForm() {
+    form.replaceChildren();
+    const student = exam.students.find(s => s.id === exam.activeStudentId);
+    if (!student) { form.append(el('p', 'Değerlendirmek için listeden öğrenci seçin.', 'se-empty')); return; }
+    const head = el('div', undefined, 'se-form-heading'); head.append(el('h3', student.name), el('output', '', 'se-total'), button('Seçimi kaldır', () => chooseStudent(null))); form.append(head);
+    exam.results[student.id] ||= {scores: emptyScores(), revision: 0};
+    exam.rubric.criteria.forEach((criterion, index) => {
+      const field = el('fieldset', undefined, 'se-criterion'), legend = el('legend', `${index + 1}. ${criterion}`), choices = el('div', undefined, 'se-scores');
+      for (let score = 1; score <= 10; score++) {
+        const choice = button(String(score), () => {
+          if (exam.status !== 'active' || busy) return;
+          if (exam.results[student.id].scores[index] === score) return;
+          exam.results[student.id].scores[index] = score; queue.enqueue(student.id, index, score); update();
+        });
+        choice.dataset.criterion = index; choice.dataset.score = score; choice.setAttribute('aria-label', `${index + 1}. ölçüt: ${score} puan`); choices.append(choice);
+      }
+      field.append(legend, choices); form.append(field);
+    });
+    update();
+  }
+  function update() {
+    if (!exam) return;
+    studentSelect.value = exam.activeStudentId || '';
+    for (const option of studentSelect.options) { const student = exam.students.find(s => s.id === option.value); if (!student) continue; const value = total(exam.results[student.id]?.scores ?? emptyScores()); option.textContent = `${student.name} · ${value.complete ? '✓ ' + value.sum + '/100' : value.count + '/10'}`; }
+    for (const node of roster.querySelectorAll('[data-student-id]')) {
+      const scores = exam.results[node.dataset.studentId]?.scores ?? emptyScores(), value = total(scores);
+      node.setAttribute('aria-current', String(node.dataset.studentId === exam.activeStudentId));
+      node.querySelector('small').textContent = value.complete ? `${value.sum}/100 · Tamamlandı` : `${value.count}/10 ölçüt`;
+    }
+    const scores = exam.results[exam.activeStudentId]?.scores ?? emptyScores();
+    const output = form.querySelector('output'); if (output) output.textContent = totalLabel(scores);
+    for (const choice of form.querySelectorAll('[data-score]')) {
+      choice.setAttribute('aria-pressed', String(scores[Number(choice.dataset.criterion)] === Number(choice.dataset.score)));
+      choice.disabled = exam.status !== 'active';
+    }
+    controls();
+  }
+  const beforeUnload = event => { if (queue?.dirty) { event.preventDefault(); event.returnValue = ''; } };
+  const online = () => { if (queue?.error?.code !== 'conflict') void action(async () => { await flush(); if (exam) load(await api.get(exam.id)); }); };
+  window.addEventListener('beforeunload', beforeUnload); window.addEventListener('online', online);
+  controls(); const ready = action(refreshHistory);
+  return {ready, async close() { await flush(); disposed = true; window.removeEventListener('beforeunload', beforeUnload); window.removeEventListener('online', online); root.replaceChildren(); }, get exam() { return exam; }};
+}
+
+// Optional drawer inside the EXISTING timer. Timer background/state stay intact.
+export function mountBoard(dialog, api, topic, {read = () => api.board()} = {}) {
+  const panel = el('section', undefined, 'se-board se-root'); panel.setAttribute('aria-label', 'Canlı konuşma değerlendirmesi');
+  panel.id = 'se-board-' + crypto.randomUUID();
+  const heading = el('header', undefined, 'se-board-heading'), liveLabel = el('p', undefined, 'se-live-label');
+  const dot = el('span', undefined, 'se-live-dot'); dot.setAttribute('aria-hidden', 'true'); liveLabel.append(dot, el('span', 'Değerlendirme'));
+  const content = el('div', undefined, 'se-board-content');
+  const tab = button('', () => setOpen(tab.getAttribute('aria-expanded') !== 'true'), 'se-drawer-tab');
+  const arrow = el('span', '‹', 'se-drawer-arrow'); arrow.setAttribute('aria-hidden', 'true'); tab.append(arrow, el('span', 'Değerlendirme', 'se-drawer-tab-label'));
+  tab.setAttribute('aria-controls', panel.id); tab.setAttribute('aria-expanded', 'false'); tab.setAttribute('aria-label', 'Değerlendirmeyi aç');
+  const close = button('', () => { setOpen(false); tab.focus(); }, 'se-drawer-close'); close.setAttribute('aria-label', 'Değerlendirmeyi kapat');
+  const closeIcon = el('span', '×'); closeIcon.setAttribute('aria-hidden', 'true'); close.append(closeIcon);
+  heading.append(liveLabel, close); panel.append(heading, content); panel.inert = true; panel.setAttribute('aria-hidden', 'true');
+  dialog.classList.add('se-live'); dialog.append(panel, tab);
+  function setOpen(open) { dialog.classList.toggle('se-drawer-open', open); tab.setAttribute('aria-expanded', String(open)); tab.setAttribute('aria-label', open ? 'Değerlendirmeyi kapat' : 'Değerlendirmeyi aç'); arrow.textContent = open ? '›' : '‹'; panel.inert = !open; panel.setAttribute('aria-hidden', String(!open)); }
+  const escape = event => { if (event.key === 'Escape' && tab.getAttribute('aria-expanded') === 'true') { event.preventDefault(); event.stopImmediatePropagation(); setOpen(false); tab.focus(); } };
+  dialog.addEventListener('keydown', escape, true);
+  let lastRevision = -1, lastId = null, lastStudent = null, lastScores = null, unsubscribe = () => {}, expired = false;
+  const note = el('p', 'Bağlanıyor…', 'se-status'); note.setAttribute('role', 'status'); content.append(note);
+  function clear(message) { panel.dataset.live = 'false'; const status = el('p', message, 'se-status'); status.setAttribute('role', 'status'); content.replaceChildren(status); }
+  const reader = coalescedReader(read, exam => {
+    if (exam.status !== 'active') { clear('Sınav tamamlandı.'); expired = true; unsubscribe(); reader.close(); return; }
+    if (exam.id === lastId && exam.revision <= lastRevision) return;
+    const sameStudent = exam.id === lastId && exam.activeStudentId === lastStudent;
+    const changed = lastRevision >= 0;
+    lastId = exam.id; lastRevision = exam.revision;
+    if (!Number.isFinite(exam.expiresAt) || exam.expiresAt <= Date.now()) { clear('Tahta erişimi sona erdi.'); return; }
+    scheduleExpiry(exam.expiresAt);
+    panel.dataset.live = 'true'; content.replaceChildren();
+    const student = exam.students.find(s => s.id === exam.activeStudentId);
+    content.append(el('h2', student?.name || 'Öğrenci seçimi bekleniyor', changed && !sameStudent ? 'se-update-pop' : ''));
+    const scores = exam.results[exam.activeStudentId]?.scores ?? emptyScores();
+    const list = el('ol', undefined, 'se-board-rubric');
+    let scoreChanged = false;
+    exam.rubric.criteria.forEach((criterion, i) => {
+      const updated = changed && sameStudent && lastScores && scores[i] !== lastScores[i];
+      scoreChanged ||= updated;
+      const row = el('li', undefined, updated ? 'se-update-pop' : ''); row.append(el('span', criterion), el('strong', scores[i] === null ? '— / 10' : `${scores[i]} / 10`)); list.append(row);
+    });
+    content.append(list, el('output', totalLabel(scores), 'se-total' + (scoreChanged ? ' se-update-pop' : '')));
+    lastStudent = exam.activeStudentId; lastScores = [...scores];
+  }, () => { lastRevision = -1; clear('Bağlantı veya erişim doğrulanamadı. Yeniden bağlanın.'); });
+  let expiryTimer;
+  function scheduleExpiry(expiry) { clearTimeout(expiryTimer); expiryTimer = setTimeout(() => { expired = true; clear('Tahta erişimi sona erdi.'); unsubscribe(); reader.close(); }, Math.min(2147483647, Math.max(0, expiry - Date.now()))); }
+  unsubscribe = api.subscribe(topic, () => { if (!document.hidden && !expired) reader.trigger(); }, state => {
+    if (state !== 'SUBSCRIBED') { reader.invalidate(); lastRevision = -1; clear('Canlı bağlantı kesildi. Yeniden bağlanınca güncellenecek.'); }
+  });
+  const refresh = () => { if (!document.hidden && !expired) reader.trigger(); };
+  const offline = () => { reader.invalidate(); lastRevision = -1; clear('Bağlantı kesildi. Yeniden bağlanınca güncellenecek.'); };
+  document.addEventListener('visibilitychange', refresh); window.addEventListener('online', refresh); window.addEventListener('offline', offline); reader.trigger();
+  return () => { expired = true; clearTimeout(expiryTimer); reader.close(); unsubscribe(); document.removeEventListener('visibilitychange', refresh); window.removeEventListener('online', refresh); window.removeEventListener('offline', offline); dialog.removeEventListener('keydown', escape, true); panel.remove(); tab.remove(); dialog.classList.remove('se-live', 'se-drawer-open'); };
+}

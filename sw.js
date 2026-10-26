@@ -1,6 +1,7 @@
 // NoTik — Service Worker
-const CACHE = 'classlog-v570';
+const CACHE = 'classlog-v571';
 const STATIC = [
+  './speech-exam-entry.js?v=1',
  "./word-hunter.css?v=10",
  "./assets/icons/game-pass.svg", "./assets/icons/button-gloss.svg",
  "./game-restart-ui.js?v=1", "./game-restart-ui.css?v=3", "./assets/icons/game-restart.svg", "./assets/icons/unmarked.svg",

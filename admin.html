@@ -371,7 +371,7 @@
             </div>
                 </div>
             </details>
-            <details id="speechAdmin" class="announcement-details admin-info-panel no-kiosk admin-only"><summary class="announcement-summary"><span><svg class="admin-comic-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g stroke="#675080" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-8l-6 3v-3a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Z" fill="#DCDFFA"/><path d="M7 8h10M7 12h7" stroke="#9380B0"/><circle cx="18" cy="16" r="3" fill="#F7D9B4"/></g></svg> Konuşma Sınavı Konuları</span></summary><div style="padding:16px"><p id="speechAdminContext"></p><p>Her satıra bir konu yazın. Numaralar otomatik gösterilir. En fazla 200 konu, konu başına 500 karakter.</p><textarea id="speechTopicsInput" rows="7" style="width:100%;margin:12px 0" placeholder="En sevdiğin mevsimi nedenleriyle anlat.&#10;Bir günlüğüne görünmez olsaydın ne yapardın?"></textarea><ol id="speechTopicsPreview"></ol><button id="speechTopicsSave" class="tbtn tbtn-accent" disabled>Kaydet</button><button id="speechTopicsReload" class="tbtn">Kayıtlı listeyi yükle</button><p id="speechAdminStatus" role="status"></p></div></details>
+            <details id="speechAdmin" class="announcement-details admin-info-panel no-kiosk admin-only"><summary class="announcement-summary"><span><svg class="admin-comic-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g stroke="#675080" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-8l-6 3v-3a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Z" fill="#DCDFFA"/><path d="M7 8h10M7 12h7" stroke="#9380B0"/><circle cx="18" cy="16" r="3" fill="#F7D9B4"/></g></svg> Konuşma Sınavı Konuları</span></summary><div style="padding:16px"><p id="speechAdminContext"></p><p>Her satıra bir konu yazın. Numaralar otomatik gösterilir. En fazla 200 konu, konu başına 500 karakter.</p><textarea id="speechTopicsInput" rows="7" style="width:100%;margin:12px 0" placeholder="En sevdiğin mevsimi nedenleriyle anlat.&#10;Bir günlüğüne görünmez olsaydın ne yapardın?"></textarea><ol id="speechTopicsPreview"></ol><button id="speechTopicsSave" class="tbtn tbtn-accent" disabled>Kaydet</button><button id="speechTopicsReload" class="tbtn">Kayıtlı listeyi yükle</button><p id="speechAdminStatus" role="status"></p><div style="margin-top:12px"><button id="speechExamOpen" type="button" class="tbtn" disabled>Canlı Konuşma Sınavı</button><p id="speechExamAvailability" style="font-size:.8rem;margin-top:6px">Güvenlik kurulumu tamamlanana kadar kapalı.</p></div></div></details>
 <div class="admin-status-strip">
                 <span id="saveStatusBadge" class="status-pill status-idle">Hazır</span>
                 <span id="realtimeStatusBadge" class="status-pill status-muted">Canlı bağlantı: beklemede</span>
@@ -660,6 +660,7 @@
     }
     </script>
 <script src="speech-topics.js?v=4"></script>
+<script src="speech-exam-entry.js?v=1"></script>
 <script src="application-backup.js?v=1"></script>
 <script src="record-export.js?v=1"></script>
 <script src="admin-layout.js?v=24"></script>
