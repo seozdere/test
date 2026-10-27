@@ -79,6 +79,9 @@
 /* Board content scrolls independently; score and progress stay in their own footer. */
 .se-board-student{text-align:center}
 .se-board-student>span{display:inline-block}
+.se-board-student>.se-name-pop{animation:se-name-pop .24s ease-out;transform-origin:center}
+@keyframes se-name-pop{0%{opacity:0;transform:scale(.88)}65%{opacity:1;transform:scale(1.05)}100%{opacity:1;transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.se-board-student>.se-name-pop{animation:none}}
 .se-board .se-drawer-close svg{display:block;flex:none}
 .se-board .se-update-pop{display:inline-block;transform-origin:center;border-radius:8px}
 .se-board-content{flex:1;min-width:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;overflow:hidden}
