@@ -74,7 +74,7 @@ export function installAutomaticBoard(timer,api,{parentToken,loadStyles,mountBoa
     if(value.status!=='approved'){
       clearPanel();setup.hidden=false;
       const pending=value.status==='pending';code.hidden=!pending;code.textContent=value.code || '';start.hidden=pending;
-      note.textContent=pending?'Bu cihaz kodunu adminde “Tahtayı bir kez onayla” bölümüne yazın. Kod 10 dakika geçerlidir.':'Cihaz kodunun süresi doldu. Yeniden kod oluşturun.';
+      note.textContent=pending?'Bu cihazı yönetici panelinde aşağıdaki kodu kullanarak onaylayın. Kod 10 dakika geçerlidir.':'Cihaz kodunun süresi doldu. Yeniden kod oluşturun.';
       watch(value.deviceTopic?[value.deviceTopic]:[]);
       if(pending)expiryTimer=setTimeout(()=>{if(timer.open)reader?.trigger();},Math.max(0,value.expiresAt-Date.now()+50));
       return;
