@@ -1,4 +1,4 @@
-import {ScoreQueue, emptyScores, total, totalLabel, coalescedReader} from './speech-exam-core.mjs?v=speech-layout-20261027-r5';
+import {ScoreQueue, emptyScores, total, totalLabel, coalescedReader, selectionRemainingMs} from './speech-exam-core.mjs?v=speech-layout-20261027-r6';
 const el = (tag, text, className) => { const node = document.createElement(tag); if (text !== undefined) node.textContent = text; if (className) node.className = className; return node; };
 function button(text, action, className) { const node = el('button', text, className); node.type = 'button'; node.addEventListener('click', action); return node; }
 
@@ -14,7 +14,7 @@ export function mountAdmin(root, api, context) {
   const finish = button('Sınavı Bitir', () => {
     if (exam && confirm('Sınav bitirilsin mi? Kaydedilmiş puanlar korunur; değerlendirme salt okunur olur.')) action(async () => { await flush(); load(await api.finish(exam.id, exam.revision)); await refreshHistory(); });
   });
-  const download = button('Excel İndir', () => action(async () => { await flush(); const current = await api.get(exam.id); const {downloadExam} = await import('./speech-exam-xlsx.mjs?v=speech-layout-20261027-r5'); downloadExam(current); }));
+  const download = button('Excel İndir', () => action(async () => { await flush(); const current = await api.get(exam.id); const {downloadExam} = await import('./speech-exam-xlsx.mjs?v=speech-layout-20261027-r6'); downloadExam(current); }));
   const retry = button('Kaydı yeniden dene', () => action(flush)); retry.hidden = true;
   const reload = button('Kayıtlı sınavları yenile', () => action(async () => { await flush(); if (exam) load(await api.get(exam.id)); await refreshHistory(); }));
   const discard = button('Sunucudaki kaydı aç', () => {
@@ -61,6 +61,17 @@ export function mountAdmin(root, api, context) {
     finally { busy = false; controls(); }
   }
   async function flush() { if (queue?.dirty) await queue.flush(); }
+  let selectionTimer;
+  function scheduleSelectionClear() {
+    clearTimeout(selectionTimer);
+    const delay = selectionRemainingMs(exam);
+    if (delay === null || !exam.activeStudentId || exam.status !== 'active') return;
+    const {id, activeStudentId, selectionExpiresAt} = exam;
+    selectionTimer = setTimeout(() => {
+      if (disposed || exam.id !== id || exam.activeStudentId !== activeStudentId || exam.selectionExpiresAt !== selectionExpiresAt || queue?.dirty) return;
+      exam.activeStudentId = null; exam.selectionExpiresAt = null; renderForm(); update();
+    }, delay);
+  }
   async function refreshHistory() {
     const records = await api.list(context); history.replaceChildren();
     const placeholder = el('option', 'Kayıtlı sınav seçin'); placeholder.value = ''; history.append(placeholder);
@@ -83,6 +94,10 @@ export function mountAdmin(root, api, context) {
       onSaved(id, saved) {
         exam.results[id].revision = saved.revision; exam.revision = Math.max(exam.revision, saved.examRevision ?? exam.revision);
         if (saved.activeStudentId === null && exam.activeStudentId === id) { exam.activeStudentId = null; renderForm(); }
+        if (exam.activeStudentId === id) {
+          exam.selectionExpiresAt = saved.selectionExpiresAt ?? null; exam.serverTime = saved.serverTime;
+        }
+        scheduleSelectionClear();
         update();
       },
       onState(state, error) {
@@ -93,7 +108,7 @@ export function mountAdmin(root, api, context) {
     });
     inform(exam.status === 'active' ? 'Öğrenci seçerek değerlendirmeye başlayın.' : 'Tamamlanmış sınav · Puanlar korunuyor.');
     contextLabel.textContent = [exam.className, exam.subjectId, exam.termId, exam.date].filter(Boolean).join(' · ');
-    renderRoster(); renderForm(); controls();
+    renderRoster(); renderForm(); controls(); scheduleSelectionClear();
   }
   function renderRoster() {
     roster.replaceChildren(el('h3', 'Öğrenciler'));
@@ -146,7 +161,7 @@ export function mountAdmin(root, api, context) {
   const online = () => { if (queue?.error?.code !== 'conflict') void action(async () => { await flush(); if (exam) load(await api.get(exam.id)); }); };
   window.addEventListener('beforeunload', beforeUnload); window.addEventListener('online', online);
   controls(); const ready = action(refreshHistory);
-  return {ready, async close() { await flush(); disposed = true; window.removeEventListener('beforeunload', beforeUnload); window.removeEventListener('online', online); root.replaceChildren(); }, get exam() { return exam; }};
+  return {ready, async close() { await flush(); disposed = true; clearTimeout(selectionTimer); window.removeEventListener('beforeunload', beforeUnload); window.removeEventListener('online', online); root.replaceChildren(); }, get exam() { return exam; }};
 }
 
 // Optional drawer inside the EXISTING timer. Timer background/state stay intact.
@@ -167,11 +182,14 @@ export function mountBoard(dialog, api, topic, {read = () => api.board(), manage
   const escape = event => { if (event.key === 'Escape' && tab.getAttribute('aria-expanded') === 'true') { event.preventDefault(); event.stopImmediatePropagation(); setOpen(false); tab.focus(); } };
   dialog.addEventListener('keydown', escape, true);
   let lastRevision = -1, lastId = null, lastStudent = null, lastScores = null, unsubscribe = () => {}, expired = false;
+  let selectionTimer, expiredSelection = null;
   const note = el('p', 'Bağlanıyor…', 'se-status'); note.setAttribute('role', 'status'); content.append(note);
-  function clear(message) { panel.dataset.live = 'false'; const status = el('p', message, 'se-status'); status.setAttribute('role', 'status'); content.replaceChildren(status); }
+  function clear(message) { clearTimeout(selectionTimer); panel.dataset.live = 'false'; const status = el('p', message, 'se-status'); status.setAttribute('role', 'status'); content.replaceChildren(status); }
   const applySnapshot = exam => {
     if (exam.status !== 'active') { clear('Sınav tamamlandı.'); expired = true; unsubscribe(); reader.close(); return; }
-    if (exam.id === lastId && exam.revision <= lastRevision) return;
+    if (expiredSelection?.id === exam.id && exam.revision <= expiredSelection.revision && exam.activeStudentId === expiredSelection.studentId) exam = {...exam, activeStudentId:null, selectionExpiresAt:null};
+    if (exam.id === lastId && (exam.revision < lastRevision || exam.revision === lastRevision && exam.activeStudentId === lastStudent)) return;
+    clearTimeout(selectionTimer);
     const sameStudent = exam.id === lastId && exam.activeStudentId === lastStudent;
     const previousList = content.querySelector('.se-board-rubric');
     const scrollTop = sameStudent ? previousList?.scrollTop || 0 : 0;
@@ -183,7 +201,15 @@ export function mountBoard(dialog, api, topic, {read = () => api.board(), manage
     panel.dataset.live = 'true'; content.replaceChildren();
     const student = exam.students.find(s => s.id === exam.activeStudentId);
     const studentHeading = el('h2', undefined, 'se-board-student');
-    studentHeading.append(el('span', student?.name || 'Öğrenci seçimi bekleniyor', changed && !sameStudent && student ? 'se-name-pop' : '')); content.append(studentHeading);
+    if (student) studentHeading.append(el('span', student.name, changed && !sameStudent ? 'se-name-pop' : ''));
+    else {
+      studentHeading.setAttribute('aria-label', 'Öğrenci seçimi bekleniyor...');
+      const waiting = el('span', 'Öğrenci seçimi bekleniyor'), dots = el('span', undefined, 'se-waiting-dots');
+      dots.setAttribute('aria-hidden', 'true');
+      for (let i = 0; i < 3; i++) dots.append(el('span', '.'));
+      waiting.append(dots); studentHeading.append(waiting);
+    }
+    content.append(studentHeading);
     const scores = exam.results[exam.activeStudentId]?.scores ?? emptyScores();
     const list = el('ol', undefined, 'se-board-rubric');
     list.tabIndex = 0; list.setAttribute('aria-label', 'Değerlendirme ölçütleri');
@@ -203,6 +229,12 @@ export function mountBoard(dialog, api, topic, {read = () => api.board(), manage
     list.scrollTop = scrollTop;
     if (restoreListFocus) list.focus({preventScroll:true});
     lastStudent = exam.activeStudentId; lastScores = [...scores];
+    const delay = selectionRemainingMs(exam);
+    if (student && delay !== null) selectionTimer = setTimeout(() => {
+      if (expired || lastId !== exam.id || lastRevision !== exam.revision || lastStudent !== exam.activeStudentId) return;
+      expiredSelection = {id:exam.id, revision:exam.revision, studentId:exam.activeStudentId};
+      applySnapshot({...exam, activeStudentId:null, selectionExpiresAt:null});
+    }, delay);
   };
   const reader = coalescedReader(read, applySnapshot, () => { lastRevision = -1; clear('Bağlantı veya erişim doğrulanamadı. Yeniden bağlanın.'); });
   let expiryTimer;
@@ -213,7 +245,7 @@ export function mountBoard(dialog, api, topic, {read = () => api.board(), manage
   const refresh = () => { if (!document.hidden && !expired) reader.trigger(); };
   const offline = () => { reader.invalidate(); lastRevision = -1; clear('Bağlantı kesildi. Yeniden bağlanınca güncellenecek.'); };
   if (!managed) { document.addEventListener('visibilitychange', refresh); window.addEventListener('online', refresh); window.addEventListener('offline', offline); reader.trigger(); }
-  const dispose = () => { expired = true; clearTimeout(expiryTimer); reader.close(); unsubscribe(); document.removeEventListener('visibilitychange', refresh); window.removeEventListener('online', refresh); window.removeEventListener('offline', offline); dialog.removeEventListener('keydown', escape, true); panel.remove(); tab.remove(); dialog.classList.remove('se-live', 'se-drawer-open'); };
+  const dispose = () => { expired = true; clearTimeout(selectionTimer); clearTimeout(expiryTimer); reader.close(); unsubscribe(); document.removeEventListener('visibilitychange', refresh); window.removeEventListener('online', refresh); window.removeEventListener('offline', offline); dialog.removeEventListener('keydown', escape, true); panel.remove(); tab.remove(); dialog.classList.remove('se-live', 'se-drawer-open'); };
   dispose.update = exam => { if (!expired) applySnapshot(exam); };
   return dispose;
 }
