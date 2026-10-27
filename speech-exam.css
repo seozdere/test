@@ -46,7 +46,7 @@
 @keyframes se-score-pop{0%{transform:scale(.94);opacity:.55;color:#248957;text-shadow:0 0 0 #4bbf7c00}40%{transform:scale(1.08);opacity:1;color:#16854d;text-shadow:0 0 8px #4bbf7c80}100%{transform:scale(1);opacity:1}}
 @media(prefers-reduced-motion:reduce){.se-root button,.speech-dialog.se-live>.speech-stage,.se-board,.speech-dialog .se-drawer-tab{transition:none}.se-board[data-live=true] .se-live-dot,.se-board .se-update-pop{animation:none}}
 
-/* Approved device setup: test release, scoped to the exam UI. */
+/* Approved device setup, scoped to the exam UI. */
 .se-device-admin{border:1px solid #40516e;border-radius:12px;padding:12px;margin-bottom:16px}.se-device-admin summary{cursor:pointer;font-weight:700}.se-device-admin p{font-size:.85rem;margin:10px 0}.se-device-admin-controls{display:flex;flex-wrap:wrap;gap:8px}.se-device-admin input{min-width:0;flex:1 1 170px;max-width:100%;font:inherit;padding:10px;border:1px solid #65728c;background:#283650;color:#eef2ff;border-radius:10px}.se-device-list>div{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px}.se-device-list span{overflow-wrap:anywhere;min-width:0}.se-device-setup{margin:14px auto;padding:12px;max-width:560px;text-align:center;color:#655678;background:#fffaf0e8;border:1px solid #dacfe5;border-radius:16px}.se-device-setup p{font-size:.85rem}.se-device-setup button{background:#eee5f7;color:#655678;margin:8px 4px 0;border-color:#cdbfdb}.se-device-code{display:block;letter-spacing:.16em;font-size:clamp(1.3rem,4vw,2rem);font-weight:800;padding:10px;color:#655678}.se-device-setup[hidden]{display:none!important}
 
 /* Admin dialog chrome: do not inherit the page header spacing. */
@@ -73,30 +73,62 @@
  .se-dialog .se-empty{padding:18px;font-size:.9rem}
 }
 
-/* Keep the running timer visible behind the drawer on portrait phones only.
-   Background alpha leaves the rubric, scores and controls fully opaque. */
-@media(max-width:640px) and (orientation:portrait){
- .speech-dialog .se-board{background:rgba(255,253,248,.42);backdrop-filter:none;-webkit-backdrop-filter:none}
- .speech-dialog .se-board-content,.speech-dialog .se-board-heading{text-shadow:0 1px 2px #fff,0 0 4px #fff}
-}
-
-/* Board labels and update feedback; only names and changed score text animate. */
+/* Board content scrolls independently; score and progress stay in their own footer. */
 .se-board-student{text-align:center}
 .se-board-student>span{display:inline-block}
 .se-board .se-drawer-close svg{display:block;flex:none}
 .se-board .se-update-pop{display:inline-block;transform-origin:center;border-radius:8px}
-.se-board-rubric.se-board-upper{margin-bottom:0}
-.se-board-rubric.se-board-lower{margin-top:0;counter-reset:criterion 5}
-.se-timer-gap{display:none}
+.se-board-content{flex:1;display:grid;grid-template-rows:auto minmax(0,1fr) auto;overflow:hidden}
+.se-board-rubric{min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+.se-board-rubric:focus-visible{outline:2px solid #b5a1cf;outline-offset:2px;border-radius:8px}
+.se-board-footer{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px 14px;border:1px solid #aacbb7;border-radius:16px;background:linear-gradient(165deg,#f1faf3,#d8eddf 52%,#c9e3d2);box-shadow:inset 0 2px 2px #fff,inset 0 -3px 3px #8fb89d30,0 3px 0 #a5c7b34d;color:#305c46}
+.se-board .se-board-footer .se-total{display:block;margin:0;padding:0;min-height:0;width:auto;border:0;border-radius:0;background:none;box-shadow:none;text-align:center;font-size:1.05rem}
+.se-board .se-board-footer .se-total::before{content:none}
+.se-criterion-count{font-size:.72rem;font-style:italic;white-space:nowrap;text-align:right}
+.se-device-setup.se-device-idle{padding:0;margin:12px auto 0;background:none;border:0;box-shadow:none}
+.se-device-setup p:empty{display:none}
+.se-device-setup .se-device-identify{display:inline-flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;box-shadow:none;padding:0;margin:0;color:#796198;font-size:.75rem;font-weight:700}
+.se-device-setup .se-device-identify:hover:not(:disabled){background:none}
+.se-device-identify svg{display:block;width:68px;height:68px;transition:transform .18s ease;pointer-events:none}
+.se-device-identify:hover:not(:disabled) svg{transform:translateY(-2px)}
+.se-device-identify:active:not(:disabled) svg{transform:scale(.95)}
+
+/* Portrait phones: the same timer moves above a half-height bottom sheet. */
 @media(max-width:640px) and (orientation:portrait){
- .speech-dialog .se-board{top:68px}
- .speech-dialog .se-board-heading{padding:4px 10px}
- .speech-dialog .se-board-content{flex:1;display:grid;grid-template-rows:auto var(--se-upper-height,180px) var(--se-timer-height,96px) minmax(0,1fr) auto;padding:4px 10px 10px;overflow:hidden;min-height:0}
- .speech-dialog .se-board-student{font-size:1rem;line-height:1.35;padding:3px 0 6px}
- .speech-dialog .se-board-rubric{margin:0;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
- .speech-dialog .se-board-rubric li{font-size:.76rem;line-height:1.3;gap:6px;padding:3px 0;align-items:center}
- .speech-dialog .se-board-upper{display:flex;flex-direction:column}
- .speech-dialog .se-board-upper>li{flex:1 0 auto}
- .speech-dialog .se-timer-gap{display:block;pointer-events:none}
- .speech-dialog .se-board .se-total{min-height:46px;margin-top:8px;padding:8px;font-size:.87rem;border-radius:14px}
+ #speechDialog.se-live{overflow:hidden}
+ #speechDialog.se-live>.speech-stage{position:absolute;top:50%;left:12px;right:12px;width:calc(100% - 24px);transform:translateY(-50%);transition:top .32s ease,transform .32s ease;}
+ #speechDialog.se-drawer-open>.speech-stage{top:calc(25dvh + 10px);max-height:calc(50dvh - 112px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;display:flex;flex-direction:column;align-items:center;gap:4px}
+ #speechDialog.se-drawer-open .speech-stage h2{flex-shrink:0;margin:0;font-size:clamp(1.05rem,4.8vw,1.35rem)}
+ #speechDialog.se-drawer-open .speech-topic-area{margin:0;max-width:100%;min-height:0;overflow-y:auto;flex-shrink:1}
+ #speechDialog.se-drawer-open .speech-topic-area>button{min-height:44px;margin:2px;padding:4px 8px;gap:4px;font-size:.72rem;border-radius:12px}
+ #speechDialog.se-drawer-open .speech-topic-area>button svg{width:28px;height:28px}
+ #speechDialog.se-drawer-open .speech-time-row{flex-shrink:0}
+ #speechDialog.se-drawer-open .speech-feedback:has(#speechStatus:empty){display:none}
+ #speechDialog.se-drawer-open #speechTopicMessage:empty{display:none}
+ #speechDialog.se-drawer-open .speech-time{margin:0;font-size:clamp(3rem,18vw,5.5rem);line-height:1.05}
+ #speechDialog.se-drawer-open .speech-feedback{min-height:18px;gap:4px;font-size:.7rem;flex-shrink:0}
+ #speechDialog.se-drawer-open #speechTick{width:20px;height:20px}
+ #speechDialog.se-drawer-open .speech-icon-actions{margin:0;gap:14px;flex-shrink:0}
+ #speechDialog.se-drawer-open .speech-icon-actions button{width:52px;height:52px}
+ #speechDialog .se-board{top:auto;bottom:0;left:8px;right:8px;width:auto;height:50dvh;max-height:50dvh;border-radius:20px 20px 0 0;background:rgba(255,253,248,.97);transform:translateY(calc(100% + 12px));transition:transform .32s ease,visibility .32s;}
+ #speechDialog.se-drawer-open .se-board{transform:translateY(0)}
+ #speechDialog .se-board-heading{padding:5px 10px;min-height:54px}
+ #speechDialog .se-board-content{padding:6px 12px max(10px,env(safe-area-inset-bottom));gap:4px}
+ #speechDialog .se-board-student{font-size:.95rem;line-height:1.35;padding:2px 0 4px}
+ #speechDialog .se-board-rubric{margin:0}
+ #speechDialog .se-board-rubric li{font-size:.78rem;line-height:1.4;gap:8px;padding:8px 0;align-items:center}
+ #speechDialog .se-board-footer{min-height:48px;padding:10px;gap:8px;border-radius:14px;margin-top:4px}
+ #speechDialog .se-board-footer .se-total{font-size:.95rem}
+ #speechDialog .se-criterion-count{font-size:.68rem}
+ #speechDialog .se-drawer-tab{left:50%;right:auto;top:auto;bottom:0;transform:translateX(-50%);min-height:44px;min-width:160px;padding:8px 20px max(8px,env(safe-area-inset-bottom));border:1px solid #cdbfdb;border-bottom:0;border-radius:16px 16px 0 0;justify-content:center;gap:10px;transition:bottom .32s ease}
+ #speechDialog.se-drawer-open .se-drawer-tab{right:auto;bottom:50dvh;padding-bottom:8px}
+ #speechDialog .se-drawer-tab-label{writing-mode:horizontal-tb;font-size:.8rem}
+ #speechDialog .se-drawer-arrow{display:block;transform:rotate(90deg);font-size:24px}
 }
+@media(max-width:640px) and (orientation:portrait) and (max-height:700px){
+ #speechDialog.se-drawer-open>.speech-stage{gap:2px}
+ #speechDialog.se-drawer-open .speech-time{font-size:15vw}
+ #speechDialog.se-drawer-open .speech-icon-actions button{width:44px;height:44px}
+ #speechDialog.se-drawer-open .speech-stage h2{font-size:1rem}
+}
+@media(prefers-reduced-motion:reduce){#speechDialog.se-live>.speech-stage,#speechDialog .se-board,#speechDialog .se-drawer-tab,.se-device-identify svg{transition:none}}

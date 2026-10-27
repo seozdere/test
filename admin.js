@@ -10,8 +10,9 @@ let notes        = {};
 let adminTab     = 'homework';
 
 const _urlParams    = new URLSearchParams(window.location.search);
-const _urlMode      = _urlParams.get('mode');
-const _authReqParam = _urlParams.get('auth_request');
+// Retired kiosk URLs now use the normal teacher login flow.
+const _urlMode      = null;
+const _authReqParam = null;
 const _isKioskStart = _urlMode === 'kiosk';
 let _kioskTimer     = null;
 let _kioskSeconds   = 10 * 60;
@@ -1116,37 +1117,12 @@ if (copyLinkBtn) copyLinkBtn.onclick = async () => {
 
 // ─── Tahta / Cihaz Eşleştirme ────────────────────────────────────────────────
 // ─── Tahtayı Aç: telefon butonuyla sabit kanala kimlik gönder ────────────────
-async function buildBoardUnlockPayload(boardCode, contextOverride = null) {
-    const normalizedBoardCode = normalizeBoardCode(boardCode);
-    if (!/^\d{6}$/.test(normalizedBoardCode)) {
-        throw new Error('Geçerli bir tahta kodu girin.');
-    }
-    const context = contextOverride || getCurrentBoardContext();
-    const kioskSession = await ClassLogAuth.createKioskSession(context);
-    if (!kioskSession?.sessionToken) {
-        throw new Error('Kiosk oturumu olusturulamadi.');
-    }
-    setStoredBoardTargetCode(normalizedBoardCode);
-    return {
-        token: kioskSession.sessionToken,
-        teacher: kioskSession.teacher || ClassLogAuth.getTeacher(),
-        context,
-        expiresAt: kioskSession.expiresAt ? new Date(kioskSession.expiresAt).getTime() : (Date.now() + KIOSK_DURATION_MS),
-        sessionKind: kioskSession.sessionKind || 'kiosk',
-        boardCode: normalizedBoardCode
-    };
+async function buildBoardUnlockPayload() {
+    throw new Error('Eski kiosk ile tahta açma özelliği kapatıldı.');
 }
 
-async function sendBoardCommand(eventName, payload = {}) {
-    const ch = await _getBroadcastChannel(CLASSLOG_BOARD_CHANNEL);
-    await ch.send({
-        type: 'broadcast',
-        event: eventName,
-        payload: {
-            ts: Date.now(),
-            ...payload
-        }
-    });
+async function sendBoardCommand() {
+    throw new Error('Eski kiosk komut aktarımı kapatıldı.');
 }
 
 const pushToBoardBtn = document.getElementById('pushToBoardBtn');
@@ -1204,102 +1180,7 @@ if (closeBoardBtn) closeBoardBtn.onclick = async () => {
 };
 
 async function handleRemoteAuthIfNeeded() {
-    const authReq = _authReqParam;
-    if (!authReq || !ClassLogAuth.isLoggedIn()) return false;
-
-    await ClassLogData.syncSettings();
-    const teacher = ClassLogAuth.getTeacher() || {};
-    const allowedClasses = teacher.classes?.length
-        ? ClassLogData.availableClasses.filter(className => teacher.classes.includes(className))
-        : ClassLogData.availableClasses;
-    const allowedSubjects = getTeacherSubjects();
-    const defaultClass = allowedClasses.includes(ClassLogData.currentClass)
-        ? ClassLogData.currentClass
-        : (allowedClasses[0] || '5A');
-    const defaultSubject = allowedSubjects.find(subject => subject.id === ClassLogData.currentSubject)?.id
-        || allowedSubjects[0]?.id
-        || 'turkce';
-    const defaultView = adminTab === 'class' ? 'class' : 'homework';
-
-    document.body.innerHTML = `
-        <div style="min-height:100vh;background:var(--a-bg);display:flex;align-items:center;justify-content:center;padding:24px;">
-            <div style="width:100%;max-width:460px;background:rgba(15,23,42,.96);border:1px solid rgba(148,163,184,.22);border-radius:24px;padding:28px;box-shadow:0 28px 60px rgba(2,6,23,.45);">
-                <div style="font-size:2.8rem;text-align:center;margin-bottom:10px;">📱</div>
-                <h2 style="font-family:'Segoe UI','DM Sans',sans-serif;color:#f8fafc;font-size:1.5rem;text-align:center;margin-bottom:8px;">Tahtayı Aç</h2>
-                <p style="color:#94a3b8;font-size:.92rem;line-height:1.6;text-align:center;margin-bottom:22px;">Tahtada görünen 6 haneli kodu girin, sınıfı seçin ve sadece o tahtayı açın.</p>
-                <label style="display:block;color:#cbd5e1;font-size:.82rem;font-weight:700;margin-bottom:6px;">Tahta kodu</label>
-                <input id="remoteBoardCode" inputmode="numeric" maxlength="6" placeholder="Örn: 482731" style="width:100%;padding:14px 16px;border-radius:14px;border:1px solid rgba(148,163,184,.2);background:#081120;color:#f8fafc;font-size:1.2rem;letter-spacing:.24em;text-align:center;margin-bottom:14px;">
-                <label style="display:block;color:#cbd5e1;font-size:.82rem;font-weight:700;margin-bottom:6px;">Sınıf</label>
-                <select id="remoteBoardClass" style="width:100%;padding:13px 14px;border-radius:14px;border:1px solid rgba(148,163,184,.2);background:#081120;color:#f8fafc;margin-bottom:14px;">${allowedClasses.map(className => `<option value="${className}" ${className === defaultClass ? 'selected' : ''}>${className}</option>`).join('')}</select>
-                <label style="display:block;color:#cbd5e1;font-size:.82rem;font-weight:700;margin-bottom:6px;">Ders</label>
-                <select id="remoteBoardSubject" style="width:100%;padding:13px 14px;border-radius:14px;border:1px solid rgba(148,163,184,.2);background:#081120;color:#f8fafc;margin-bottom:14px;">${allowedSubjects.map(subject => `<option value="${subject.id}" ${subject.id === defaultSubject ? 'selected' : ''}>${_htmlEncode(subject.label)}</option>`).join('')}</select>
-                <label style="display:block;color:#cbd5e1;font-size:.82rem;font-weight:700;margin-bottom:6px;">Görünüm</label>
-                <select id="remoteBoardView" style="width:100%;padding:13px 14px;border-radius:14px;border:1px solid rgba(148,163,184,.2);background:#081120;color:#f8fafc;margin-bottom:18px;">
-                    <option value="homework" ${defaultView === 'homework' ? 'selected' : ''}>Ödev Takip</option>
-                    <option value="class" ${defaultView === 'class' ? 'selected' : ''}>Derse Katılım</option>
-                </select>
-                <button id="remoteBoardOpenBtn" style="width:100%;padding:14px 16px;border:none;border-radius:16px;background:linear-gradient(135deg,#2563eb,#38bdf8);color:#fff;font-weight:800;font-size:1rem;cursor:pointer;">Tahtayı Aç</button>
-                <p id="remoteBoardError" style="min-height:20px;margin-top:12px;color:#fca5a5;font-size:.82rem;text-align:center;"></p>
-            </div>
-        </div>`;
-
-    const codeInput = document.getElementById('remoteBoardCode');
-    const classSelect = document.getElementById('remoteBoardClass');
-    const subjectSelect = document.getElementById('remoteBoardSubject');
-    const viewSelect = document.getElementById('remoteBoardView');
-    const errorEl = document.getElementById('remoteBoardError');
-    const openBtn = document.getElementById('remoteBoardOpenBtn');
-
-    if (codeInput) {
-        codeInput.value = getStoredBoardTargetCode();
-        codeInput.focus();
-        codeInput.addEventListener('input', () => {
-            codeInput.value = normalizeBoardCode(codeInput.value);
-        });
-    }
-
-    if (openBtn) openBtn.onclick = async () => {
-        const boardCode = normalizeBoardCode(codeInput?.value || '');
-        if (!/^\d{6}$/.test(boardCode)) {
-            if (errorEl) errorEl.textContent = 'Tahtadaki geçerli 6 haneli kodu girin.';
-            return;
-        }
-
-        const context = {
-            className: classSelect?.value || defaultClass,
-            subjectId: subjectSelect?.value || defaultSubject,
-            viewingTermId: ClassLogData.viewingTermId ?? ClassLogData.activeTermId ?? null,
-            activeTermId: ClassLogData.activeTermId ?? null,
-            adminTab: viewSelect?.value === 'class' ? 'class' : 'homework'
-        };
-
-        openBtn.disabled = true;
-        openBtn.textContent = 'Bağlanıyor...';
-        if (errorEl) errorEl.textContent = '';
-
-        try {
-            const payload = await buildBoardUnlockPayload(boardCode, context);
-            await sendBoardCommand('unlock', payload);
-            document.body.innerHTML = `
-                <div style="position:fixed;inset:0;background:var(--a-bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;text-align:center;padding:40px;">
-                    <div style="font-size:5rem;">✅</div>
-                    <h2 style="font-family:'Segoe UI','DM Sans',sans-serif;color:#4ade80;font-size:1.5rem;">Tahta Açıldı</h2>
-                    <p style="color:#94a3b8;">${context.className} sınıfı için bağlantı kuruldu.</p>
-                    <p style="color:#64748b;font-size:.82rem;margin-top:8px;">Bu sekme 3 saniyede kapanacak...</p>
-                </div>`;
-            setTimeout(() => {
-                try { window.close(); } catch (error) {}
-                setTimeout(() => { window.location.href = window.location.pathname; }, 600);
-            }, 2800);
-        } catch (error) {
-            console.error('Remote board connect error:', error);
-            if (errorEl) errorEl.textContent = error?.message || 'Tahta bağlantısı kurulurken bir sorun oluştu.';
-            openBtn.disabled = false;
-            openBtn.textContent = 'Tahtayı Aç';
-        }
-    };
-
-    return true;
+    return false;
 }
 
 // ─── QR Kodu ──────────────────────────────────────────────────────────────────
@@ -1307,31 +1188,7 @@ const qrBtn = document.getElementById('qrBtn');
 if (qrBtn) qrBtn.onclick = showBoardQR;
 
 function showBoardQR() {
-    const modal   = document.getElementById('qrModal');
-    const label   = document.getElementById('qrClassLabel');
-    const img     = document.getElementById('qrImage');
-    const infoEl  = document.getElementById('qrInfo');
-    const countEl = document.getElementById('qrCountdown');
-    if (!modal) return;
-
-    // ── Sabit auth_request URL (QR asla değişmez) ──
-    const boardAuthUrl = `${window.location.origin}${window.location.pathname}?auth_request=${CLASSLOG_BOARD_FIXED_ID}`;
-    const boardUrl     = `${window.location.origin}${window.location.pathname}?mode=board`;
-
-    if (label)   label.textContent = '🖥️ Tahta QR — Telefon ile Tarat';
-    if (img)     img.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=10&color=F1F5FF&bgcolor=0D1525&data=${encodeURIComponent(boardAuthUrl)}`;
-    if (countEl) countEl.textContent = '♾️ Sabit QR — Asla değişmez';
-    if (infoEl)  infoEl.innerHTML = `
-        <div style="margin-top:12px;padding:12px 14px;background:rgba(99,102,241,.1);border-radius:10px;font-size:.82rem;line-height:1.7;color:var(--a-muted2);text-align:left;">
-            <strong style="color:var(--a-accent)">📋 İki Yöntemden Biri:</strong><br>
-            <strong style="color:#4ade80;">① Telefon Butonu (Önerilen):</strong><br>
-            &nbsp;&nbsp;Panel'de <em>"📱→🖥️ Tahtayı Aç"</em> butonuna bas<br><br>
-            <strong style="color:#60a5fa;">② QR Tarat:</strong><br>
-            &nbsp;&nbsp;Tahtaya <a style="color:#818cf8;" href="${boardUrl}" target="_blank">bu bağlantıyı</a> aç → QR görünür<br>
-            &nbsp;&nbsp;Telefonunla o QR'ı tara → bağlan<br><br>
-            <strong style="color:#F59E0B;">🔒 Güvenlik:</strong> Öğrenciler QR'ı okutsa da şifre bilmeden giremez.
-        </div>`;
-    modal.style.display = 'flex';
+    return; // The retired QR never requests a code or remote session.
 }
 
 // ─── Sınıf Değiştir ───────────────────────────────────────────────────────────
@@ -2086,64 +1943,11 @@ async function init() {
 let _boardControlChannel = null;
 
 function showBoardWaitingState() {
-    stopBoardCodeLoop();
-    sessionStorage.removeItem('cl_board_target_code');
-    const overlay = document.getElementById('loginOverlay');
-    if (overlay) overlay.style.display = 'none';
-
-    const boardScreen = document.getElementById('boardScreen');
-    if (boardScreen) {
-        boardScreen.style.display = 'flex';
-        boardScreen.style.background = '';
-    }
-
-    const statusText = document.getElementById('boardStatusText');
-    if (statusText) statusText.textContent = 'Öğretmen bekleniyor...';
-
-    const boardAuthUrl = `${window.location.origin}${window.location.pathname}?auth_request=${CLASSLOG_BOARD_FIXED_ID}`;
-    const qrImg = document.getElementById('boardScreenQr');
-    if (qrImg) qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=280x280&margin=12&color=EEF2FF&bgcolor=0D1525&data=${encodeURIComponent(boardAuthUrl)}`;
-    startBoardCodeLoop();
+    return;
 }
 
-function handleBoardUnlock(payload = {}) {
-    const { token, teacher, context, expiresAt, sessionKind, boardCode } = payload;
-    if (!token) return;
-    if (!/^\d{6}$/.test(normalizeBoardCode(boardCode))) return;
-    if (normalizeBoardCode(boardCode) !== normalizeBoardCode(_boardCurrentCode)) return;
-
-    const teacherObj = typeof teacher === 'object' ? teacher : JSON.parse(teacher || '{}');
-    const safeTeacher = sessionKind === 'kiosk'
-        ? {
-            ...teacherObj,
-            role: teacherObj?.role === 'admin' ? 'teacher' : (teacherObj?.role || 'teacher'),
-            classes: context?.className ? [context.className] : (teacherObj?.classes || []),
-            subjects: context?.subjectId ? [context.subjectId] : (teacherObj?.subjects || [])
-        }
-        : teacherObj;
-
-    sessionStorage.setItem('cl_session', token);
-    sessionStorage.setItem('cl_teacher', JSON.stringify(safeTeacher));
-    sessionStorage.setItem('cl_session_kind', sessionKind || 'kiosk');
-    sessionStorage.setItem('cl_board_target_code', normalizeBoardCode(boardCode));
-    applyKioskContext(context);
-    stopBoardCodeLoop();
-    startKioskTimer({ expiresAt, context });
-    renderKioskContextInfo();
-
-    const statusText = document.getElementById('boardStatusText');
-    if (statusText) {
-        statusText.textContent = `${safeTeacher.name || 'Öğretmen'} bağlandı. Panel açılıyor...`;
-    }
-
-    const boardScreen = document.getElementById('boardScreen');
-    if (boardScreen) {
-        boardScreen.style.background = 'linear-gradient(135deg, #052e16, #064e3b)';
-    }
-
-    setTimeout(() => {
-        location.replace(`${window.location.pathname}?mode=kiosk_ready`);
-    }, 1600);
+function handleBoardUnlock() {
+    return; // Never accept credentials from the retired Broadcast channel.
 }
 
 function handleBoardLock(payload = {}) {
@@ -2158,15 +1962,7 @@ function handleBoardLock(payload = {}) {
 }
 
 function ensureBoardControlChannel() {
-    if (_boardControlChannel) return _boardControlChannel;
-
-    _boardControlChannel = _supabase.channel(CLASSLOG_BOARD_CHANNEL);
-    _boardControlChannel
-        .on('broadcast', { event: 'unlock' }, payload => handleBoardUnlock(payload.payload || {}))
-        .on('broadcast', { event: 'lock' }, payload => handleBoardLock(payload.payload || {}))
-        .subscribe();
-
-    return _boardControlChannel;
+    return null; // No subscription to the shared legacy channel.
 }
 
 function initBoardMode() {

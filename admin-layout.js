@@ -24,7 +24,7 @@
   ids.forEach(id=>{const el=$(id);if(el)controls.append(el);});
   section.append(controls);top.append(section);
  });
- body.append($('adminInfoPanel'),$('speechAdmin'));
+ body.append($('adminInfoPanel'),$('speechAdmin'),$('speechExamAdmin'));
  body.addEventListener('click',e=>{if(e.target.closest('#teacherMgrBtn,#subjectMgrBtn,#termMgrBtn,#qrBtn,#pushToBoardBtn,#changePwBtn'))close();});
  // One announcement surface, preserving each channel's inputs, drafts and save handlers.
  const info=$('adminInfoPanel'),noticeTabs=document.createElement('div');noticeTabs.className='notice-tabs';noticeTabs.setAttribute('role','tablist');

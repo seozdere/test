@@ -1,5 +1,5 @@
-// Intentionally dormant. No RPC, Realtime subscription, roster read or heavy
-// module download until the security review AND server release gate are complete.
+// Prepared release client. Deploy only after the live preflight review.
+// Server RPC permissions and the independent server gate control data access.
 (() => {
   const RELEASE_ENABLED = true;
   const button = document.getElementById('speechExamOpen');
@@ -10,6 +10,6 @@
   }
   if (RELEASE_ENABLED) {
     // A separate server gate and real RPC authorization are still mandatory.
-    import('./speech-exam-host.mjs?v=auto-20261026-layout3').then(module => module.install()).catch(() => {});
+    import('./speech-exam-host.mjs?v=speech-layout-20261027-r3').then(module => module.install()).catch(() => {});
   }
 })();

@@ -1,7 +1,14 @@
 // NoTik — Service Worker
-const CACHE = 'classlog-test-speech-auto-20261026-layout3';
+const CACHE = 'classlog-speech-layout-20261027-r3';
 const STATIC = [
-  './speech-exam-entry.js?v=auto-20261026-layout3',
+  './speech-exam-host.mjs?v=speech-layout-20261027-r3',
+  './speech-exam-api.mjs?v=speech-layout-20261027-r3',
+  './speech-exam-device.mjs?v=speech-layout-20261027-r3',
+  './speech-exam-ui.mjs?v=speech-layout-20261027-r3',
+  './speech-exam-core.mjs?v=speech-layout-20261027-r3',
+  './speech-exam-xlsx.mjs?v=speech-layout-20261027-r3',
+  './speech-exam.css?v=speech-layout-20261027-r3',
+  './speech-exam-entry.js?v=speech-layout-20261027-r3',
  "./word-hunter.css?v=10",
  "./assets/icons/game-pass.svg", "./assets/icons/button-gloss.svg",
  "./game-restart-ui.js?v=1", "./game-restart-ui.css?v=3", "./assets/icons/game-restart.svg", "./assets/icons/unmarked.svg",
@@ -22,9 +29,9 @@ const STATIC = [
   './data.js',
   './data.js?v=20',
   './admin.js',
-  './admin.js?v=42',
-  './admin-layout.js?v=24',
-  './admin-layout.css?v=60-test',
+  './admin.js?v=speech-layout-20261027-r3',
+  './admin-layout.js?v=25',
+  './admin-layout.css?v=speech-layout-20261027-r3',
   './application-backup.js?v=1',
   './record-export.js?v=1',
   './parent.js',

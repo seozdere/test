@@ -1,6 +1,6 @@
 // Small, lazy-loaded OOXML writer: ZIP/store, explicit string cells, no formulas.
 // No third-party runtime or CDN request. Null cells remain empty in real XLSX.
-import {exportRows} from './speech-exam-core.mjs';
+import {exportRows} from './speech-exam-core.mjs?v=speech-live-20261027-r2';
 const encoder = new TextEncoder();
 const xml = value => String(value).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
 function crc32(bytes) {

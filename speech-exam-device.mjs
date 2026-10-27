@@ -1,4 +1,4 @@
-import {coalescedReader} from './speech-exam-core.mjs';
+import {coalescedReader} from './speech-exam-core.mjs?v=speech-layout-20261027-r3';
 const STORAGE_KEY = 'notik-approved-speech-device-v1';
 const element = (tag, text, cls) => { const n=document.createElement(tag); if(text!==undefined)n.textContent=text; if(cls)n.className=cls; return n; };
 const button = (text, fn) => {const n=element('button',text);n.type='button';n.onclick=fn;return n;};
@@ -43,9 +43,11 @@ export function mountDeviceAdmin(root,api,context) {
 // random device secret. The server decides whether that device can see grades.
 export function installAutomaticBoard(timer,api,{parentToken,loadStyles,mountBoard,storage=localStorage}={}) {
   const setup=element('section',undefined,'se-root se-device-setup');setup.hidden=true;
-  const note=element('p','Değerlendirme için bu tahtayı bir kez adminden onaylayın.');note.setAttribute('role','status');
+  const note=element('p','');note.setAttribute('role','status');
   const code=element('output','', 'se-device-code');code.hidden=true;code.setAttribute('aria-label','Cihaz onay kodu');
   const start=button('Bu tahtayı tanıt',()=>void request());
+  start.className='se-device-identify';start.title='Bu tahtayı tanıt';
+  start.innerHTML='<svg viewBox="0 0 64 64" fill="none" aria-hidden="true" focusable="false"><rect x="7" y="10" width="50" height="48" rx="18" fill="#86709F" opacity=".18"/><rect x="7" y="6" width="50" height="48" rx="18" fill="#E5DDF2" stroke="#86709F" stroke-width="2"/><path d="M17 14h10" stroke="white" stroke-width="3" stroke-linecap="round"/><rect x="18" y="20" width="28" height="19" rx="4" fill="#FFFDF7" stroke="#86709F" stroke-width="2"/><path d="M27 44h10m-5-5v5" stroke="#86709F" stroke-width="2" stroke-linecap="round"/><circle cx="44" cy="38" r="8" fill="#D2EBD9" stroke="#548467" stroke-width="1.5"/><path d="M44 34v8m-4-4h8" stroke="#548467" stroke-width="2" stroke-linecap="round"/></svg><span>Bu tahtayı tanıt</span>';
   const retry=button('Yeniden bağlan',()=>{restart();});retry.hidden=true;
   const reset=button('Yeni cihaz onayı iste',()=>{if(!confirm('Bu tarayıcıdaki cihaz kaydı sıfırlansın mı? Yeniden admin onayı gerekir.'))return;try{storage.removeItem(STORAGE_KEY);}catch{}restart();});reset.hidden=true;
   setup.append(note,code,start,retry,reset);timer.querySelector('.speech-stage').append(setup);
@@ -54,7 +56,7 @@ export function installAutomaticBoard(timer,api,{parentToken,loadStyles,mountBoa
   function clearPanel(){panel?.();panel=null;activeId=null;}
   function clearSubscriptions(){for(const off of subscriptions.values())off();subscriptions.clear();}
   function stop(){epoch++;reader?.close();reader=null;clearSubscriptions();clearPanel();clearTimeout(expiryTimer);connected=false;setup.hidden=true;}
-  function error(message){clearPanel();setup.hidden=false;code.hidden=true;start.hidden=true;retry.hidden=false;reset.hidden=false;note.textContent=message;}
+  function error(message){clearPanel();setup.classList.remove('se-device-idle');setup.hidden=false;code.hidden=true;start.hidden=true;retry.hidden=false;reset.hidden=false;note.textContent=message;}
   function watch(topics){
     for(const [topic,off] of subscriptions)if(!topics.includes(topic)){off();subscriptions.delete(topic);}
     for(const topic of topics)if(!subscriptions.has(topic)){
@@ -67,6 +69,7 @@ export function installAutomaticBoard(timer,api,{parentToken,loadStyles,mountBoa
   }
   function apply(value){
     if(!timer.open||disposed)return;
+    setup.classList.remove('se-device-idle');
     clearTimeout(expiryTimer);retry.hidden=true;reset.hidden=true;start.disabled=false;requesting=false;
     if(value.status!=='approved'){
       clearPanel();setup.hidden=false;
@@ -87,7 +90,7 @@ export function installAutomaticBoard(timer,api,{parentToken,loadStyles,mountBoa
     try{await loadStyles();if(current!==epoch||!timer.open)return;secret=storage.getItem(STORAGE_KEY)||'';}
     catch{if(current===epoch)error('Cihaz kaydı veya görünüm yüklenemedi. Tarayıcı depolama iznini kontrol edin.');return;}
     start.disabled=false;requesting=false;
-    if(!secret){setup.hidden=false;start.hidden=false;retry.hidden=true;reset.hidden=true;code.hidden=true;note.textContent='Değerlendirme için bu tahtayı bir kez adminden onaylayın.';return;}
+    if(!secret){setup.classList.add('se-device-idle');setup.hidden=false;start.hidden=false;retry.hidden=true;reset.hidden=true;code.hidden=true;note.textContent='';return;}
     connected=true;
     reader=coalescedReader(()=>api.call('read',{parentToken:parentToken()},secret),value=>{if(current===epoch)apply(value);},e=>{if(current===epoch)error(e.message);});reader.trigger();
   }
@@ -97,7 +100,7 @@ export function installAutomaticBoard(timer,api,{parentToken,loadStyles,mountBoa
       if(!secret){secret=Array.from(crypto.getRandomValues(new Uint8Array(32)),n=>n.toString(16).padStart(2,'0')).join('');storage.setItem(STORAGE_KEY,secret);}
       await api.call('request',{parentToken:parentToken()},secret);
       if(current===epoch)await restart();
-    }catch(e){if(current===epoch){note.textContent=e.message;start.disabled=false;requesting=false;retry.hidden=false;}}
+    }catch(e){if(current===epoch){setup.classList.remove('se-device-idle');note.textContent=e.message;start.disabled=false;requesting=false;retry.hidden=false;}}
   }
   const observer=new MutationObserver(()=>{if(timer.open&&!connected)void restart();else if(!timer.open)stop();});observer.observe(timer,{attributes:true,attributeFilter:['open']});
   const offline=()=>{if(!timer.open)return;reader?.invalidate();error('İnternet bağlantısı kesildi. Puanlar yeniden doğrulanınca gösterilecek.');};
