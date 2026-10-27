@@ -1,4 +1,10 @@
-import {ScoreQueue, emptyScores, total, totalLabel, coalescedReader, selectionRemainingMs} from './speech-exam-core.mjs?v=speech-layout-20261027-r6';
+import {ScoreQueue, emptyScores, total, totalLabel, coalescedReader} from './speech-exam-core.mjs?v=speech-loader-20261028-r1';
+// Presentation-only deadline calculation; compatible with the existing core module.
+function selectionRemainingMs(value) {
+  return Number.isFinite(value.selectionExpiresAt)
+    ? Math.max(0, value.selectionExpiresAt - (Number.isFinite(value.serverTime) ? value.serverTime : Date.now()))
+    : null;
+}
 const el = (tag, text, className) => { const node = document.createElement(tag); if (text !== undefined) node.textContent = text; if (className) node.className = className; return node; };
 function button(text, action, className) { const node = el('button', text, className); node.type = 'button'; node.addEventListener('click', action); return node; }
 
@@ -14,7 +20,7 @@ export function mountAdmin(root, api, context) {
   const finish = button('Sınavı Bitir', () => {
     if (exam && confirm('Sınav bitirilsin mi? Kaydedilmiş puanlar korunur; değerlendirme salt okunur olur.')) action(async () => { await flush(); load(await api.finish(exam.id, exam.revision)); await refreshHistory(); });
   });
-  const download = button('Excel İndir', () => action(async () => { await flush(); const current = await api.get(exam.id); const {downloadExam} = await import('./speech-exam-xlsx.mjs?v=speech-layout-20261027-r6'); downloadExam(current); }));
+  const download = button('Excel İndir', () => action(async () => { await flush(); const current = await api.get(exam.id); const {downloadExam} = await import('./speech-exam-xlsx.mjs?v=speech-loader-20261028-r1'); downloadExam(current); }));
   const retry = button('Kaydı yeniden dene', () => action(flush)); retry.hidden = true;
   const reload = button('Kayıtlı sınavları yenile', () => action(async () => { await flush(); if (exam) load(await api.get(exam.id)); await refreshHistory(); }));
   const discard = button('Sunucudaki kaydı aç', () => {

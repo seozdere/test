@@ -1,16 +1,16 @@
-import {LIVE_ENABLED, SpeechExamApi} from './speech-exam-api.mjs?v=speech-layout-20261027-r6';
-import {mountAdmin, mountBoard} from './speech-exam-ui.mjs?v=speech-layout-20261027-r6';
-import {SpeechDeviceApi, mountDeviceAdmin, installAutomaticBoard} from './speech-exam-device.mjs?v=speech-layout-20261027-r6';
+import {LIVE_ENABLED, SpeechExamApi} from './speech-exam-api.mjs?v=speech-loader-20261028-r1';
+import {mountAdmin, mountBoard} from './speech-exam-ui.mjs?v=speech-loader-20261028-r1';
+import {SpeechDeviceApi, mountDeviceAdmin, installAutomaticBoard} from './speech-exam-device.mjs?v=speech-loader-20261028-r1';
 let styles;
 function loadStyles() {
   if (!styles) styles = new Promise((resolve, reject) => {
-    const link = document.createElement('link'); link.rel = 'stylesheet'; link.href = new URL('./speech-exam.css?v=speech-layout-20261027-r6', import.meta.url).href;
+    const link = document.createElement('link'); link.rel = 'stylesheet'; link.href = new URL('./speech-exam.css?v=speech-loader-20261028-r1', import.meta.url).href;
     link.onload = resolve; link.onerror = () => { link.remove(); styles = null; reject(Error('Sınav görünümü yüklenemedi.')); }; document.head.append(link);
   });
   return styles;
 }
 export function install() {
-  if (!LIVE_ENABLED) return;
+  if (!LIVE_ENABLED) return false;
   const launcher = document.getElementById('speechExamOpen');
   if (launcher) {
     launcher.disabled = false; launcher.title = '';
