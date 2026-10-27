@@ -13,6 +13,12 @@ export const RUBRIC = Object.freeze({version: 'tr-speaking-1', criteria: Object.
 ])});
 export const clone = value => structuredClone(value);
 export const emptyScores = () => Array(10).fill(null);
+// Server time avoids extending/shortening the display when device clocks differ.
+export function selectionRemainingMs(value) {
+  return Number.isFinite(value.selectionExpiresAt)
+    ? Math.max(0, value.selectionExpiresAt - (Number.isFinite(value.serverTime) ? value.serverTime : Date.now()))
+    : null;
+}
 export function validateScores(scores) {
   if (!Array.isArray(scores) || scores.length !== 10 || scores.some(v => v !== null && (!Number.isInteger(v) || v < 1 || v > 10))) throw Error('Geçersiz puan.');
   return scores;

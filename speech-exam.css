@@ -79,6 +79,15 @@
 /* Board content scrolls independently; score and progress stay in their own footer. */
 .se-board-student{text-align:center}
 .se-board-student>span{display:inline-block}
+.se-waiting-dots{display:inline-flex;width:1.05em;text-align:left}
+.se-waiting-dots>span{width:.35em;animation:se-waiting-dot-one 1.2s step-end infinite}
+.se-waiting-dots>span:nth-child(2){animation-name:se-waiting-dot-two}
+.se-waiting-dots>span:nth-child(3){animation-name:se-waiting-dot-three}
+@keyframes se-waiting-dot-one{0%{opacity:1}75%,100%{opacity:0}}
+@keyframes se-waiting-dot-two{0%{opacity:0}25%{opacity:1}75%,100%{opacity:0}}
+@keyframes se-waiting-dot-three{0%{opacity:0}50%{opacity:1}75%,100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.se-waiting-dots>span{animation:none;opacity:1}}
+.se-board-rubric strong{font-size:1.18em;line-height:1.35;font-variant-numeric:tabular-nums}
 .se-board-student>.se-name-pop{animation:se-name-pop .24s ease-out;transform-origin:center}
 @keyframes se-name-pop{0%{opacity:0;transform:scale(.88)}65%{opacity:1;transform:scale(1.05)}100%{opacity:1;transform:scale(1)}}
 @media(prefers-reduced-motion:reduce){.se-board-student>.se-name-pop{animation:none}}
