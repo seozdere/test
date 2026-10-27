@@ -24,7 +24,7 @@
 @keyframes se-live-pulse{0%{box-shadow:0 0 0 0 #42ad7755}75%,100%{box-shadow:0 0 0 7px #42ad7700}}
 .se-board-content{min-height:0;overflow:auto;overscroll-behavior:contain;padding:16px 18px 20px;scrollbar-width:thin}
 .se-board .se-status{color:#52617b}.se-board h2{overflow-wrap:anywhere;font-size:clamp(1.1rem,1.5vw,1.5rem)}
-.se-board-rubric{padding:0;list-style:none;counter-reset:criterion;margin:16px 0}.se-board-rubric li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:10px 0;border-bottom:1px solid #e5dfeb;align-items:start;font-size:clamp(.8rem,1vw,.95rem)}.se-board-rubric li span{overflow-wrap:anywhere;counter-increment:criterion}.se-board-rubric li span::before{content:counter(criterion) '. ';font-weight:700}.se-board-rubric strong{white-space:nowrap;color:#5b5078}.se-board .se-total{position:relative;isolation:isolate;margin-top:18px;width:100%;min-height:68px;display:grid;place-items:center;text-align:center;padding:16px 20px;font-size:clamp(1rem,1.5vw,1.2rem);line-height:1.5;border:1px solid #aacbb7;border-radius:18px;background:linear-gradient(165deg,#f1faf3 0%,#d8eddf 52%,#c9e3d2 100%);box-shadow:inset 0 2px 2px #fff,inset 0 -3px 3px #8fb89d30,0 4px 0 #a5c7b34d;color:#305c46}.se-board .se-total::before{content:"";position:absolute;inset:5px 10px auto;height:35%;border-radius:14px;background:linear-gradient(#ffffff9c,#fff0);pointer-events:none;z-index:-1}
+.se-board-rubric{padding:0;list-style:none;counter-reset:criterion;margin:16px 0}.se-board-rubric li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:10px 0;border-bottom:1px solid #e5dfeb;align-items:start;font-size:clamp(.8rem,1vw,.95rem)}.se-board-rubric li>span{overflow-wrap:anywhere;counter-increment:criterion}.se-board-rubric li>span::before{content:counter(criterion) '. ';font-weight:700}.se-board-rubric strong{white-space:nowrap;color:#5b5078}.se-board .se-total{position:relative;isolation:isolate;margin-top:18px;width:100%;min-height:68px;display:grid;place-items:center;text-align:center;padding:16px 20px;font-size:clamp(1rem,1.5vw,1.2rem);line-height:1.5;border:1px solid #aacbb7;border-radius:18px;background:linear-gradient(165deg,#f1faf3 0%,#d8eddf 52%,#c9e3d2 100%);box-shadow:inset 0 2px 2px #fff,inset 0 -3px 3px #8fb89d30,0 4px 0 #a5c7b34d;color:#305c46}.se-board .se-total::before{content:"";position:absolute;inset:5px 10px auto;height:35%;border-radius:14px;background:linear-gradient(#ffffff9c,#fff0);pointer-events:none;z-index:-1}
 .speech-dialog .se-drawer-tab{position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:5;display:flex;align-items:center;gap:8px;min-width:44px;min-height:140px;padding:14px 10px;border:1px solid #cdbfdb;border-right:0;border-radius:16px 0 0 16px;background:linear-gradient(110deg,#fffdf8,#f2eaf6);color:#69547f;box-shadow:inset 2px 2px 2px #fff,inset -2px -3px 3px #b4a0c52b,-4px 3px 16px #68537c24;font:700 .83rem 'Plus Jakarta Sans',sans-serif;cursor:pointer;transition:right .28s ease}
 .se-drawer-tab-label{writing-mode:vertical-rl}.se-drawer-arrow{font-size:28px;line-height:1}
 .speech-dialog.se-drawer-open .se-drawer-tab{right:calc(var(--se-drawer-width) + 11px)}
@@ -42,9 +42,12 @@
  .se-board-heading{padding:10px 12px;gap:6px}.se-live-label{font-size:.76rem;gap:6px}.se-board-content{padding:12px}.se-board-rubric li{font-size:.82rem;gap:8px}.se-drawer-tab-label{font-size:.75rem}
 }
 @media(orientation:landscape) and (max-height:600px){.se-board{top:80px;bottom:12px}.speech-dialog.se-live{--se-drawer-width:min(460px,calc(100vw - 72px))}}
-.se-board .se-update-pop{animation:se-score-pop .65s ease-out}
-@keyframes se-score-pop{0%{transform:scale(.94);opacity:.55;color:#248957;text-shadow:0 0 0 #4bbf7c00}40%{transform:scale(1.08);opacity:1;color:#16854d;text-shadow:0 0 8px #4bbf7c80}100%{transform:scale(1);opacity:1}}
-@media(prefers-reduced-motion:reduce){.se-root button,.speech-dialog.se-live>.speech-stage,.se-board,.speech-dialog .se-drawer-tab{transition:none}.se-board[data-live=true] .se-live-dot,.se-board .se-update-pop{animation:none}}
+.se-board .se-score-value.se-update-pop{animation:se-score-pop .8s ease-out}
+.se-score-value[data-tone=high]{--se-score-ink:#258754;--se-score-glow:#72c89b99}
+.se-score-value[data-tone=middle]{--se-score-ink:#a17916;--se-score-glow:#efd576aa}
+.se-score-value[data-tone=low]{--se-score-ink:#ba6576;--se-score-glow:#e6a4b299}
+@keyframes se-score-pop{0%{transform:scale(.94);opacity:.6;color:var(--se-score-ink);text-shadow:0 0 0 transparent}40%,65%{transform:scale(1.12);opacity:1;color:var(--se-score-ink);text-shadow:0 0 8px var(--se-score-glow)}100%{transform:scale(1);opacity:1;color:inherit;text-shadow:none}}
+@media(prefers-reduced-motion:reduce){.se-root button,.speech-dialog.se-live>.speech-stage,.se-board,.speech-dialog .se-drawer-tab{transition:none}.se-board[data-live=true] .se-live-dot,.se-board .se-score-value.se-update-pop{animation:none}}
 
 /* Approved device setup, scoped to the exam UI. */
 .se-device-admin{border:1px solid #40516e;border-radius:12px;padding:12px;margin-bottom:16px}.se-device-admin summary{cursor:pointer;font-weight:700}.se-device-admin p{font-size:.85rem;margin:10px 0}.se-device-admin-controls{display:flex;flex-wrap:wrap;gap:8px}.se-device-admin input{min-width:0;flex:1 1 170px;max-width:100%;font:inherit;padding:10px;border:1px solid #65728c;background:#283650;color:#eef2ff;border-radius:10px}.se-device-list>div{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px}.se-device-list span{overflow-wrap:anywhere;min-width:0}.se-device-setup{margin:14px auto;padding:12px;max-width:560px;text-align:center;color:#655678;background:#fffaf0e8;border:1px solid #dacfe5;border-radius:16px}.se-device-setup p{font-size:.85rem}.se-device-setup button{background:#eee5f7;color:#655678;margin:8px 4px 0;border-color:#cdbfdb}.se-device-code{display:block;letter-spacing:.16em;font-size:clamp(1.3rem,4vw,2rem);font-weight:800;padding:10px;color:#655678}.se-device-setup[hidden]{display:none!important}
@@ -78,13 +81,14 @@
 .se-board-student>span{display:inline-block}
 .se-board .se-drawer-close svg{display:block;flex:none}
 .se-board .se-update-pop{display:inline-block;transform-origin:center;border-radius:8px}
-.se-board-content{flex:1;display:grid;grid-template-rows:auto minmax(0,1fr) auto;overflow:hidden}
-.se-board-rubric{min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+.se-board-content{flex:1;min-width:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;overflow:hidden}
+.se-board-rubric{min-width:0;min-height:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding-right:6px}
+.se-board-rubric::-webkit-scrollbar{display:none}
 .se-board-rubric:focus-visible{outline:2px solid #b5a1cf;outline-offset:2px;border-radius:8px}
-.se-board-footer{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px 14px;border:1px solid #aacbb7;border-radius:16px;background:linear-gradient(165deg,#f1faf3,#d8eddf 52%,#c9e3d2);box-shadow:inset 0 2px 2px #fff,inset 0 -3px 3px #8fb89d30,0 3px 0 #a5c7b34d;color:#305c46}
-.se-board .se-board-footer .se-total{display:block;margin:0;padding:0;min-height:0;width:auto;border:0;border-radius:0;background:none;box-shadow:none;text-align:center;font-size:1.05rem}
+.se-board-footer{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px;padding:10px 14px;border:1px solid #aacbb7;border-radius:16px;background:linear-gradient(165deg,#f1faf3,#d8eddf 52%,#c9e3d2);box-shadow:inset 0 2px 2px #fff,inset 0 -3px 3px #8fb89d30,0 3px 0 #a5c7b34d;color:#305c46}
+.se-board .se-board-footer .se-total{grid-column:2;display:block;margin:0;padding:0;min-height:0;width:auto;border:0;border-radius:0;background:none;box-shadow:none;text-align:center;font-size:1.05rem}
 .se-board .se-board-footer .se-total::before{content:none}
-.se-criterion-count{font-size:.72rem;font-style:italic;white-space:nowrap;text-align:right}
+.se-criterion-count{grid-column:3;justify-self:end;font-size:.72rem;font-style:italic;white-space:nowrap;text-align:right}
 .se-device-setup.se-device-idle{padding:0;margin:12px auto 0;background:none;border:0;box-shadow:none}
 .se-device-setup p:empty{display:none}
 .se-device-setup .se-device-identify{display:inline-flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;box-shadow:none;padding:0;margin:0;color:#796198;font-size:.75rem;font-weight:700}
@@ -115,11 +119,14 @@
  #speechDialog .se-board-heading{padding:5px 10px;min-height:54px}
  #speechDialog .se-board-content{padding:6px 12px max(10px,env(safe-area-inset-bottom));gap:4px}
  #speechDialog .se-board-student{font-size:.95rem;line-height:1.35;padding:2px 0 4px}
- #speechDialog .se-board-rubric{margin:0}
+ #speechDialog .se-board-rubric{margin:0 -6px 0 0;padding-right:12px;scrollbar-width:thin;scrollbar-color:#c5b1df #f2edf7;scrollbar-gutter:stable}
+ #speechDialog .se-board-rubric::-webkit-scrollbar{display:block;width:7px}
+ #speechDialog .se-board-rubric::-webkit-scrollbar-track{background:#f2edf7;border-radius:8px}
+ #speechDialog .se-board-rubric::-webkit-scrollbar-thumb{border:1px solid #bda5d6;border-radius:8px;background:linear-gradient(90deg,#eee5f8,#c5b1df);box-shadow:inset 1px 0 1px #fff9}
  #speechDialog .se-board-rubric li{font-size:.78rem;line-height:1.4;gap:8px;padding:8px 0;align-items:center}
  #speechDialog .se-board-footer{min-height:48px;padding:10px;gap:8px;border-radius:14px;margin-top:4px}
  #speechDialog .se-board-footer .se-total{font-size:.95rem}
- #speechDialog .se-criterion-count{font-size:.68rem}
+ #speechDialog .se-criterion-count{grid-column:3;justify-self:end;font-size:.68rem}
  #speechDialog .se-drawer-tab{left:50%;right:auto;top:auto;bottom:0;transform:translateX(-50%);min-height:44px;min-width:160px;padding:8px 20px max(8px,env(safe-area-inset-bottom));border:1px solid #cdbfdb;border-bottom:0;border-radius:16px 16px 0 0;justify-content:center;gap:10px;transition:bottom .32s ease}
  #speechDialog.se-drawer-open .se-drawer-tab{right:auto;bottom:50dvh;padding-bottom:8px}
  #speechDialog .se-drawer-tab-label{writing-mode:horizontal-tb;font-size:.8rem}

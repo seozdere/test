@@ -1,4 +1,4 @@
-import {ScoreQueue, emptyScores, total, totalLabel, coalescedReader} from './speech-exam-core.mjs?v=speech-layout-20261027-r3';
+import {ScoreQueue, emptyScores, total, totalLabel, coalescedReader} from './speech-exam-core.mjs?v=speech-layout-20261027-r4';
 const el = (tag, text, className) => { const node = document.createElement(tag); if (text !== undefined) node.textContent = text; if (className) node.className = className; return node; };
 function button(text, action, className) { const node = el('button', text, className); node.type = 'button'; node.addEventListener('click', action); return node; }
 
@@ -14,7 +14,7 @@ export function mountAdmin(root, api, context) {
   const finish = button('Sınavı Bitir', () => {
     if (exam && confirm('Sınav bitirilsin mi? Kaydedilmiş puanlar korunur; değerlendirme salt okunur olur.')) action(async () => { await flush(); load(await api.finish(exam.id, exam.revision)); await refreshHistory(); });
   });
-  const download = button('Excel İndir', () => action(async () => { await flush(); const current = await api.get(exam.id); const {downloadExam} = await import('./speech-exam-xlsx.mjs?v=speech-layout-20261027-r3'); downloadExam(current); }));
+  const download = button('Excel İndir', () => action(async () => { await flush(); const current = await api.get(exam.id); const {downloadExam} = await import('./speech-exam-xlsx.mjs?v=speech-layout-20261027-r4'); downloadExam(current); }));
   const retry = button('Kaydı yeniden dene', () => action(flush)); retry.hidden = true;
   const reload = button('Kayıtlı sınavları yenile', () => action(async () => { await flush(); if (exam) load(await api.get(exam.id)); await refreshHistory(); }));
   const discard = button('Sunucudaki kaydı aç', () => {
@@ -183,16 +183,22 @@ export function mountBoard(dialog, api, topic, {read = () => api.board(), manage
     panel.dataset.live = 'true'; content.replaceChildren();
     const student = exam.students.find(s => s.id === exam.activeStudentId);
     const studentHeading = el('h2', undefined, 'se-board-student');
-    studentHeading.append(el('span', student?.name || 'Öğrenci seçimi bekleniyor', changed && student ? 'se-update-pop' : '')); content.append(studentHeading);
+    studentHeading.append(el('span', student?.name || 'Öğrenci seçimi bekleniyor')); content.append(studentHeading);
     const scores = exam.results[exam.activeStudentId]?.scores ?? emptyScores();
     const list = el('ol', undefined, 'se-board-rubric');
     list.tabIndex = 0; list.setAttribute('aria-label', 'Değerlendirme ölçütleri');
     exam.rubric.criteria.forEach((criterion, i) => {
       const updated = changed && sameStudent && lastScores && scores[i] !== lastScores[i];
-      const row = el('li'); row.append(el('span', criterion), el('strong', scores[i] === null ? '— / 10' : `${scores[i]} / 10`, updated ? 'se-update-pop' : '')); list.append(row);
+      const row = el('li'), score = el('strong'), number = el('span', scores[i] === null ? '—' : String(scores[i]), 'se-score-value');
+      if (scores[i] !== null) {
+        number.dataset.tone = scores[i] > 5 ? 'high' : scores[i] === 5 ? 'middle' : 'low';
+        if (updated) number.classList.add('se-update-pop');
+      }
+      score.append(number, document.createTextNode(' / 10'));
+      row.append(el('span', criterion), score); list.append(row);
     });
     const value = total(scores), footer = el('div', undefined, 'se-board-footer');
-    footer.append(el('output', `Toplam: ${value.sum}`, 'se-total'), el('small', `${value.count}/10 ölçüt`, 'se-criterion-count'));
+    footer.append(el('output', `Puan: ${value.sum}`, 'se-total'), el('small', `${value.count}/10 ölçüt`, 'se-criterion-count'));
     content.append(list, footer);
     list.scrollTop = scrollTop;
     if (restoreListFocus) list.focus({preventScroll:true});

@@ -1,4 +1,4 @@
-import {coalescedReader} from './speech-exam-core.mjs?v=speech-layout-20261027-r3';
+import {coalescedReader} from './speech-exam-core.mjs?v=speech-layout-20261027-r4';
 const STORAGE_KEY = 'notik-approved-speech-device-v1';
 const element = (tag, text, cls) => { const n=document.createElement(tag); if(text!==undefined)n.textContent=text; if(cls)n.className=cls; return n; };
 const button = (text, fn) => {const n=element('button',text);n.type='button';n.onclick=fn;return n;};
