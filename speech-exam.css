@@ -103,11 +103,14 @@
 .se-criterion-count{grid-column:3;justify-self:end;font-size:.72rem;font-style:italic;white-space:nowrap;text-align:right}
 .se-device-setup.se-device-idle{padding:0;margin:12px auto 0;background:none;border:0;box-shadow:none}
 .se-device-setup p:empty{display:none}
-.se-device-setup .se-device-identify{display:inline-flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;box-shadow:none;padding:0;margin:0;color:#796198;font-size:.75rem;font-weight:700}
-.se-device-setup .se-device-identify:hover:not(:disabled){background:none}
-.se-device-identify svg{display:block;width:68px;height:68px;transition:transform .18s ease;pointer-events:none}
-.se-device-identify:hover:not(:disabled) svg{transform:translateY(-2px)}
-.se-device-identify:active:not(:disabled) svg{transform:scale(.95)}
+ .se-device-actions{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:center;gap:12px;margin-top:8px}
+.se-device-setup .se-device-action{display:inline-flex;flex:0 1 128px;min-width:0;flex-direction:column;align-items:center;gap:3px;background:none;border:0;box-shadow:none;padding:0;margin:0;color:#796198;font-size:.75rem;font-weight:700}
+.se-device-setup .se-device-action:hover:not(:disabled){background:none}
+.se-device-action>span{max-width:100%;line-height:1.4;overflow-wrap:anywhere}
+.se-device-action svg{display:block;flex-shrink:0;width:68px;height:68px;transition:transform .18s ease;pointer-events:none}
+.se-device-action:hover:not(:disabled) svg{transform:translateY(-2px)}
+.se-device-action:active:not(:disabled) svg{transform:scale(.95)}
+.se-device-setup .se-device-retry{color:#548467;--se-device-fill:#D2EBD9}
 
 /* Portrait phones: the same timer moves above a half-height bottom sheet. */
 @media(max-width:640px) and (orientation:portrait){
@@ -150,4 +153,4 @@
  #speechDialog.se-drawer-open .speech-icon-actions button{width:44px;height:44px}
  #speechDialog.se-drawer-open .speech-stage h2{font-size:1rem}
 }
-@media(prefers-reduced-motion:reduce){#speechDialog.se-live>.speech-stage,#speechDialog .se-board,#speechDialog .se-drawer-tab,.se-device-identify svg{transition:none}}
+@media(prefers-reduced-motion:reduce){#speechDialog.se-live>.speech-stage,#speechDialog .se-board,#speechDialog .se-drawer-tab,.se-device-action svg{transition:none}}

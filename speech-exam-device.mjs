@@ -1,4 +1,4 @@
-import {coalescedReader} from './speech-exam-core.mjs?v=speech-loader-20261028-r1';
+import {coalescedReader} from './speech-exam-core.mjs?v=speech-xlsx-template-20261028-r1';
 const STORAGE_KEY = 'notik-approved-speech-device-v1';
 const element = (tag, text, cls) => { const n=document.createElement(tag); if(text!==undefined)n.textContent=text; if(cls)n.className=cls; return n; };
 const button = (text, fn) => {const n=element('button',text);n.type='button';n.onclick=fn;return n;};
@@ -46,11 +46,19 @@ export function installAutomaticBoard(timer,api,{parentToken,loadStyles,mountBoa
   const note=element('p','');note.setAttribute('role','status');
   const code=element('output','', 'se-device-code');code.hidden=true;code.setAttribute('aria-label','Cihaz onay kodu');
   const start=button('Bu tahtayı tanıt',()=>void request());
-  start.className='se-device-identify';start.title='Bu tahtayı tanıt';
-  start.innerHTML='<svg viewBox="0 0 64 64" fill="none" aria-hidden="true" focusable="false"><rect x="7" y="10" width="50" height="48" rx="18" fill="#86709F" opacity=".18"/><rect x="7" y="6" width="50" height="48" rx="18" fill="#E5DDF2" stroke="#86709F" stroke-width="2"/><path d="M17 14h10" stroke="white" stroke-width="3" stroke-linecap="round"/><rect x="18" y="20" width="28" height="19" rx="4" fill="#FFFDF7" stroke="#86709F" stroke-width="2"/><path d="M27 44h10m-5-5v5" stroke="#86709F" stroke-width="2" stroke-linecap="round"/><circle cx="44" cy="38" r="8" fill="#D2EBD9" stroke="#548467" stroke-width="1.5"/><path d="M44 34v8m-4-4h8" stroke="#548467" stroke-width="2" stroke-linecap="round"/></svg><span>Bu tahtayı tanıt</span>';
+  const identifyDrawing='<rect x="18" y="20" width="28" height="19" rx="4" fill="#FFFDF7" stroke="#86709F" stroke-width="2"/><path d="M27 44h10m-5-5v5" stroke="#86709F" stroke-width="2" stroke-linecap="round"/><circle cx="44" cy="38" r="8" fill="#D2EBD9" stroke="#548467" stroke-width="1.5"/><path d="M44 34v8m-4-4h8" stroke="#548467" stroke-width="2" stroke-linecap="round"/>';
+  function decorate(control,label,drawing,kind) {
+    control.className='se-device-action '+kind;control.title=label;
+    control.innerHTML='<svg viewBox="0 0 64 64" fill="none" aria-hidden="true" focusable="false"><rect x="7" y="10" width="50" height="48" rx="18" fill="currentColor" opacity=".18"/><rect x="7" y="6" width="50" height="48" rx="18" fill="var(--se-device-fill,#E5DDF2)" stroke="currentColor" stroke-width="2"/><path d="M17 14h10" stroke="white" stroke-width="3" stroke-linecap="round"/>'+drawing+'</svg>';
+    control.append(element('span',label));
+  }
+  decorate(start,'Bu tahtayı tanıt',identifyDrawing,'se-device-identify');
   const retry=button('Yeniden bağlan',()=>{restart();});retry.hidden=true;
   const reset=button('Yeni cihaz onayı iste',()=>{if(!confirm('Bu tarayıcıdaki cihaz kaydı sıfırlansın mı? Yeniden admin onayı gerekir.'))return;try{storage.removeItem(STORAGE_KEY);}catch{}restart();});reset.hidden=true;
-  setup.append(note,code,start,retry,reset);timer.querySelector('.speech-stage').append(setup);
+  decorate(retry,'Yeniden bağlan','<path d="M22 27a12 12 0 0 1 21-5l3 5m0-8v8h-8M42 35a12 12 0 0 1-21 5l-3-5m0 8v-8h8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>','se-device-retry');
+  decorate(reset,'Yeni cihaz onayı iste',identifyDrawing,'se-device-reset');
+  const actions=element('div',undefined,'se-device-actions');actions.append(start,retry,reset);
+  setup.append(note,code,actions);timer.querySelector('.speech-stage').append(setup);
   let reader=null,panel=null,activeId=null,secret='',epoch=0,disposed=false,requesting=false,expiryTimer=null,connected=false;
   const subscriptions=new Map();
   function clearPanel(){panel?.();panel=null;activeId=null;}
