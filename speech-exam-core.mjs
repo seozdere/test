@@ -44,7 +44,7 @@ export class ScoreQueue {
   }
   get dirty() { return !!(this.job || this.pending.size || this.running); }
   enqueue(studentId, criterion, score) {
-    if (!Number.isInteger(criterion) || criterion < 0 || criterion > 9 || !Number.isInteger(score) || score < 1 || score > 10) throw Error('Geçersiz puan.');
+    if (!Number.isInteger(criterion) || criterion < 0 || criterion > 9 || (score !== null && (!Number.isInteger(score) || score < 1 || score > 10))) throw Error('Geçersiz puan.');
     const patch = this.pending.get(studentId) || {};
     patch[criterion] = score; this.pending.set(studentId, patch);
     this.onState(this.error ? 'error' : 'pending', this.error);

@@ -383,6 +383,7 @@ body.admin-page,body.admin-page :is(button,input,textarea,select,.s-name,.modal-
 #adminMenuSheet .menu-category-controls{display:flex;flex-wrap:wrap;gap:8px}
 #adminMenuSheet .menu-category-summary{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;padding:8px 12px;box-sizing:border-box;border:1px solid #415071;border-radius:12px;background:#293650;color:#dce3f0;cursor:pointer;list-style:none;font-size:.8rem;font-weight:700}
 #adminMenuSheet .menu-category-summary::-webkit-details-marker{display:none}
+#adminMenuSheet .menu-category-summary>.layout-control-icon{margin:0 0 0 auto}
 #adminMenuSheet .menu-category[open]>.menu-category-summary{margin-bottom:10px}
 #adminMenuSheet .menu-category[open]>.menu-category-summary svg{transform:rotate(180deg)}
 #adminMenuSheet .menu-category-summary:focus-visible{outline:2px solid #a6a9ff;outline-offset:2px}
