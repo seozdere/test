@@ -1,0 +1,62 @@
+[
+  {
+    "file": "kurulum\\00_CANLI_ONKONTROL.READONLY.sql",
+    "sha256": "A701C3B082907271BD7CC4497E68E2C41D2991D85B005444A963A071409F575F",
+    "source": "C:\\Users\\Serkan\\.codex\\visualizations\\2026\\09\\25\\01a0d9ba-6e63-7513-84ec-b3e8258323d9\\notik-canli-kurulum-20261026\\sql\\00_CANLI_ONKONTROL.READONLY.sql"
+  },
+  {
+    "file": "kurulum\\01_TABLOLAR.sql",
+    "sha256": "C231676AA7A96E433F260B99EA728305BE4C41F61ECF0A73EAB65A32DB7D9CA0",
+    "source": "C:\\Users\\Serkan\\.codex\\visualizations\\2026\\09\\25\\01a0d9ba-6e63-7513-84ec-b3e8258323d9\\notik-canli-kurulum-20261026\\sql\\01_TABLOLAR.sql"
+  },
+  {
+    "file": "kurulum\\02_SINAV_RPC_KAPALI.sql",
+    "sha256": "E55DE4004CA6A9D441DE06CDF63170CEE3873585D67944DEE591EFC920C24876",
+    "source": "C:\\Users\\Serkan\\.codex\\visualizations\\2026\\09\\25\\01a0d9ba-6e63-7513-84ec-b3e8258323d9\\notik-canli-kurulum-20261026\\sql\\02_SINAV_RPC_KAPALI.sql"
+  },
+  {
+    "file": "kurulum\\03_TAHTA_CIHAZ_ONAYI_KAPALI.sql",
+    "sha256": "7ABE1C3D1FB31766A8E35DB58E9A7D17A6337358569730626AD76D5D6E6E99C8",
+    "source": "C:\\Users\\Serkan\\.codex\\visualizations\\2026\\09\\25\\01a0d9ba-6e63-7513-84ec-b3e8258323d9\\notik-canli-kurulum-20261026\\sql\\03_TAHTA_CIHAZ_ONAYI_KAPALI.sql"
+  },
+  {
+    "file": "kurulum\\04_KAPALI_KURULUM_KONTROL.READONLY.sql",
+    "sha256": "A198FE3CBA583425D7F9445564AB958E962EEA5D7345587A963300788190EE18",
+    "source": "C:\\Users\\Serkan\\.codex\\visualizations\\2026\\09\\25\\01a0d9ba-6e63-7513-84ec-b3e8258323d9\\notik-canli-kurulum-20261026\\sql\\04_KAPALI_KURULUM_KONTROL.READONLY.sql"
+  },
+  {
+    "file": "kurulum\\04B_ESKI_KIOSK_AKTARIMINI_KAPAT.sql",
+    "sha256": "9CF0F2F2E1370C7C6B76D992DEBB910653C19A0FC8E1D1BEAF26C54CF8FD9DEF",
+    "source": "C:\\Users\\Serkan\\.codex\\visualizations\\2026\\09\\25\\01a0d9ba-6e63-7513-84ec-b3e8258323d9\\notik-canli-kurulum-20261026\\sql\\04B_ESKI_KIOSK_AKTARIMINI_KAPAT.sql"
+  },
+  {
+    "file": "kurulum\\05_ERISIMI_AC.sql",
+    "sha256": "4B93A889D8AF09AAF7517E0AABAD562C2B4B74FB816A38D44855D5AC17DB7EC9",
+    "source": "C:\\Users\\Serkan\\.codex\\visualizations\\2026\\09\\25\\01a0d9ba-6e63-7513-84ec-b3e8258323d9\\notik-canli-kurulum-20261026\\sql\\05_ERISIMI_AC.sql"
+  },
+  {
+    "file": "kurulum\\06_ACILIS_KONTROL.READONLY.sql",
+    "sha256": "A198FE3CBA583425D7F9445564AB958E962EEA5D7345587A963300788190EE18",
+    "source": "C:\\Users\\Serkan\\.codex\\visualizations\\2026\\09\\25\\01a0d9ba-6e63-7513-84ec-b3e8258323d9\\notik-canli-kurulum-20261026\\sql\\06_ACILIS_KONTROL.READONLY.sql"
+  },
+  {
+    "file": "kurulum\\90_ACIL_KAPAT_VERILERI_KORU.sql",
+    "sha256": "9E345425BDFBE4E9565964C7C780450255BC12F6EE55A6C1B31288D2C7F8E586",
+    "source": "C:\\Users\\Serkan\\.codex\\visualizations\\2026\\09\\25\\01a0d9ba-6e63-7513-84ec-b3e8258323d9\\notik-canli-kurulum-20261026\\sql\\90_ACIL_KAPAT_VERILERI_KORU.sql"
+  },
+  {
+    "file": "tek-sonuc-kontrolleri\\ADIM-00-SADECE-JSON.READONLY.sql",
+    "sha256": "AACB7628A40AC51B6C8543A3401A415977A85AE0989839F2C9BB7A9825B790FD",
+    "source": "C:\\Users\\Serkan\\.codex\\visualizations\\2026\\09\\25\\01a0d9ba-6e63-7513-84ec-b3e8258323d9\\notik-canli-kurulum-20261026\\ADIM-00-SADECE-JSON.READONLY.sql"
+  },
+  {
+    "file": "tek-sonuc-kontrolleri\\ADIM-04-TEK-SONUC.READONLY.sql",
+    "sha256": "F7035CDEF3F507595E2BCF1256D8A8065F0C00D3E6FCE31C3E3038D28A205908",
+    "source": "C:\\Users\\Serkan\\.codex\\visualizations\\2026\\09\\25\\01a0d9ba-6e63-7513-84ec-b3e8258323d9\\notik-canli-kurulum-20261026\\ADIM-04-TEK-SONUC.READONLY.sql"
+  },
+  {
+    "file": "tek-sonuc-kontrolleri\\ADIM-06-TEK-SONUC.READONLY.sql",
+    "sha256": "F79C62DA5F28CF365F312B8D69D84678B8D79AB90CD6DCB2632CEA80F121FF2F",
+    "source": "C:\\Users\\Serkan\\.codex\\visualizations\\2026\\09\\25\\01a0d9ba-6e63-7513-84ec-b3e8258323d9\\notik-canli-kurulum-20261026\\ADIM-06-TEK-SONUC.READONLY.sql"
+  }
+]
