@@ -1,6 +1,7 @@
 // NoTik — Service Worker
-const CACHE = 'classlog-speech-score-toggle-20261029-r1';
+const CACHE = 'classlog-duty-20261030-r1';
 const STATIC = [
+  './duty-entry.js?v=duty-1',
   './speech-exam-host.mjs?v=speech-score-toggle-20261029-r1',
   './speech-exam-api.mjs?v=speech-score-toggle-20261029-r1',
   './speech-exam-device.mjs?v=speech-score-toggle-20261029-r1',
@@ -29,10 +30,10 @@ const STATIC = [
   './data.js',
   './data.js?v=20',
   './admin.js',
-  './admin.js?v=speech-score-toggle-20261029-r1',
+  './admin.js?v=duty-1',
   './admin-layout.js?v=25',
   './admin-layout.css?v=speech-score-toggle-20261029-r1',
-  './application-backup.js?v=1',
+  './application-backup.js?v=duty-1',
   './record-export.js?v=1',
   './parent.js',
   './parent.js?v=102',

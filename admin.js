@@ -2038,7 +2038,10 @@ document.getElementById('renameStudentBtn').onclick=async()=>{
  if(!confirm(oldName+' → '+newName+'\nAktif dönemde tüm ders kayıtlarıyla birlikte değiştirilsin mi?'))return;
  const context={...renameContext};button.disabled=true;saveStudentsBtn.disabled=true;status.textContent='Güncelleniyor…';
  try{
- const {data,error}=await _supabase.rpc('cl_rename_student',{p_token:ClassLogAuth.getSessionToken(),p_class_name:context.className,p_term_id:context.term,p_old_name:oldName,p_new_name:newName});
+ const renameArgs={p_token:ClassLogAuth.getSessionToken(),p_class_name:context.className,p_term_id:context.term,p_old_name:oldName,p_new_name:newName};
+ let renameResponse=await _supabase.rpc('cl_duty_rename_student',renameArgs);
+ if(renameResponse.error?.code==='PGRST202')renameResponse=await _supabase.rpc('cl_rename_student',renameArgs);
+ const {data,error}=renameResponse;
  if(error||!data?.ok){status.textContent=data?.reason==='conflict'?'Yeni ad altında kayıt var. İşlem yapılmadı.':'Ad değiştirilemedi. Bağlantıyı, yetkinizi ve 29 numaralı SQL kurulumunu kontrol edin.';return;}
  let warning='';try{const key=name=>'classlog.student-number.v1:'+JSON.stringify([context.term,context.className,name]);const value=localStorage.getItem(key(oldName));if(value!==null){if(localStorage.getItem(key(newName))===null){localStorage.setItem(key(newName),value);localStorage.removeItem(key(oldName));}else warning=' Yerel öğrenci numarasını kontrol edin.';}}catch(_){warning=' Yerel öğrenci numarasını kontrol edin.';}
  status.textContent='Ad ve kayıtlar güncellendi.'+warning;
