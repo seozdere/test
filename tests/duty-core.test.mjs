@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {date,addDays,monday,range,eligible,exportRows,filename} from '../duty-core.mjs';
+import {DutyApi} from '../duty-api.mjs';
+assert.equal(addDays('2026-12-31',1),'2027-01-01');assert.equal(addDays('2024-02-28',1),'2024-02-29');assert.equal(monday('2027-01-03'),'2026-12-28');assert.throws(()=>date('2026-02-29'));assert.throws(()=>range('2026-02-10','2026-02-01'));
+const state={year:{class_name:'6/A',daily_count:2},today:'2026-10-30',roster:[{id:'a',display_name:'=HYPERLINK("x")',joined_on:'2026-01-01',left_on:null}],days:[{id:'d',day:'2026-10-30',kind:'school',publication:'published'}],assignments:[{id:'x',day_id:'d',student_id:'a',slot:1,is_current:true,status:'completed',name_snapshot:'=HYPERLINK("x")'}],counts:{a:1},exemptions:[]};
+assert(eligible(state,'a','2026-10-30'));state.exemptions.push({student_id:'a',starts_on:'2026-10-29',ends_on:'2026-10-30'});assert(!eligible(state,'a','2026-10-30'));assert(eligible(state,'a','2026-10-31'));
+assert.equal(exportRows(state,'2026-10-30','2026-11-01').length,3);assert(!filename(state,'2026-10-30','2026-11-01').includes('/'));
+let calls=[],fail=true;const api=new DutyApi({rpc:async(_,args)=>{calls.push(args);if(fail){fail=false;throw Error('connection lost')}return {data:{ok:true,value:state}};}},()=> 'synthetic-token');
+await assert.rejects(api.write('result',{yearId:'id',revision:1}));assert(api.failed);assert.equal(await api.retry(),state);assert.deepEqual(calls[0],calls[1],'retry preserves operation UUID and body');
+const parent=new DutyApi({rpc:()=>{throw Error('should not write')}},()=> 'parent',true);await assert.rejects(parent.write('create',{}),/Salt okunur/);
+console.log('PASS date boundaries, exemptions, export range, filename, offline/retry UUID, read-only client');

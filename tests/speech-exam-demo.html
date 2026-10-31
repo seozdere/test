@@ -1,0 +1,15 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>NoTik · Örnek sınav</title>
+<link rel="stylesheet" href="../speech-exam.css?v=3"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>body{margin:0;background:#111c30;padding:24px;font-family:'Plus Jakarta Sans',sans-serif;color:#edf2fb}.demo-shell{max-width:1200px;margin:auto}.demo-notice{border:1px solid #a295bf;padding:14px;border-radius:12px;margin:0 0 20px;font-size:.85rem}.demo-links{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px}.demo-links a{color:#dcd0ff}.demo-timer{text-align:center;background:#eee8f5;color:#554265;padding:30px 10px;border-radius:18px}.demo-timer output{font-size:clamp(48px,9vw,110px)}.demo-timer p{font-size:.8rem}@media(max-width:600px){body{padding:12px}}</style></head><body><main class="demo-shell">
+<p class="demo-notice">GELİŞTİRME ÖNİZLEMESİ · Yalnızca uydurma öğrenciler. Supabase bağlantısı yok. Örnek kayıtlar bu tarayıcıda saklanır; gerçek sınav kaydı değildir.</p>
+<nav class="demo-links"><a href="speech-exam-demo.html">Sınav yönetimi</a><a href="speech-exam-demo.html?board=1" target="_blank" rel="noopener">Örnek tahta görünümü</a></nav>
+<div id="demo"></div></main><script type="module">
+import {createDemoStore, DEMO_CONTEXT} from './speech-exam-demo-store.mjs?v=3';
+import {mountAdmin,mountBoard} from '../speech-exam-ui.mjs?v=3';
+const api=createDemoStore(),root=document.getElementById('demo');
+if(new URLSearchParams(location.search).has('board')) {
+  const {openTimerPreview} = await import('./speech-exam-timer-preview.mjs?v=2');
+  const reopen = await openTimerPreview(api,mountBoard);
+  const button = document.createElement('button');button.type='button';button.textContent='Kronometre önizlemesini aç';button.onclick=reopen;root.append(button);
+} else {const ui=mountAdmin(root,api,DEMO_CONTEXT);window.demoExamUI=ui;window.demoExamApi=api;}
+</script></body></html>

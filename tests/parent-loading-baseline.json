@@ -1,0 +1,7 @@
+{
+  "removed_initial_requests": 31,
+  "removed_raw_bytes": 2200091,
+  "added_loader_bytes": 3795,
+  "before_direct_assets": 41,
+  "after_direct_assets": 11
+}
