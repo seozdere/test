@@ -1,8 +1,8 @@
 // NoTik — Service Worker
-const CACHE = 'classlog-duty-20261101-r3';
+const CACHE = 'classlog-duty-auto-20261101-r1';
 const STATIC = [
-  './duty-launch.css?v=duty-20261101-r3',
-  './duty-entry.js?v=duty-20261101-r3',
+  './duty-launch.css?v=duty-auto-20261101',
+  './duty-entry.js?v=duty-auto-20261101',
   './speech-exam-host.mjs?v=speech-score-toggle-20261029-r1',
   './speech-exam-api.mjs?v=speech-score-toggle-20261029-r1',
   './speech-exam-device.mjs?v=speech-score-toggle-20261029-r1',

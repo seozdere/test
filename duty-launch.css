@@ -9,3 +9,6 @@
 #toolsPanel #dutyOpen .duty-card-art svg{width:64px;height:64px;transform:rotate(7deg)}
 #toolsPanel #dutyOpen .tools-soon{grid-column:1;grid-row:3;align-self:end;justify-self:start}
 #toolsPanel #dutyOpen:focus-visible{outline:3px solid #957bb8;outline-offset:3px}
+/* Class-theme-aware school gloss; scoped to duty only. */
+#dutyOpen[hidden]{display:none!important}
+#toolsPanel #dutyOpen{background:linear-gradient(145deg,#fffdf6,color-mix(in srgb,var(--p-accent,#8c7cb0) 12%,#ecf7ef));border-color:color-mix(in srgb,var(--p-accent,#8c7cb0) 28%,#e3ece7)}
