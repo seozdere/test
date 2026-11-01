@@ -6,7 +6,7 @@
 #toolsPanel #dutyOpen::before{content:'';position:absolute;left:12px;right:12px;top:5px;height:34%;border-radius:18px;background:linear-gradient(#ffffff75,#ffffff00);pointer-events:none}
 #toolsPanel #dutyOpen h3,#toolsPanel #dutyOpen p,#toolsPanel #dutyOpen span{position:relative}
 #toolsPanel #dutyOpen .duty-card-art{grid-column:2;grid-row:3;align-self:end;justify-self:end}
-#toolsPanel #dutyOpen .duty-card-art svg{width:64px;height:64px;transform:rotate(7deg)}
+#toolsPanel #dutyOpen .duty-card-art svg{width:64px;height:64px;transform:rotate(7deg);transform-origin:center;animation:duty-card-float 4s ease-in-out infinite}
 #toolsPanel #dutyOpen .tools-soon{grid-column:1;grid-row:3;align-self:end;justify-self:start}
 #toolsPanel #dutyOpen:focus-visible{outline:3px solid #957bb8;outline-offset:3px}
 /* Class-theme-aware school gloss; scoped to duty only. */
@@ -21,3 +21,8 @@
 #dutyAdmin[open]>.announcement-summary>.layout-control-icon{transform:rotate(180deg)}
 .duty-admin-warning,.duty-automation-warning{padding:14px 18px;border:1px solid #e4a05e;border-radius:12px;background:linear-gradient(#fff0d9,#ffd8ae);color:#713d1b;font-family:'Plus Jakarta Sans',sans-serif;line-height:1.6;font-size:13px;margin:10px 0}
 .duty-admin-warning{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px}.duty-admin-warning[hidden]{display:none}.duty-admin-warning span{flex:1 1 240px}.duty-admin-warning button{font:inherit;min-height:42px;border:1px solid #bb874f;background:#fff7ed;color:#613817;border-radius:10px;padding:8px 12px;cursor:pointer}
+
+@keyframes duty-card-float{0%,100%{transform:translateY(0) rotate(7deg)}50%{transform:translateY(-4px) rotate(-3deg)}}
+#toolsPanel #dutyOpen .duty-card-art svg circle{transform-box:fill-box;transform-origin:center;animation:duty-card-pop 4s ease-in-out infinite}
+@keyframes duty-card-pop{0%,65%,100%{transform:scale(1)}78%{transform:scale(1.12)}}
+@media(prefers-reduced-motion:reduce){#toolsPanel #dutyOpen .duty-card-art svg,#toolsPanel #dutyOpen .duty-card-art svg circle{animation:none}}
