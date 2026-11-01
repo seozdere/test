@@ -1,8 +1,8 @@
 // NoTik — Service Worker
-const CACHE = 'classlog-duty-week-month-20261101-r1';
+const CACHE = 'classlog-duty-parent-theme-20261101-r1';
 const STATIC = [
-  './duty-launch.css?v=duty-week-month-20261101',
-  './duty-entry.js?v=duty-week-month-20261101',
+  './duty-launch.css?v=duty-parent-theme-20261101',
+  './duty-entry.js?v=duty-parent-theme-20261101',
   './speech-exam-host.mjs?v=speech-score-toggle-20261029-r1',
   './speech-exam-api.mjs?v=speech-score-toggle-20261029-r1',
   './speech-exam-device.mjs?v=speech-score-toggle-20261029-r1',
