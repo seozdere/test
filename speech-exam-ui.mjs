@@ -138,6 +138,7 @@ export function mountAdmin(root, api, context) {
         const choice = button(String(score), () => {
           if (exam.status !== 'active' || busy) return;
           const nextScore = exam.results[student.id].scores[index] === score ? null : score;
+          clearTimeout(selectionTimer);
           queue.enqueue(student.id, index, nextScore);
           exam.results[student.id].scores[index] = nextScore; update();
         });

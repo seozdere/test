@@ -105,3 +105,4 @@
 .duty-parent .duty-sub button[aria-pressed="true"]{box-shadow:inset 0 0 0 2px currentColor,inset 0 2px 0 #ffffff9c,0 2px 4px #51426213}
 .duty-parent .duty-sub button:hover{filter:brightness(.97)}
 .duty-parent .duty-totals li>span{color:#294638}
+.duty-automation-warning{padding:14px 18px;border:1px solid #e4a05e;border-radius:12px;background:linear-gradient(#fff0d9,#ffd8ae);color:#713d1b;font-size:13px;line-height:1.6;margin:10px 0}
