@@ -1,12 +1,12 @@
-import {DutyApi} from './duty-api.mjs?v=duty-parent-theme-20261101';
-import {STATUS,KIND,addDays,monday,today,pretty,dayName,range,eligible,assignments,statusOf,dayStatus,statistics,weekday,parentWeeks,defaultParentWeek} from './duty-core.mjs?v=duty-parent-theme-20261101';
+import {DutyApi} from './duty-api.mjs?v=duty-parent-colors-20261101';
+import {STATUS,KIND,addDays,monday,today,pretty,dayName,range,eligible,assignments,statusOf,dayStatus,statistics,weekday,parentWeeks,defaultParentWeek} from './duty-core.mjs?v=duty-parent-colors-20261101';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const btn=(action,label,extra='')=>`<button type="button" data-action="${action}" ${extra}>${label}</button>`;
 const field=(label,name,type='text',value='',extra='')=>`<label>${label}<input name="${name}" type="${type}" value="${esc(value)}" ${extra}></label>`;
 const select=(label,name,options,value)=>`<label>${label}<select name="${name}">${options.map(([v,t])=>`<option value="${esc(v)}" ${String(value)===String(v)?'selected':''}>${esc(t)}</option>`).join('')}</select></label>`;
 let styleReady;
 export async function openDuty({client,token,parent,className,launcher}){
- if(!styleReady)styleReady=new Promise((resolve,reject)=>{const l=document.createElement('link');l.rel='stylesheet';l.href=new URL('./duty.css?v=duty-parent-theme-20261101',import.meta.url);l.onload=resolve;l.onerror=()=>{styleReady=null;l.remove();reject(Error('Nöbet görünümü yüklenemedi.'));};document.head.append(l);});
+ if(!styleReady)styleReady=new Promise((resolve,reject)=>{const l=document.createElement('link');l.rel='stylesheet';l.href=new URL('./duty.css?v=duty-parent-colors-20261101',import.meta.url);l.onload=resolve;l.onerror=()=>{styleReady=null;l.remove();reject(Error('Nöbet görünümü yüklenemedi.'));};document.head.append(l);});
  await styleReady;const dialog=document.createElement('dialog');dialog.className='duty-dialog';dialog.setAttribute('aria-label','Nöbetçi Öğrenciler');
  const close=document.createElement('button');close.className='duty-close';close.textContent='×';close.setAttribute('aria-label','Nöbet ekranını kapat');const body=document.createElement('div');dialog.append(close,body);document.body.append(dialog);
  const view=mountDuty(body,new DutyApi(client,token,parent),{parent,className});
@@ -97,8 +97,8 @@ export function mountDuty(root,api,{parent=false,className=''}){
   else if(action==='quick'){await save('result',{assignmentId:el.dataset.id,status:el.dataset.status});}
   else if(action==='retry'){state=await api.retry();verifiedAt=new Date();preview=null;}
   else if(action==='absence'){await save('absence',{studentId:el.dataset.student,day:absenceDay,reason:'Öğretmen: nöbet tutmadı'});}
-  else if(action==='excelMonth'){if(!online)throw Error('Bağlantı gerekli.');await load(state.year.id);const {downloadDuty}=await import('./duty-xlsx.mjs?v=duty-parent-theme-20261101');downloadDuty(state,exportMonth+'-01',monthEnd(exportMonth),'month');}
-  else if(action==='excel'){if(!online)throw Error('Güncel listeyi doğrulamak için bağlantı gerekli.');await load(state.year.id);const {downloadDuty}=await import('./duty-xlsx.mjs?v=duty-parent-theme-20261101');downloadDuty(state,week,addDays(week,6));}
+  else if(action==='excelMonth'){if(!online)throw Error('Bağlantı gerekli.');await load(state.year.id);const {downloadDuty}=await import('./duty-xlsx.mjs?v=duty-parent-colors-20261101');downloadDuty(state,exportMonth+'-01',monthEnd(exportMonth),'month');}
+  else if(action==='excel'){if(!online)throw Error('Güncel listeyi doğrulamak için bağlantı gerekli.');await load(state.year.id);const {downloadDuty}=await import('./duty-xlsx.mjs?v=duty-parent-colors-20261101');downloadDuty(state,week,addDays(week,6));}
   else if(action==='repreview'){if(!selected.length)throw Error('En az bir gün seçin.');await makePreview({...preview.payload,selectedDates:selected});}
   else if(action==='apply'){if(preview.selectionChanged)throw Error('Önce seçili günleri yeniden önizleyin.');await save('apply_plan',{...preview.payload,selectedDates:selected,fingerprint:preview.plan.fingerprint,confirmPublished:true,reason});}
   else if(action==='confirmChange'){const p=preview;await save(p.type==='calendar'?'calendar':'exempt',{...p.payload,confirmCompleted:!!confirmCompleted});}
