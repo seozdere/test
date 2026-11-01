@@ -1,5 +1,5 @@
 // Independent duty XLSX export, reusing the project's small ZIP/OOXML technique.
-import {exportRows,exportCapacity,filename,pretty} from './duty-core.mjs?v=duty-auto-20261101';
+import {exportRows,exportCapacity,filename,pretty,assignments,dayName,weekday,KIND} from './duty-core.mjs?v=duty-week-month-20261101';
 const encoder = new TextEncoder();
 const xml = value => String(value).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
 function crc32(bytes) {
@@ -31,13 +31,38 @@ export function workbook(state,from,to,period='week'){
  const headers=['Tarih','Gün',...Array.from({length:exportCapacity(state,from,to)},(_,i)=>(i+1)+'. Nöbetçi'),'Yedek','Gün durumu','Yayın'];
  const rows=[[title],headers,...exportRows(state,from,to)];const last=column(headers.length-1),ns='http://schemas.openxmlformats.org/spreadsheetml/2006/main';
  const sheet=rows.map((row,y)=>'<row r="'+(y+1)+'" ht="'+(y===0?32:y===1?26:48)+'" customHeight="1">'+row.map((v,x)=>'<c r="'+column(x)+(y+1)+'" s="'+(y<2?1:0)+'" t="inlineStr"><is><t xml:space="preserve">'+xml(v)+'</t></is></c>').join('')+'</row>').join('');
- return zip({
+ const files={
  '[Content_Types].xml':'<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>',
  '_rels/.rels':'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>',
  'xl/workbook.xml':'<workbook xmlns="'+ns+'" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="'+(period==='month'?'Aylık Nöbet':'Haftalık Nöbet')+'" sheetId="1" r:id="rId1"/></sheets></workbook>',
  'xl/_rels/workbook.xml.rels':'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>',
  'xl/styles.xml':'<styleSheet xmlns="'+ns+'"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFE4EEDD"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment wrapText="1" vertical="center"/></xf><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment wrapText="1" vertical="center"/></xf></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>',
  'xl/worksheets/sheet1.xml':'<worksheet xmlns="'+ns+'"><sheetPr><pageSetUpPr fitToPage="1"/></sheetPr><dimension ref="A1:'+last+rows.length+'"/><sheetViews><sheetView workbookViewId="0"><pane ySplit="2" topLeftCell="A3" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>'+headers.map((_,i)=>'<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+(i<2?18:27)+'" customWidth="1"/>').join('')+'</cols><sheetData>'+sheet+'</sheetData><mergeCells count="1"><mergeCell ref="A1:'+last+'1"/></mergeCells><pageMargins left="0.3" right="0.3" top="0.4" bottom="0.4" header="0.2" footer="0.2"/><pageSetup paperSize="9" orientation="landscape" fitToWidth="1" fitToHeight="'+(period==='month'?0:1)+'"/></worksheet>'
- });
+ };
+ if(period==='month')monthlyLayout(files,state,from,to);
+ return zip(files);
 }
 export function downloadDuty(state,from,to,period='week'){const blob=new Blob([workbook(state,from,to,period)],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename(state,from,to);document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+
+// Monthly print layout follows Desktop/nöbet örnek.docx; weekly export stays unchanged.
+function monthlyLayout(files,state,from,to){
+ const ns='http://schemas.openxmlformats.org/spreadsheetml/2006/main';
+ const title=state.year.class_name+' SINIFI NÖBET LİSTESİ';
+ const month=new Intl.DateTimeFormat('tr-TR',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(from+'T12:00:00Z')).toLocaleUpperCase('tr-TR');
+ const rows=[[title],[month],['TARİH','GÜN','NÖBETÇİLER']];
+ for(const d of state.days.filter(d=>d.day>=from&&d.day<=to&&![0,6].includes(weekday(d.day))).sort((a,b)=>a.day.localeCompare(b.day))){
+  const list=assignments(state,d).filter(a=>!['cancelled','not_completed'].includes(a.status));
+  const name=a=>state.roster.find(r=>r.id===a.student_id)?.display_name||a.name_snapshot||'—';
+  const primary=list.filter(a=>a.slot>0).map(name).join(' – '),reserve=list.find(a=>a.slot===0);
+  const text=d.publication==='draft'?'Henüz yayımlanmadı':d.kind!=='school'?(d.reason||KIND[d.kind]):(primary||'Görevli belirlenmedi')+(reserve?'\nYedek: '+name(reserve):'');
+  rows.push([d.day.split('-').reverse().join('.'),dayName(d.day),text]);
+ }
+ if(rows.length===3)rows.push(['','','Bu ay için takvim kaydı yok.']);
+ const cell=(v,x,y)=>`<c r="${column(x)}${y+1}" s="${y===0?0:y===1?1:y===2?2:(y%2?3:5)+(x===0?1:0)}" t="inlineStr"><is><t xml:space="preserve">${xml(v)}</t></is></c>`;
+ const sheet=rows.map((r,y)=>{const lines=y>2?String(r[2]).split('\n').reduce((n,line)=>n+Math.max(1,Math.ceil(line.length/48)),0):1;return `<row r="${y+1}" ht="${y===0?42:y===1?28:y===2?32:Math.max(28,lines*19+10)}" customHeight="1">${r.map((v,x)=>cell(v,x,y)).join('')}</row>`;}).join('');
+ const font=(size,bold=false,underline=false)=>`<font><sz val="${size}"/><name val="Times New Roman"/>${bold?'<b/>':''}${underline?'<u/>':''}</font>`;
+ const xf=(fontId,fill,border,align)=>`<xf numFmtId="0" fontId="${fontId}" fillId="${fill}" borderId="${border}" xfId="0" applyAlignment="1" applyFont="1" applyFill="1" applyBorder="1"><alignment horizontal="${align}" vertical="center" wrapText="1"/></xf>`;
+ files['xl/styles.xml']=`<styleSheet xmlns="${ns}"><fonts count="5">${font(26,true,true)}${font(14)}${font(18,true)}${font(14)}${font(14,true)}</fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFE5E5E5"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="2"><border/><border>${['left','right','top','bottom'].map(e=>`<${e} style="thin"><color rgb="FF666666"/></${e}>`).join('')}</border></borders><cellStyleXfs count="1"><xf/></cellStyleXfs><cellXfs count="7">${xf(0,0,0,'center')}${xf(1,0,0,'center')}${xf(2,0,1,'center')}${xf(3,2,1,'left')}${xf(4,2,1,'right')}${xf(3,0,1,'left')}${xf(4,0,1,'right')}</cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`;
+ files['xl/workbook.xml']=files['xl/workbook.xml'].replace('</workbook>',`<definedNames><definedName name="_xlnm.Print_Area" localSheetId="0">'Aylık Nöbet'!$A$1:$C$${rows.length}</definedName><definedName name="_xlnm.Print_Titles" localSheetId="0">'Aylık Nöbet'!$1:$3</definedName></definedNames></workbook>`);
+ files['xl/worksheets/sheet1.xml']=`<worksheet xmlns="${ns}"><sheetPr><pageSetUpPr fitToPage="1"/></sheetPr><dimension ref="A1:C${rows.length}"/><sheetViews><sheetView workbookViewId="0" showGridLines="0"><pane ySplit="3" topLeftCell="A4" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols><col min="1" max="1" width="15" customWidth="1"/><col min="2" max="2" width="13.5" customWidth="1"/><col min="3" max="3" width="69" customWidth="1"/></cols><sheetData>${sheet}</sheetData><mergeCells count="2"><mergeCell ref="A1:C1"/><mergeCell ref="A2:C2"/></mergeCells><printOptions horizontalCentered="1"/><pageMargins left="0.5" right="0.5" top="0.5" bottom="0.5" header="0.2" footer="0.2"/><pageSetup paperSize="9" orientation="portrait" fitToWidth="1" fitToHeight="0"/></worksheet>`;
+}

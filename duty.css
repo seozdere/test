@@ -78,3 +78,4 @@
 .duty-parent .duty-students>p{grid-column:1/-1}
 @media(max-width:600px){.duty-parent .duty-student{padding:12px 8px}.duty-parent .duty-student strong{font-size:13px}.duty-top{padding-right:32px}.duty-class-switch{font-size:11px}.duty-toolbar label{flex-basis:150px}}
 .duty-calendar-events{padding-left:18px;font-size:12px;line-height:1.7}.duty-calendar-events small{display:block;color:#85768f;font-size:10px}
+.duty-parent-weeknav{display:flex;align-items:center;justify-content:center;gap:12px;margin:14px 0}.duty-parent-weeknav strong{text-align:center;font-size:13px;line-height:1.5}.duty-parent-weeknav button{flex-shrink:0;min-width:42px}
