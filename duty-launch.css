@@ -1,0 +1,11 @@
+/* Launcher only: loaded without opening the duty module or fetching records. */
+#dutyAdmin .announcement-summary span{display:flex;align-items:center;gap:8px}
+#dutyAdmin .announcement-summary svg{width:24px;height:24px;flex:none}
+#dutyAdmin .duty-menu-body{padding:16px}
+#toolsPanel #dutyOpen{position:relative;overflow:hidden;background:linear-gradient(145deg,#f0faf5 0%,#dfefe7 55%,#d4e5ed 100%);border:1px solid #b9d5c9;box-shadow:inset 0 2px 0 #ffffffdf,inset 0 -4px 0 #96b9ad24,0 5px 14px #54786c16;color:#46566a;font-family:'Plus Jakarta Sans',sans-serif;text-align:left}
+#toolsPanel #dutyOpen::before{content:'';position:absolute;left:12px;right:12px;top:5px;height:34%;border-radius:18px;background:linear-gradient(#ffffff75,#ffffff00);pointer-events:none}
+#toolsPanel #dutyOpen h3,#toolsPanel #dutyOpen p,#toolsPanel #dutyOpen span{position:relative}
+#toolsPanel #dutyOpen .duty-card-art{grid-column:2;grid-row:3;align-self:end;justify-self:end}
+#toolsPanel #dutyOpen .duty-card-art svg{width:64px;height:64px;transform:rotate(7deg)}
+#toolsPanel #dutyOpen .tools-soon{grid-column:1;grid-row:3;align-self:end;justify-self:start}
+#toolsPanel #dutyOpen:focus-visible{outline:3px solid #957bb8;outline-offset:3px}

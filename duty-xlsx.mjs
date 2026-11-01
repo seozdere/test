@@ -1,5 +1,5 @@
 // Independent duty XLSX export, reusing the project's small ZIP/OOXML technique.
-import {exportRows,exportCapacity,filename,pretty} from './duty-core.mjs?v=duty-20261101-r2';
+import {exportRows,exportCapacity,filename,pretty} from './duty-core.mjs?v=duty-20261101-r3';
 const encoder = new TextEncoder();
 const xml = value => String(value).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
 function crc32(bytes) {
