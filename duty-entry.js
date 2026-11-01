@@ -15,5 +15,5 @@
   button.classList.add('duty-tool-card');button.innerHTML='<h3>'+art+'Nöbetçi Öğrenciler</h3><p>Bu haftanın nöbetçi öğrencileri.</p><span class="tools-soon">Bu hafta ↗</span><span class="duty-card-art" aria-hidden="true">'+art+'</span>';
   (anchor.querySelector('.tools-grid')||anchor).append(button);
  }
- button.onclick=async()=>{button.disabled=true;try{const module=await import('./duty-ui.mjs?v=duty-20261101-r4');await module.openDuty({client:_supabase,token:()=>admin?ClassLogAuth.getSessionToken():ClassLogData.parentToken,parent:!admin,className:ClassLogData.currentClass,launcher:button});}catch(e){alert(e.message||'Nöbet ekranı açılamadı.');}finally{button.disabled=false;}};
+ button.onclick=async()=>{button.disabled=true;try{const module=await import('./duty-ui.mjs?v=duty-20261101-r5');await module.openDuty({client:_supabase,token:()=>admin?ClassLogAuth.getSessionToken():ClassLogData.parentToken,parent:!admin,className:ClassLogData.currentClass,launcher:button});}catch(e){alert(e.message||'Nöbet ekranı açılamadı.');}finally{button.disabled=false;}};
 })();
