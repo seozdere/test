@@ -1,8 +1,8 @@
 // NoTik — Service Worker
-const CACHE = 'classlog-duty-soft-motion-20261101-r1';
+const CACHE = 'classlog-duty-shared-reference-20261101-r1';
 const STATIC = [
-  './duty-launch.css?v=duty-soft-motion-20261101',
-  './duty-entry.js?v=duty-soft-motion-20261101',
+  './duty-launch.css?v=duty-shared-reference-20261101',
+  './duty-entry.js?v=duty-shared-reference-20261101',
   './speech-exam-host.mjs?v=speech-selection30-20261101',
   './speech-exam-api.mjs?v=speech-selection30-20261101',
   './speech-exam-device.mjs?v=speech-selection30-20261101',
