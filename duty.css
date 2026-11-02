@@ -199,3 +199,5 @@
 
 /* Daily card badge below Refresh; leave the green Today tab unchanged. */
 .duty-parent[data-view="today"] .duty-day.is-today .duty-badge{background:#eef4ef;border:1px solid transparent;color:#5f7b67;font-size:12px;font-weight:800;padding:5px 10px;align-self:flex-start;flex-shrink:0}
+
+.duty-root .duty-manage-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}.duty-root .duty-manage-actions>button{flex:1 1 145px;margin:0;min-height:44px}

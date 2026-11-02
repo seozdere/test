@@ -186,3 +186,8 @@
  .se-mobile-picker .se-student-menu summary small{justify-self:start;font-size:12px;font-weight:800;line-height:1.4}
  .se-mobile-picker .se-student-menu summary b{justify-self:end;font-size:13px;font-weight:800;line-height:1.4;margin:0}
 }
+
+/* Keep the full roster inside the scrollable picker, including its final row. */
+.se-picker-label{min-width:0;font-size:.75rem;font-weight:600}
+.se-mobile-picker .se-student-options{position:relative;top:auto;left:auto;right:auto;margin-top:6px;max-height:min(40dvh,320px);grid-auto-rows:max-content;align-content:start;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;touch-action:pan-y;scrollbar-width:thin;scrollbar-color:#b5a3ce #202d43}
+.se-mobile-picker .se-student-options button{flex-shrink:0;min-width:0;overflow-wrap:anywhere}

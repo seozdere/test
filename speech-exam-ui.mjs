@@ -46,7 +46,7 @@ export function mountAdmin(root, api, context) {
   if (api.issueBoard) toolbar.append(issue, revoke);
   const layout = el('div', undefined, 'se-admin-layout'), roster = el('nav', undefined, 'se-roster'); roster.setAttribute('aria-label', 'Öğrenciler');
   const picker = el('div', undefined, 'se-mobile-picker');
-  const pickerLabel = el('label', 'Öğrenci'), studentSelect = el('select'); studentSelect.setAttribute('aria-label', 'Değerlendirilecek öğrenci'); pickerLabel.append(studentSelect); studentSelect.hidden=true;
+  const pickerLabel = el('div', 'Öğrenci', 'se-picker-label'), studentSelect = el('select'); studentSelect.setAttribute('aria-label', 'Değerlendirilecek öğrenci'); pickerLabel.append(studentSelect); studentSelect.hidden=true;
   const studentMenu=el('details',undefined,'se-student-menu'), studentSummary=el('summary','Öğrenci seçin'), studentOptions=el('div',undefined,'se-student-options');
   studentMenu.append(studentSummary,studentOptions); pickerLabel.append(studentMenu);
   studentMenu.addEventListener('keydown',e=>{if(e.key==='Escape'){studentMenu.open=false;studentSummary.focus();}});
@@ -155,6 +155,7 @@ export function mountAdmin(root, api, context) {
     if (!exam) return;
     studentSelect.value = exam.activeStudentId || '';
     for (const option of studentSelect.options) { const student = exam.students.find(s => s.id === option.value); if (!student) continue; const value = total(exam.results[student.id]?.scores ?? emptyScores()); option.textContent = `${student.name} · ${value.complete ? '✓ ' + value.sum + '/100' : value.count + '/10'}`; }
+    const optionsScroll=studentOptions.scrollTop;
     studentOptions.replaceChildren();
     const clearChoice=button('Öğrenci seçimini kaldır',()=>{studentMenu.open=false;chooseStudent(null);}); studentOptions.append(clearChoice);
     for(const student of exam.students){
@@ -164,6 +165,7 @@ export function mountAdmin(root, api, context) {
       row.append(el('span',(value.complete?'✓ ':'')+student.name),el('small',`${value.count}/10 ölçüt · ${value.sum}/100 puan`));
       row.setAttribute('aria-pressed',String(student.id===exam.activeStudentId));studentOptions.append(row);
     }
+    studentOptions.scrollTop=optionsScroll;
     const selected=exam.students.find(s=>s.id===exam.activeStudentId);
     studentSummary.replaceChildren();
     if(selected){const value=total(exam.results[selected.id]?.scores??emptyScores());studentSummary.append(el('span',selected.name),el('small',`${value.count}/10 ölçüt`),el('b',`${value.sum}/100`));}
