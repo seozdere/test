@@ -24,7 +24,12 @@ export function statistics(state){
 }
 export function exportCapacity(state,from,to){return Math.max(state.year.daily_count,...state.days.filter(d=>d.day>=from&&d.day<=to).map(d=>d.daily_count??state.year.daily_count));}
 export function exportRows(state,from,to){const capacity=exportCapacity(state,from,to),display=a=>a?(state.roster.find(r=>r.id===a.student_id)?.display_name||a.name_snapshot):null;return range(from,to).map(value=>{const d=state.days.find(d=>d.day===value);if(!d)return [pretty(value),dayName(value),...Array(capacity).fill('—'),'—','Takvim dışında',''];const list=assignments(state,d);return [pretty(value),dayName(value),...Array.from({length:capacity},(_,i)=>{const a=list.find(a=>a.slot===i+1);return a?`${display(a)} (${a.status==='completed'&&a.completion_source==='automatic'?'Otomatik kabul':STATUS[statusOf(a,d,state.today)]})`:'—';}),display(list.find(a=>a.slot===0&&a.status!=='cancelled'))||'—',dayStatus(state,d),d.publication==='draft'?'TASLAK':'Yayımlandı'];});}
-export function filename(state,from,to){return `NoTik_${state.year.class_name}_Nobet_${date(from)}_${date(to)}.xlsx`.replace(/[<>:"/\\|?*\u0000-\u001f]/g,'-');}
+export function filename(state,from,to,period='week'){
+ const cls=String(state.year.class_name).replace(/\s*\/\s*/g,'');
+ const month=new Intl.DateTimeFormat('tr-TR',{month:'long',timeZone:'UTC'}).format(new Date(date(from)+'T12:00:00Z'));
+ const week=date(from).split('-').reverse().join('.')+' – '+date(to).split('-').reverse().join('.');
+ return `${cls} Sınıfı ${period==='month'?month+' Ayı':week+' Haftası'} Nöbet Çizelgesi.xlsx`.replace(/[<>:"/\\|?*\u0000-\u001f]/g,'-');
+}
 
 // Published weeks only; on weekends lead with the approaching school week.
 export function parentWeeks(state){return [...new Set((state?.days||[]).filter(d=>d.publication!=='draft').map(d=>monday(d.day)))].sort();}

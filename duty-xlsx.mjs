@@ -1,6 +1,6 @@
 import {referenceStyles,referenceCols,referenceMargins} from './duty-week-template.mjs?v=duty-week-template-20261101';
 // Independent duty XLSX export, reusing the project's small ZIP/OOXML technique.
-import {exportRows,exportCapacity,filename,pretty,addDays,assignments,dayName,weekday,KIND} from './duty-core.mjs?v=duty-shared-reference-20261101';
+import {exportRows,exportCapacity,filename,pretty,addDays,assignments,dayName,weekday,KIND} from './duty-core.mjs?v=duty-background-20261102';
 const encoder = new TextEncoder();
 const xml = value => String(value).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
 function crc32(bytes) {
@@ -45,7 +45,7 @@ export function workbook(state,from,to,period='week'){
  weeklyReferenceLayout(files,state,from,to,period);
  return zip(files);
 }
-export function downloadDuty(state,from,to,period='week'){const blob=new Blob([workbook(state,from,to,period)],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename(state,from,to);document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+export function downloadDuty(state,from,to,period='week'){const blob=new Blob([workbook(state,from,to,period)],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename(state,from,to,period);document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 
 function weeklyReferenceLayout(files,state,from,to,period='week'){
  const ns='http://schemas.openxmlformats.org/spreadsheetml/2006/main';

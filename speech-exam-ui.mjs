@@ -46,7 +46,10 @@ export function mountAdmin(root, api, context) {
   if (api.issueBoard) toolbar.append(issue, revoke);
   const layout = el('div', undefined, 'se-admin-layout'), roster = el('nav', undefined, 'se-roster'); roster.setAttribute('aria-label', 'Öğrenciler');
   const picker = el('div', undefined, 'se-mobile-picker');
-  const pickerLabel = el('label', 'Öğrenci'), studentSelect = el('select'); studentSelect.setAttribute('aria-label', 'Değerlendirilecek öğrenci'); pickerLabel.append(studentSelect);
+  const pickerLabel = el('label', 'Öğrenci'), studentSelect = el('select'); studentSelect.setAttribute('aria-label', 'Değerlendirilecek öğrenci'); pickerLabel.append(studentSelect); studentSelect.hidden=true;
+  const studentMenu=el('details',undefined,'se-student-menu'), studentSummary=el('summary','Öğrenci seçin'), studentOptions=el('div',undefined,'se-student-options');
+  studentMenu.append(studentSummary,studentOptions); pickerLabel.append(studentMenu);
+  studentMenu.addEventListener('keydown',e=>{if(e.key==='Escape'){studentMenu.open=false;studentSummary.focus();}});
   const previousStudent = button('‹', () => stepStudent(-1)), nextStudent = button('›', () => stepStudent(1));
   previousStudent.setAttribute('aria-label', 'Önceki öğrenci'); nextStudent.setAttribute('aria-label', 'Sonraki öğrenci');
   picker.append(previousStudent, pickerLabel, nextStudent);
@@ -59,7 +62,7 @@ export function mountAdmin(root, api, context) {
   }
   const form = el('section', undefined, 'se-form'); layout.append(picker, roster, form); root.append(header, toolbar, status, pairing, layout);
   function inform(text) { status.textContent = text; }
-  function controls() { start.disabled = busy || exam?.status === 'active'; finish.disabled = busy || !exam || exam.status !== 'active'; download.disabled = busy || !exam; history.disabled = busy; reload.disabled = busy; retry.disabled = busy; discard.disabled = busy; issue.disabled = finish.disabled; revoke.disabled = busy || !exam; studentSelect.disabled = busy || !exam; const index = exam?.students.findIndex(s => s.id === exam.activeStudentId) ?? -1; previousStudent.disabled = busy || index <= 0; nextStudent.disabled = busy || !exam || index >= exam.students.length - 1; }
+  function controls() { start.disabled = busy || exam?.status === 'active'; finish.disabled = busy || !exam || exam.status !== 'active'; download.disabled = busy || !exam; history.disabled = busy; reload.disabled = busy; retry.disabled = busy; discard.disabled = busy; issue.disabled = finish.disabled; revoke.disabled = busy || !exam; studentSelect.disabled = busy || !exam; studentSummary.setAttribute('aria-disabled',String(busy||!exam)); if(busy)studentMenu.open=false; const index = exam?.students.findIndex(s => s.id === exam.activeStudentId) ?? -1; previousStudent.disabled = busy || index <= 0; nextStudent.disabled = busy || !exam || index >= exam.students.length - 1; }
   async function action(fn) {
     if (busy || disposed) return;
     busy = true; controls();
@@ -152,6 +155,19 @@ export function mountAdmin(root, api, context) {
     if (!exam) return;
     studentSelect.value = exam.activeStudentId || '';
     for (const option of studentSelect.options) { const student = exam.students.find(s => s.id === option.value); if (!student) continue; const value = total(exam.results[student.id]?.scores ?? emptyScores()); option.textContent = `${student.name} · ${value.complete ? '✓ ' + value.sum + '/100' : value.count + '/10'}`; }
+    studentOptions.replaceChildren();
+    const clearChoice=button('Öğrenci seçimini kaldır',()=>{studentMenu.open=false;chooseStudent(null);}); studentOptions.append(clearChoice);
+    for(const student of exam.students){
+      const value=total(exam.results[student.id]?.scores??emptyScores());
+      const row=button('',()=>{studentMenu.open=false;chooseStudent(student.id);});
+      row.className='se-student-option '+(value.complete?'is-complete':'is-incomplete');
+      row.append(el('span',(value.complete?'✓ ':'')+student.name),el('small',`${value.count}/10 ölçüt · ${value.sum}/100 puan`));
+      row.setAttribute('aria-pressed',String(student.id===exam.activeStudentId));studentOptions.append(row);
+    }
+    const selected=exam.students.find(s=>s.id===exam.activeStudentId);
+    studentSummary.replaceChildren();
+    if(selected){const value=total(exam.results[selected.id]?.scores??emptyScores());studentSummary.append(el('span',selected.name),el('small',`${value.count}/10 ölçüt`),el('b',`${value.sum}/100`));}
+    else studentSummary.textContent='Öğrenci seçin';
     for (const node of roster.querySelectorAll('[data-student-id]')) {
       const scores = exam.results[node.dataset.studentId]?.scores ?? emptyScores(), value = total(scores);
       node.setAttribute('aria-current', String(node.dataset.studentId === exam.activeStudentId));
