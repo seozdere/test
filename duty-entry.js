@@ -48,5 +48,5 @@
   availability();document.addEventListener('DOMContentLoaded',availability,{once:true});window.addEventListener('online',availability);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')availability();});
   const tools=document.getElementById('toolsPanel');if(tools)new MutationObserver(()=>{if(!tools.hidden)availability();}).observe(tools,{attributes:true,attributeFilter:['hidden']});
  }
- button.onclick=async()=>{button.disabled=true;try{const module=await import('./duty-ui.mjs?v=share-direct-20261105');await module.openDuty({client:_supabase,token:()=>admin?ClassLogAuth.getSessionToken():ClassLogData.parentToken,parent:!admin,className:ClassLogData.currentClass,launcher:button});}catch(e){alert(e.message||'Nöbet ekranı açılamadı.');}finally{button.disabled=false;}};
+ button.onclick=async()=>{button.disabled=true;try{const module=await import('./duty-ui.mjs?v=share-errors-20261106');await module.openDuty({client:_supabase,token:()=>admin?ClassLogAuth.getSessionToken():ClassLogData.parentToken,parent:!admin,className:ClassLogData.currentClass,launcher:button});}catch(e){alert(e.message||'Nöbet ekranı açılamadı.');}finally{button.disabled=false;}};
 })();
