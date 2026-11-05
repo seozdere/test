@@ -2,8 +2,13 @@ export const XLSX_MIME='application/vnd.openxmlformats-officedocument.spreadshee
 const DEPO_ORIGIN='https://deppo.netlify.app';
 let style;
 export function excelFile(bytes,name){return new File([bytes],name,{type:XLSX_MIME});}
-// A fresh click after preparation preserves mobile share/popup user activation.
-export function presentExcel(file,mode){
+// Try native sharing directly; offer a fresh gesture only if the browser rejects it.
+export async function presentExcel(file,mode){
+ let shareError='';
+ if(mode==='share'&&navigator.share&&navigator.canShare?.({files:[file]})){
+  try{await navigator.share({files:[file]});return;}catch(e){if(e.name==='AbortError')return;shareError=e.name==='NotAllowedError'?'Dosya hazırlanırken tarayıcının dokunma süresi dolmuş veya paylaşım izni engellenmiş olabilir. Hazır dosyayı paylaşmak için aşağıdaki düğmeye dokunun.':'Telefon paylaşım menüsünü açamadı. Hazır dosyayla tekrar deneyebilirsiniz.';}
+ }
+
  if(!style)style=document.getElementById('excel-actions-style');
  if(!style){style=document.createElement('link');style.rel='stylesheet';style.href=new URL('./excel-actions.css?v=2',import.meta.url);document.head.append(style);}
  const dialog=document.createElement('dialog');dialog.className='excel-transfer';
@@ -11,8 +16,9 @@ export function presentExcel(file,mode){
  heading.textContent=mode==='share'?'Excel paylaş':'Depo’ya kaydet';name.textContent=file.name;status.setAttribute('role','status');go.type=close.type='button';go.textContent=mode==='share'?'Paylaşım menüsünü aç':'Depo’ya bağlan';close.textContent='Kapat';actions.append(go,close);dialog.append(heading,name,status,actions);document.body.append(dialog);
  let cleanup=()=>{},busy=false;
  const finish=()=>{if(busy&&mode==='share')return;cleanup();dialog.close();dialog.remove();};close.onclick=finish;dialog.oncancel=e=>{e.preventDefault();finish();};
- if(mode==='depo'&&location.origin!=='https://bbgmko.netlify.app'){go.disabled=true;status.textContent='Depo bağlantısı yalnızca canlı NoTik adresinde kullanılabilir.';}
- if(mode==='share'&&(!navigator.share||!navigator.canShare?.({files:[file]}))){go.disabled=true;status.textContent='Bu tarayıcı Excel dosyası paylaşımını desteklemiyor. Excel İndir düğmesini kullanabilirsiniz.';}
+ if(mode==='depo'&&!['https://bbgmko.netlify.app','https://seozdere.github.io'].includes(location.origin)){go.disabled=true;status.textContent='Depo bağlantısı yalnızca canlı NoTik adresinde kullanılabilir.';}
+ if(shareError)status.textContent=shareError;
+ if(mode==='share'&&(!navigator.share||!navigator.canShare?.({files:[file]}))){go.disabled=true;status.textContent='Bu tarayıcı .xlsx dosyası paylaşımını desteklemiyor veya paylaşım izni kapalı. Sayfayı telefonun Chrome/Safari tarayıcısında açın; olmazsa Excel İndir’i kullanın.';}
  go.onclick=async()=>{
   if(busy)return;
   busy=true;go.disabled=true;

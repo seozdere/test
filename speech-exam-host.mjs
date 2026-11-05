@@ -1,5 +1,5 @@
 import {LIVE_ENABLED, SpeechExamApi} from './speech-exam-api.mjs?v=speech-pickerclear-20261103';
-import {mountAdmin, mountBoard} from './speech-exam-ui.mjs?v=excel-transfer-20261105';
+import {mountAdmin, mountBoard} from './speech-exam-ui.mjs?v=share-direct-20261105';
 import {SpeechDeviceApi, mountDeviceAdmin, installAutomaticBoard} from './speech-exam-device.mjs?v=speech-pickerclear-20261103';
 let styles;
 function loadStyles() {

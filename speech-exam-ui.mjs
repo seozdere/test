@@ -46,7 +46,7 @@ export function mountAdmin(root, api, context) {
     confirmingFinish=false;finish.focus();
     if(accepted && exam?.id===id && exam.status==='active' && !busy) await action(async()=>{await flush();load(await api.finish(exam.id,exam.revision));await refreshHistory();});
   });
-  const exportExcel=mode=>action(async()=>{await flush();const current=await api.get(exam.id);const {attachStudentNumbers}=await import('./exam-export-numbers.mjs');await attachStudentNumbers(current,api.client,api.credentials());const {downloadExam,workbook,examFilename}=await import('./speech-exam-xlsx.mjs?v=studentno-20261104');if(mode==='download')downloadExam(current);else{const {excelFile,presentExcel}=await import('./excel-actions.mjs');presentExcel(excelFile(workbook(current),examFilename(current)),mode);}});
+  const exportExcel=mode=>action(async()=>{await flush();const current=await api.get(exam.id);const {attachStudentNumbers}=await import('./exam-export-numbers.mjs');await attachStudentNumbers(current,api.client,api.credentials());const {downloadExam,workbook,examFilename}=await import('./speech-exam-xlsx.mjs?v=studentno-20261104');if(mode==='download')downloadExam(current);else{const {excelFile,presentExcel}=await import('./excel-actions.mjs?v=2');await presentExcel(excelFile(workbook(current),examFilename(current)),mode);}});
   const download=button('Excel İndir',()=>exportExcel('download'));
   const share=button('Paylaş',()=>exportExcel('share'),'se-action-share');
   const depo=button('Depo’ya Kaydet',()=>exportExcel('depo'),'se-action-depo');
