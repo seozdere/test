@@ -46,9 +46,10 @@ export function mountAdmin(root, api, context) {
     confirmingFinish=false;finish.focus();
     if(accepted && exam?.id===id && exam.status==='active' && !busy) await action(async()=>{await flush();load(await api.finish(exam.id,exam.revision));await refreshHistory();});
   });
-  const exportExcel=mode=>action(async()=>{await flush();const current=await api.get(exam.id);const {attachStudentNumbers}=await import('./exam-export-numbers.mjs');await attachStudentNumbers(current,api.client,api.credentials());const {downloadExam,workbook,examFilename}=await import('./speech-exam-xlsx.mjs?v=studentno-20261104');if(mode==='download')downloadExam(current);else{const {excelFile,presentExcel}=await import('./excel-actions.mjs?v=3');await presentExcel(excelFile(workbook(current),examFilename(current)),mode);}});
+  const exportExcel=mode=>action(async()=>{await flush();const current=await api.get(exam.id);const {attachStudentNumbers}=await import('./exam-export-numbers.mjs');await attachStudentNumbers(current,api.client,api.credentials());const {downloadExam,workbook,examFilename}=await import('./speech-exam-xlsx.mjs?v=studentno-20261104');if(mode==='download')downloadExam(current);else{const {excelFile,presentExcel}=await import('./excel-actions.mjs?v=4');await presentExcel(excelFile(workbook(current),examFilename(current)),mode);}});
   const download=button('Excel İndir',()=>exportExcel('download'));
-  const share=button('Paylaş',()=>exportExcel('share'),'se-action-share');
+  const pdf=button('PDF indir',()=>exportExcel('pdf'),'se-action-download');
+  const share=button('PDF Paylaş',()=>exportExcel('share'),'se-action-share');
   const depo=button('Depo’ya Kaydet',()=>exportExcel('depo'),'se-action-depo');
   const retry = button('Kaydı yeniden dene', () => action(flush)); retry.hidden = true;
   const reload = button('Kayıtlı sınavları yenile', () => action(async () => { await flush(); if (exam) { numberKey=''; load(await api.get(exam.id)); } await refreshHistory(); }));
@@ -63,7 +64,7 @@ export function mountAdmin(root, api, context) {
     svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
     const line = document.createElementNS(svg.namespaceURI, 'path'); line.setAttribute('d', drawing); svg.append(line); control.replaceChildren(svg, label);
   }
-  toolbar.append(start, finish, download, share, depo, history, reload, retry);
+  toolbar.append(start, finish, download, pdf, share, depo, history, reload, retry);
   toolbar.append(discard);
   const pairing = el('div', undefined, 'se-pairing'); pairing.hidden = true;
   const key = el('input'); key.type = 'password'; key.readOnly = true; key.autocomplete = 'off'; key.setAttribute('aria-label', 'Sınava özel geçici tahta anahtarı');
@@ -114,7 +115,7 @@ export function mountAdmin(root, api, context) {
   }
   const form = el('section', undefined, 'se-form'); layout.append(picker, roster, form); root.append(header, toolbar, status, pairing, layout);
   function inform(text) { status.textContent = text; }
-  function controls() { stickyClear.hidden=!exam?.activeStudentId;stickyClear.disabled=busy; start.disabled = busy || exam?.status === 'active'; finish.disabled = busy || !exam || exam.status !== 'active'; share.disabled = depo.disabled = download.disabled = busy || !exam; history.disabled = busy; reload.disabled = busy; retry.disabled = busy; discard.disabled = busy; issue.disabled = finish.disabled; revoke.disabled = busy || !exam; studentSelect.disabled = busy || !exam; studentSummary.setAttribute('aria-disabled',String(busy||!exam)); if(busy)studentMenu.open=false; const index = exam?.students.findIndex(s => s.id === exam.activeStudentId) ?? -1; previousStudent.disabled = busy || index <= 0; nextStudent.disabled = busy || !exam || index >= exam.students.length - 1; }
+  function controls() { stickyClear.hidden=!exam?.activeStudentId;stickyClear.disabled=busy; start.disabled = busy || exam?.status === 'active'; finish.disabled = busy || !exam || exam.status !== 'active'; pdf.disabled = share.disabled = depo.disabled = download.disabled = busy || !exam; history.disabled = busy; reload.disabled = busy; retry.disabled = busy; discard.disabled = busy; issue.disabled = finish.disabled; revoke.disabled = busy || !exam; studentSelect.disabled = busy || !exam; studentSummary.setAttribute('aria-disabled',String(busy||!exam)); if(busy)studentMenu.open=false; const index = exam?.students.findIndex(s => s.id === exam.activeStudentId) ?? -1; previousStudent.disabled = busy || index <= 0; nextStudent.disabled = busy || !exam || index >= exam.students.length - 1; }
   async function action(fn) {
     if (busy || disposed) return;
     busy = true; controls();

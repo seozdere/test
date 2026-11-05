@@ -15,7 +15,7 @@
   if (RELEASE_ENABLED) {
     inform('Sınav ekranı yükleniyor…');
     // A separate server gate and real RPC authorization are still mandatory.
-    import('./speech-exam-host.mjs?v=share-errors-20261106').then(module => {
+    import('./speech-exam-host.mjs?v=pdf-transfer-20261106').then(module => {
       if (module.install() === false) inform('Canlı sınav bu uygulama sürümünde kapalı.');
     }).catch(error => {
       if (button) button.disabled = true;
