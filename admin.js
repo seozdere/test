@@ -606,33 +606,12 @@ window.switchAdminTab = function(tab) {
 
 // ─── Öğrenci Listesi ──────────────────────────────────────────────────────────
 // Admin-only, device-local numbers. Never included in the shared data layer.
-function studentNumberKey(student) {
-    return 'classlog.student-number.v1:' + JSON.stringify([ClassLogData._activeTid(), ClassLogData.currentClass, student]);
-}
 function renderStudentNumber(student) {
-    const key = studentNumberKey(student);
-    let value = '';
-    try { value = localStorage.getItem(key) || ''; } catch (_) {}
-    const readonly = ClassLogAuth.isKioskSession() || (ClassLogData.viewingTermId !== null && ClassLogData.viewingTermId !== ClassLogData.activeTermId);
-    return `<input class="student-number" type="text" inputmode="numeric" maxlength="12" placeholder="No"
-        aria-label="${_htmlEncode(student)} öğrenci numarası" title="Yalnızca bu tarayıcıda saklanır"
-        data-number-key="${_htmlEncode(key)}" value="${_htmlEncode(value)}" ${readonly ? 'readonly' : ''}
-        oninput="saveLocalStudentNumber(this)" autocomplete="off">`;
+ return `<input class="student-number" type="hidden" value="${_htmlEncode(window.StudentNumbers?.value(student)||'')}">`;
 }
-window.saveLocalStudentNumber = function(input) {
-    if (input.readOnly) return;
-    input.value = input.value.replace(/[^0-9]/g, '').slice(0, 12);
-    try {
-        if (input.value) localStorage.setItem(input.dataset.numberKey, input.value);
-        else localStorage.removeItem(input.dataset.numberKey);
-        input.setCustomValidity('');
-        input.title = 'Yalnızca bu tarayıcıda saklanır';
-    } catch (_) {
-        input.title = 'Numara kaydedilemedi. Tarayıcı depolama iznini kontrol edin.';
-        input.setCustomValidity(input.title);
-        input.reportValidity();
-    }
-};
+function renderStudentNumberButton(student) {
+ return `<button type="button" class="student-number-open" data-student="${_htmlEncode(student)}" aria-label="${_htmlEncode(student)} öğrenci numarasını düzenle" title="Öğrenci numarası ekle">${_htmlEncode(window.StudentNumbers?.value(student)||'No')}</button>`;
+}
 
 function normalizeStudentSearch(value) {
     return String(value).toLocaleLowerCase('tr').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ı/g, 'i').trim();
@@ -687,6 +666,7 @@ window.addEventListener('focus', updateSelectedDateNotice);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) updateSelectedDateNotice(); });
 
 function renderStudents() {
+    void window.StudentNumbers?.ensure();
     updateHomeworkDateJumps();
     updateSelectedDateNotice();
     renderHomeworkDescriptionEditor();
@@ -716,7 +696,7 @@ function renderStudents() {
                 ${renderStudentNumber(student)}
                 <div class="s-avatar" style="background:${color};">${initials}</div>
                 <span class="s-name">${_htmlEncode(student)}</span>
-                <button class="note-btn ${hasNote}" onclick="openNote('${esc}')" aria-label="${notes[student] ? 'Veli notunu düzenle' : 'Veli notu ekle'}" title="Veli notu"><svg width="22" height="22" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M5 4h18a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H12l-6 4v-4H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3Z" fill="${notes[student] ? '#F8E5B8' : '#E4DCF4'}" stroke="#907AAA" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 10h12M8 15h8" stroke="#79638E" stroke-width="1.7" stroke-linecap="round"/><path d="M6 7h5" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+                <button class="note-btn ${hasNote}" onclick="openNote('${esc}')" aria-label="${notes[student] ? 'Veli notunu düzenle' : 'Veli notu ekle'}" title="Veli notu"><svg width="22" height="22" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M5 4h18a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H12l-6 4v-4H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3Z" fill="${notes[student] ? '#F8E5B8' : '#E4DCF4'}" stroke="#907AAA" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 10h12M8 15h8" stroke="#79638E" stroke-width="1.7" stroke-linecap="round"/><path d="M6 7h5" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/></svg></button>${renderStudentNumberButton(student)}
                 <div class="controls">
                     <button class="btn btn-pos     ${status===1  ?'active':''}" onclick="setMark('${esc}',1)"  title="Tamam (+)">+</button>
                     <button class="btn btn-neg     ${status===-1 ?'active':''}" onclick="setMark('${esc}',-1)" title="Eksik (-)">−</button>
@@ -739,6 +719,7 @@ function renderStudents() {
                 ${renderStudentNumber(student)}
                 <div class="s-avatar" style="background:${color};">${initials}</div>
                 <span class="s-name">${_htmlEncode(student)}</span>
+                ${renderStudentNumberButton(student)}
                 <div class="class-score-mini">
                     <span class="csm-pos">+${posCount}</span>
                     <span class="csm-neg">−${negCount}</span>

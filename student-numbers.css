@@ -1,0 +1,9 @@
+.admin-page .student-card .student-number-open{flex:0 0 auto;min-width:32px;max-width:70px;min-height:36px;padding:4px 6px;border:1px solid #485976;border-radius:10px;background:#293650;color:#dce5f7;font:700 11px 'Plus Jakarta Sans',sans-serif;overflow-wrap:anywhere;cursor:pointer}
+.student-number-dialog{position:fixed;inset:0;margin:auto;box-sizing:border-box;width:min(400px,calc(100vw - 28px));padding:22px;border:1px solid #596781;border-radius:20px;background:#202d43;color:#edf1ff;font-family:'Plus Jakarta Sans',sans-serif}
+.student-number-dialog::backdrop{background:#0c1323aa}.student-number-dialog h3{font-size:16px;margin:0 0 14px;overflow-wrap:anywhere}.student-number-dialog input{box-sizing:border-box;width:100%;min-height:44px;border:1px solid #71809b;border-radius:10px;padding:10px;font:inherit;background:#142139;color:#fff}.student-number-dialog p{font-size:12px;line-height:1.5}.student-number-dialog form>div{display:flex;gap:10px}.student-number-dialog button{flex:1;min-height:44px;background:#293650;color:#dce5f7;border:1px solid #485976;border-radius:10px;font:700 13px 'Plus Jakarta Sans',sans-serif;cursor:pointer}
+@media(min-width:641px) and (max-width:1099px){.admin-page .student-card{display:flex;flex-wrap:wrap;align-items:center}.admin-page .student-card .s-name{flex:1;min-width:0}.admin-page .student-card .controls{flex-basis:100%}}
+@media(max-width:640px){.admin-page .student-card .student-number-open{max-width:42px;padding:3px;min-width:28px;font-size:10px}}
+
+.admin-page .student-card .student-number-open:hover,.student-number-dialog button:not(:disabled):hover{background:#364762;border-color:#71809b}
+.admin-page .student-card .student-number-open:focus-visible,.student-number-dialog button:focus-visible{outline:2px solid #b9a5e6;outline-offset:2px}
+.student-number-dialog button:disabled{opacity:.55;cursor:wait}

@@ -409,7 +409,6 @@ body.admin-page,body.admin-page :is(button,input,textarea,select,.s-name,.modal-
 .admin-page .layout-date-card #nextDate{background:#b4dfc3;color:#326b56;border:1px solid #9dceb0}
 .admin-page .layout-date-card .admin-homework-ribbon{display:none}
 .admin-page .layout-date-card .date-selector .date-homework-row:has(.admin-homework-ribbon){order:1;display:grid;grid-template-columns:minmax(30px,.6fr) minmax(0,1.6fr) minmax(0,1.6fr) minmax(30px,.6fr) minmax(44px,.9fr);gap:7px;width:100%;margin:0;padding:0;border:0}
-.admin-page .layout-date-card .date-selector .date-homework-row:has(.date-today[hidden]){grid-template-columns:minmax(30px,.6fr) minmax(0,1.6fr) minmax(0,1.6fr) minmax(30px,.6fr)}
 .admin-page .layout-date-card .date-homework-row :is(.homework-jump-btn,.date-today){position:static;inset:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;justify-self:stretch;gap:3px;width:100%;min-width:0;height:42px;min-height:42px;margin:0;padding:3px 2px;border:1px solid #30405e;border-radius:11px;background:linear-gradient(145deg,#202e48,#19253b);color:#c8ccec;box-sizing:border-box}
 .admin-page .layout-date-card .date-homework-row svg{width:20px;height:20px}
 .admin-page .layout-date-card .homework-jump-label{font-size:.64rem;line-height:1.2}

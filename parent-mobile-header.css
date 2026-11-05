@@ -148,3 +148,16 @@
  .parent-page .portrait-multi-subject .tools-shortcut-label{display:block;font-size:.7rem}
  .parent-page .portrait-multi-subject .tools-new-ribbon{top:-7px;right:-3px;scale:.5;transform-origin:right top}
 }
+
+/* The notice is outside the scrolling panels: compensate only its position
+   for the space occupied by the expanded header, using its existing timeline. */
+@media(max-width:640px) and (orientation:portrait){
+ @supports (animation-timeline: --dashboard-scroll) and (timeline-scope: --dashboard-scroll){
+  .parent-page .header-scroll-driven>#parentNoticeBar{
+   flex-shrink:0;top:var(--hdr-shift,0px);z-index:49;
+   animation:parent-notice-header-offset linear both;
+   animation-timeline:--dashboard-scroll;animation-range:0px var(--hdr-shift);
+  }
+ }
+}
+@keyframes parent-notice-header-offset{from{transform:translateY(0);opacity:1}to{transform:translateY(calc(-1 * var(--hdr-shift)));opacity:1}}

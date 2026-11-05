@@ -201,3 +201,12 @@
 .duty-parent[data-view="today"] .duty-day.is-today .duty-badge{background:#eef4ef;border:1px solid transparent;color:#5f7b67;font-size:12px;font-weight:800;padding:5px 10px;align-self:flex-start;flex-shrink:0}
 
 .duty-root .duty-manage-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}.duty-root .duty-manage-actions>button{flex:1 1 145px;margin:0;min-height:44px}
+
+.duty-parent .duty-reserve-note{color:#000;font-style:italic}
+
+.duty-missed-state{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:5px 10px;border:1px solid #e4b5bc;border-radius:10px;background:#fbe8eb;color:#9c3e4c;font-size:11px;font-weight:700;white-space:nowrap}
+
+.duty-root button.duty-result-choice.duty-ok{background:#e1efe6;border-color:#b0d1c0;color:#305e48}
+.duty-root button.duty-result-choice.duty-no{background:#fbe9e9;border-color:#e7c3c3;color:#a2464f}
+.duty-root button.duty-result-choice[aria-pressed="true"]{font-weight:800;box-shadow:inset 0 0 0 2px currentColor}
+.duty-root button.duty-result-choice.is-muted{background:#ececef;border-color:#d1d1d8;color:#777782;box-shadow:none}

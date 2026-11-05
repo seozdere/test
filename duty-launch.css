@@ -30,3 +30,6 @@
  #toolsPanel .tools-grid:not(.games-grid) #dutyOpen .duty-card-art{grid-column:1/-1;justify-self:center;align-self:center;margin:0 auto;width:48px;height:48px}
  #toolsPanel #dutyOpen .duty-card-art svg{width:40px;height:40px}
 }
+
+#adminMenuSheet #dutyAdmin .duty-menu-body{padding:14px 16px}
+#adminMenuSheet #dutyAdmin #dutyOpen{display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:100%;min-width:0;margin:0;min-height:44px;line-height:1.4;text-align:center}

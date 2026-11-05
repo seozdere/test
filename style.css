@@ -1830,3 +1830,12 @@ body.admin-page #installBanner { background:var(--palette-lavender); color:var(-
 .subject-scroll-hint:focus-visible{outline:2px solid white;outline-offset:2px}
 @keyframes subject-hint-pulse{0%,100%{transform:scale(.8)}50%{transform:scale(1.15)}}
 @media(prefers-reduced-motion:reduce){.subject-scroll-hint svg{animation:none}}
+
+/* Announcement editors retain Unicode and line breaks as plain text. */
+.announcement-text-input{box-sizing:border-box;width:100%;resize:vertical;min-height:96px;font-family:'Plus Jakarta Sans','Segoe UI Emoji','Apple Color Emoji',sans-serif!important;line-height:1.5;white-space:pre-wrap}
+.announcement-edit-tools{display:flex;align-items:center;flex-wrap:wrap;gap:6px;flex:1 1 100%;width:100%}
+.announcement-edit-tools button,.announcement-edit-tools select{font:inherit;font-size:12px;min-height:36px;padding:6px 10px;border:1px solid #66718b;border-radius:9px;background:#293650;color:#f2f3ff}
+.announcement-edit-hint{font-size:11px;color:#c9cee0}
+#parentNoticeBar .notice-text-anim,#criticalPopupContent{white-space:pre-wrap;overflow-wrap:anywhere}
+.parent-page #parentTickerBar{height:auto;min-height:28px;border-radius:16px}
+#parentTickerBar .parent-ticker-text{white-space:pre;line-height:1.5}

@@ -15,7 +15,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="NoTik">
     <link rel="apple-touch-icon" sizes="180x180" href="notik-rounded-180.png">
-    <link rel="stylesheet" href="style.css?v=218">
+    <link rel="stylesheet" href="style.css?v=219">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .admin-info-panel { margin-top:12px; border:1px solid var(--a-border2); border-radius:14px; background:var(--a-surface); }
@@ -200,7 +200,10 @@
                          margin-top: 20px; font-size: .82rem; color: #4ade80; font-weight: 600;
                          position: relative; z-index: 1; }
     </style>
-<link rel="stylesheet" href="admin-layout.css?v=speech-fullroster-20261102">
+<link rel="stylesheet" href="admin-layout.css?v=today-visible-20261104">
+<link rel="stylesheet" href="exam-entry.css?v=compact-20261104">
+<link rel="stylesheet" href="student-numbers.css?v=2">
+<link id="excel-actions-style" rel="stylesheet" href="excel-actions.css?v=2">
 </head>
 <body class="admin-page">
 <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" style="position:absolute;overflow:hidden"><defs><symbol id="admin-icon-settings" viewBox="0 0 24 24"><g stroke="#675080" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3 3 4-1 1 4 3 3-3 3-1 4-4-1-3 3-3-3-4 1-1-4-3-3 3-3 1-4 4 1Z" fill="#DCDFFA"/><circle cx="12" cy="11" r="4" fill="#FFF5DC"/></g></symbol><symbol id="admin-icon-link" viewBox="0 0 24 24"><g stroke="#675080" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="15" height="18" rx="3" fill="#DCDFFA"/><rect x="3" y="2" width="14" height="17" rx="3" fill="#FFF5DC"/><path d="M7 8h6M7 12h6"/></g></symbol><symbol id="admin-icon-board" viewBox="0 0 24 24"><g stroke="#675080" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="3" fill="#C4D8F3"/><path d="M9 21h6M12 17v4"/><path d="M6 7h4v4H6zM14 7h4v4h-4z" fill="#FFF5DC"/></g></symbol><symbol id="admin-icon-send" viewBox="0 0 24 24"><g stroke="#675080" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="5" width="7" height="16" rx="2" fill="#DCDFFA"/><rect x="13" y="3" width="10" height="12" rx="2" fill="#B7E5CA"/><path d="M8 12h9m-3-3 3 3-3 3M17 19h4M19 15v4"/></g></symbol><symbol id="admin-icon-download" viewBox="0 0 24 24"><g stroke="#675080" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5Z" fill="#FFF5DC"/><path d="M15 3v5h4M12 10v7m-3-3 3 3 3-3"/></g></symbol><symbol id="admin-icon-people" viewBox="0 0 24 24"><g stroke="#675080" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="7" r="4" fill="#F7C49E"/><circle cx="18" cy="8" r="3" fill="#FFF5DC"/><path d="M1 22v-4c0-8 14-8 14 0v4Z" fill="#DCDFFA"/><path d="M16 14q7 0 7 6v2h-5" fill="#B7E5CA"/></g></symbol><symbol id="admin-icon-calendar" viewBox="0 0 24 24"><g stroke="#675080" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="17" rx="3" fill="#FFF5DC"/><path d="M3 11h18M8 2v6M16 2v6"/><path d="m8 16 3 3 5-5" stroke="#65BD5D"/></g></symbol><symbol id="admin-icon-lock" viewBox="0 0 24 24"><g stroke="#675080" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10V7a6 6 0 0 1 12 0v3" fill="none"/><rect x="3" y="10" width="18" height="12" rx="3" fill="#F4CC73"/><path d="M12 14v4"/></g></symbol><symbol id="admin-icon-exit" viewBox="0 0 24 24"><g stroke="#675080" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 3H3v18h8" fill="#DCDFFA"/><path d="M10 12h12m-5-5 5 5-5 5" fill="none" stroke="#A16B55"/></g></symbol><symbol id="admin-icon-eye" viewBox="0 0 24 24"><g stroke="#675080" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12Q12-3 23 12Q12 27 1 12Z" fill="#DCDFFA"/><circle cx="12" cy="12" r="5" fill="#B7E5CA"/><circle cx="12" cy="12" r="2" fill="#675080"/><path d="m10 9 1-1" stroke="#fff"/></g></symbol><symbol id="admin-icon-crown" viewBox="0 0 24 24"><g stroke="#675080" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m2 6 5 4 5-7 5 7 5-4-3 14H5Z" fill="#F4CC73"/><path d="M6 16h12"/><circle cx="12" cy="12" r="2" fill="#DCDFFA"/></g></symbol><symbol id="admin-icon-notice" viewBox="0 0 24 24"><g stroke="#675080" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 3-3h10l3 3v8H4Z" fill="#F7C49E"/><path d="M8 9V7a4 4 0 0 1 8 0v2M2 20h20"/><path d="M10 22h4"/></g></symbol><symbol id="admin-icon-ticker" viewBox="0 0 24 24"><g stroke="#675080" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h5l11-5v16L8 15H3Z" fill="#C4D8F3"/><path d="m6 15 2 6h4l-2-5" fill="#DCDFFA"/><path d="M8 9v6M22 9v6"/></g></symbol><symbol id="admin-icon-popup" viewBox="0 0 24 24"><g stroke="#675080" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="17" rx="5" fill="#DCDFFA"/><path d="m8 20-3 3v-5" fill="#DCDFFA"/><path d="M12 7v6" stroke="#A16B55" stroke-width="3"/><circle cx="12" cy="16" r="1.2" fill="#A16B55" stroke="none"/></g></symbol></defs></svg>
@@ -311,7 +314,7 @@
                 <span id="parentNoticeMeta" style="font-size:.76rem;color:#fed7aa;opacity:.95;"></span>
                     </div>
                     <div class="announcement-fields">
-                <input id="parentNoticeInput" type="text" maxlength="180" placeholder="Veli ekranında görünecek kısa duyuru..." style="flex:1 1 280px;min-width:220px;background:rgba(15,23,42,.55);border:1px solid rgba(148,163,184,.24);border-radius:10px;padding:10px 12px;color:#f8fafc;font-size:.82rem;">
+                <textarea id="parentNoticeInput" maxlength="180" placeholder="Veli ekranında görünecek kısa duyuru..." style="flex:1 1 100%;min-width:0;background:rgba(15,23,42,.55);border:1px solid rgba(148,163,184,.24);border-radius:10px;padding:10px 12px;color:#f8fafc;font-size:.82rem;" rows="4" class="announcement-text-input"></textarea>
                 <select id="parentNoticeDuration" style="background:rgba(15,23,42,.55);border:1px solid rgba(148,163,184,.24);border-radius:10px;padding:10px 12px;color:#f8fafc;font-size:.82rem;">
                     <option value="">Süre seç</option>
                     <option value="15">15 dk</option>
@@ -335,7 +338,7 @@
                 <span id="parentTickerMeta" style="font-size:.76rem;color:#bae6fd;opacity:.95;"></span>
                     </div>
                     <div class="announcement-fields">
-                <input id="parentTickerInput" type="text" maxlength="220" placeholder="Tamam / Eksik satırının sağında yavaş kayan yazı..." style="flex:1 1 300px;min-width:220px;background:rgba(15,23,42,.55);border:1px solid rgba(148,163,184,.24);border-radius:10px;padding:10px 12px;color:#f8fafc;font-size:.82rem;">
+                <textarea id="parentTickerInput" maxlength="220" placeholder="Tamam / Eksik satırının sağında yavaş kayan yazı..." style="flex:1 1 100%;min-width:0;background:rgba(15,23,42,.55);border:1px solid rgba(148,163,184,.24);border-radius:10px;padding:10px 12px;color:#f8fafc;font-size:.82rem;" rows="4" class="announcement-text-input"></textarea>
                 <select id="parentTickerDuration" style="background:rgba(15,23,42,.55);border:1px solid rgba(148,163,184,.24);border-radius:10px;padding:10px 12px;color:#f8fafc;font-size:.82rem;">
                     <option value="">Süre seç</option>
                     <option value="1440">1 gün</option>
@@ -356,7 +359,7 @@
                 <span id="parentPopupMeta" style="font-size:.76rem;color:#c7d2fe;opacity:.95;"></span>
                     </div>
                     <div class="announcement-fields">
-                <input id="parentPopupInput" type="text" maxlength="300" placeholder="Ekranda belirecek kritik mesaj..." style="flex:1 1 280px;min-width:220px;background:rgba(15,23,42,.55);border:1px solid rgba(148,163,184,.24);border-radius:10px;padding:10px 12px;color:#f8fafc;font-size:.82rem;">
+                <textarea id="parentPopupInput" maxlength="300" placeholder="Ekranda belirecek kritik mesaj..." style="flex:1 1 100%;min-width:0;background:rgba(15,23,42,.55);border:1px solid rgba(148,163,184,.24);border-radius:10px;padding:10px 12px;color:#f8fafc;font-size:.82rem;" rows="4" class="announcement-text-input"></textarea>
                 <select id="parentPopupDuration" style="background:rgba(15,23,42,.55);border:1px solid rgba(148,163,184,.24);border-radius:10px;padding:10px 12px;color:#f8fafc;font-size:.82rem;">
                     <option value="">Süre seç</option>
                     <option value="eod">Bugün sonuna kadar</option>
@@ -375,8 +378,13 @@
 
             <details id="speechExamAdmin" class="announcement-details admin-info-panel no-kiosk admin-only">
                 <summary class="announcement-summary"><span><svg class="admin-comic-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="#D8EBDC" stroke="#718E80" stroke-width="1.5"/><path d="M7 8h6M7 12h4m2 4 2 2 4-5" stroke="#675080" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 5h5" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg> Canlı Konuşma Sınavı</span></summary>
-                <div class="speech-exam-menu-body"><button id="speechExamOpen" type="button" class="tbtn tbtn-accent" disabled>Sınav yönetimini aç</button><p id="speechExamAvailability" role="status">Sınav ekranı yükleniyor…</p></div>
+                <div class="speech-exam-menu-body"><div class="exam-entry-launchers"><button id="speechExamOpen" type="button" class="tbtn tbtn-accent" disabled>Sınav yönetimini aç</button></div><p id="speechExamAvailability" role="status">Sınav ekranı yükleniyor…</p></div>
             </details>
+<details id="examEntrySection" class="announcement-details admin-info-panel no-kiosk admin-only"><summary class="announcement-summary"><span><svg class="admin-comic-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="#e4d9f2" stroke="#9880b0" stroke-width="1.5"/><path d="M7 8h10M7 12h10M7 16h10M12 8v8" stroke="#72588e" stroke-width="1.5"/></svg> Sınav Notları Excel</span></summary><div id="examEntryAdmin"><div style="padding:16px;display:grid;gap:10px;font-family:'Plus Jakarta Sans',sans-serif">
+
+ <select aria-label="Aktarılacak konuşma sınavı" style="width:100%;min-width:0;min-height:44px"><option value="">Kayıtlı sınav seçin</option></select>
+ <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="tbtn" data-entry-reload>Sınavları yenile</button><button type="button" class="tbtn tbtn-accent" data-entry-download disabled>Excel indir</button></div>
+ <p role="status"></p></div></div></details>
 <div class="admin-status-strip">
                 <span id="saveStatusBadge" class="status-pill status-idle">Hazır</span>
                 <span id="realtimeStatusBadge" class="status-pill status-muted">Canlı bağlantı: beklemede</span>
@@ -654,13 +662,17 @@
 
     <script src="pwa.js?v=4"></script>
     <script src="data.js?v=20"></script>
-    <script src="admin.js?v=duty-1"></script>
+    <script src="student-numbers.js?v=1"></script>
+    <script src="admin.js?v=student-numbers-1"></script>
 
 <script src="speech-topics.js?v=4"></script>
-<script src="speech-exam-entry.js?v=speech-fullroster-20261102"></script>
+<script src="speech-exam-entry.js?v=excel-transfer-20261105"></script>
 <script src="application-backup.js?v=duty-1"></script>
 <script src="record-export.js?v=1"></script>
-<script src="admin-layout.js?v=25"></script>
-<script src="duty-entry.js?v=duty-managegap-20261102"></script>
+<script src="admin-layout.js?v=today-visible-20261104"></script>
+<script src="duty-entry.js?v=excel-transfer-20261105"></script>
+<script src="exam-entry.js?v=excel-transfer-20261105"></script>
+<script src="announcement-editor.js?v=1"></script>
+<script src="excel-action-icons.js?v=1"></script>
 </body>
 </html>

@@ -1,3 +1,4 @@
+import {teacherClock} from './speech-teacher-clock.mjs?v=1';
 import {ScoreQueue, emptyScores, total, totalLabel, coalescedReader} from './speech-exam-core.mjs?v=speech-score-toggle-20261029-r1';
 // Presentation-only deadline calculation; compatible with the existing core module.
 function selectionRemainingMs(value) {
@@ -11,18 +12,46 @@ function button(text, action, className) { const node = el('button', text, class
 export function mountAdmin(root, api, context) {
   root.classList.add('se-root');
   let exam = null, queue = null, busy = false, disposed = false;
+  let numberKey='', studentNumbers={};
+  const pickerName=(student,complete=false)=>[complete?'✓':'',studentNumbers[student.id]||'',student.name].filter(Boolean).join(' · ');
+  function readPickerNumbers(value){
+    if(!api.client||!api.credentials)return;
+    const key=JSON.stringify([value.id,value.students]);
+    if(key===numberKey)return;
+    numberKey=key;studentNumbers={};
+    import('./exam-export-numbers.mjs').then(({attachStudentNumbers})=>attachStudentNumbers({...value},api.client,api.credentials())).then(result=>{
+      if(!disposed&&numberKey===key){studentNumbers=result.studentNumbers;update();}
+    }).catch(()=>{if(!disposed&&numberKey===key){numberKey='';inform('Öğrenci numaraları okunamadı. Kayıtlı sınavları yenileyebilirsiniz.');}});
+  }
   const header = el('header', undefined, 'se-header'), heading = el('div');
   heading.append(el('p', 'KONUŞMA DEĞERLENDİRMESİ', 'se-eyebrow'), el('h2', 'Canlı Konuşma Sınavı'));
   const contextLabel = el('p', [context.className, context.subjectId, context.termId, context.date].filter(Boolean).join(' · '), 'se-context'); heading.append(contextLabel); header.append(heading);
   const toolbar = el('div', undefined, 'se-toolbar'), status = el('p', 'Sınav seçin veya yeni sınav başlatın.', 'se-status'); status.setAttribute('role', 'status');
   const history = el('select'); history.setAttribute('aria-label', 'Kayıtlı sınavlar');
   const start = button('Sınavı Başlat', () => action(async () => { await flush(); load(await api.create(context)); await refreshHistory(); }));
-  const finish = button('Sınavı Bitir', () => {
-    if (exam && confirm('Sınav bitirilsin mi? Kaydedilmiş puanlar korunur; değerlendirme salt okunur olur.')) action(async () => { await flush(); load(await api.finish(exam.id, exam.revision)); await refreshHistory(); });
+  let confirmingFinish=false;
+  const finish = button('Sınavı Bitir', async () => {
+    if (!exam || exam.status!=='active' || busy || confirmingFinish) return;
+    const id=exam.id; confirmingFinish=true;
+    const accepted=await new Promise(resolve=>{
+      const dialog=el('dialog',undefined,'se-finish-confirm se-root');
+      const title=el('h3','Sınavı bitirmek istiyor musunuz?');title.id='se-finish-confirm-title';dialog.setAttribute('aria-labelledby',title.id);
+      const note=el('p','Kaydedilen puanlar korunur. Tamamlanan sınavda puanlama yapılamaz.');
+      const actions=el('div',undefined,'se-finish-actions');
+      const settle=value=>{dialog.close();dialog.remove();resolve(value);};
+      const cancel=button('Vazgeç',()=>settle(false)),approve=button('Sınavı Bitir',()=>settle(true));
+      actions.append(cancel,approve);dialog.append(title,note,actions);document.body.append(dialog);
+      dialog.addEventListener('cancel',event=>{event.preventDefault();settle(false);});dialog.showModal();cancel.focus();
+    });
+    confirmingFinish=false;finish.focus();
+    if(accepted && exam?.id===id && exam.status==='active' && !busy) await action(async()=>{await flush();load(await api.finish(exam.id,exam.revision));await refreshHistory();});
   });
-  const download = button('Excel İndir', () => action(async () => { await flush(); const current = await api.get(exam.id); const {downloadExam} = await import('./speech-exam-xlsx.mjs?v=speech-score-toggle-20261029-r1'); downloadExam(current); }));
+  const exportExcel=mode=>action(async()=>{await flush();const current=await api.get(exam.id);const {attachStudentNumbers}=await import('./exam-export-numbers.mjs');await attachStudentNumbers(current,api.client,api.credentials());const {downloadExam,workbook,examFilename}=await import('./speech-exam-xlsx.mjs?v=studentno-20261104');if(mode==='download')downloadExam(current);else{const {excelFile,presentExcel}=await import('./excel-actions.mjs');presentExcel(excelFile(workbook(current),examFilename(current)),mode);}});
+  const download=button('Excel İndir',()=>exportExcel('download'));
+  const share=button('Paylaş',()=>exportExcel('share'),'se-action-share');
+  const depo=button('Depo’ya Kaydet',()=>exportExcel('depo'),'se-action-depo');
   const retry = button('Kaydı yeniden dene', () => action(flush)); retry.hidden = true;
-  const reload = button('Kayıtlı sınavları yenile', () => action(async () => { await flush(); if (exam) load(await api.get(exam.id)); await refreshHistory(); }));
+  const reload = button('Kayıtlı sınavları yenile', () => action(async () => { await flush(); if (exam) { numberKey=''; load(await api.get(exam.id)); } await refreshHistory(); }));
   const discard = button('Sunucudaki kaydı aç', () => {
     if (confirm('Kaydedilmemiş yerel puanları bırakıp sunucudaki son kaydı açmak istiyor musunuz?')) action(async () => { load(await api.get(exam.id)); });
   }); discard.hidden = true;
@@ -34,7 +63,7 @@ export function mountAdmin(root, api, context) {
     svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
     const line = document.createElementNS(svg.namespaceURI, 'path'); line.setAttribute('d', drawing); svg.append(line); control.replaceChildren(svg, label);
   }
-  toolbar.append(start, finish, download, history, reload, retry);
+  toolbar.append(start, finish, download, share, depo, history, reload, retry);
   toolbar.append(discard);
   const pairing = el('div', undefined, 'se-pairing'); pairing.hidden = true;
   const key = el('input'); key.type = 'password'; key.readOnly = true; key.autocomplete = 'off'; key.setAttribute('aria-label', 'Sınava özel geçici tahta anahtarı');
@@ -46,13 +75,36 @@ export function mountAdmin(root, api, context) {
   if (api.issueBoard) toolbar.append(issue, revoke);
   const layout = el('div', undefined, 'se-admin-layout'), roster = el('nav', undefined, 'se-roster'); roster.setAttribute('aria-label', 'Öğrenciler');
   const picker = el('div', undefined, 'se-mobile-picker');
-  const pickerLabel = el('div', 'Öğrenci', 'se-picker-label'), studentSelect = el('select'); studentSelect.setAttribute('aria-label', 'Değerlendirilecek öğrenci'); pickerLabel.append(studentSelect); studentSelect.hidden=true;
+  const pickerLabel = el('div', undefined, 'se-picker-label'), studentSelect = el('select'); studentSelect.setAttribute('aria-label', 'Değerlendirilecek öğrenci'); pickerLabel.append(studentSelect); studentSelect.hidden=true;
   const studentMenu=el('details',undefined,'se-student-menu'), studentSummary=el('summary','Öğrenci seçin'), studentOptions=el('div',undefined,'se-student-options');
   studentMenu.append(studentSummary,studentOptions); pickerLabel.append(studentMenu);
-  studentMenu.addEventListener('keydown',e=>{if(e.key==='Escape'){studentMenu.open=false;studentSummary.focus();}});
+  const dismissStudentMenu=event=>{if(studentMenu.open&&!studentMenu.contains(event.target))studentMenu.open=false;};
+  const escapeStudentMenu=event=>{if(event.key==='Escape'&&studentMenu.open){event.preventDefault();event.stopPropagation();studentMenu.open=false;studentSummary.focus();}};
+  document.addEventListener('pointerdown',dismissStudentMenu,true);
+  document.addEventListener('keydown',escapeStudentMenu,true);
+  const localClock=teacherClock();let clockTick=null;
+  function clockWidget(kind){
+    const node=el('div',undefined,'se-teacher-clock '+kind),face=el('span',undefined,'se-clock-face');
+    face.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="13" r="8" fill="#e3d8f2" stroke="#8b73a2" stroke-width="1.6"/><path d="M9 2h6m-3 4v-4m0 7v5l3 2" fill="none" stroke="#71588b" stroke-width="1.8" stroke-linecap="round"/></svg>';
+    const time=el('span','00:00','se-clock-time');time.setAttribute('aria-label','Öğretmen kronometresi');face.append(time);
+    const toggle=button('Başlat',()=>{localClock.toggle();paintClock();},'se-clock-toggle');
+    const reset=button('Sıfırla',()=>{localClock.reset();paintClock();},'se-clock-reset');
+    node.append(face,toggle,reset);return {node,time,toggle};
+  }
+  const mobileClock=clockWidget('se-clock-mobile'),desktopClock=clockWidget('se-clock-desktop');
+  picker.append(mobileClock.node);
+  function paintClock(){
+    const active=!!exam?.activeStudentId&&exam.status==='active';
+    const seconds=Math.floor(localClock.milliseconds/1000),text=String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');
+    for(const widget of [mobileClock,desktopClock]){widget.node.hidden=!active;widget.time.textContent=text;widget.toggle.textContent=localClock.running?'Durdur':localClock.milliseconds?'Devam':'Başlat';widget.toggle.setAttribute('aria-pressed',String(localClock.running));}
+    if(localClock.running&&!clockTick)clockTick=setInterval(paintClock,250);
+    if(!localClock.running&&clockTick){clearInterval(clockTick);clockTick=null;}
+  }
+  function syncClock(){localClock.select(exam?.status==='active'&&exam.activeStudentId?exam.id+':'+exam.activeStudentId:null);paintClock();}
   const previousStudent = button('‹', () => stepStudent(-1)), nextStudent = button('›', () => stepStudent(1));
   previousStudent.setAttribute('aria-label', 'Önceki öğrenci'); nextStudent.setAttribute('aria-label', 'Sonraki öğrenci');
-  picker.append(previousStudent, pickerLabel, nextStudent);
+  const stickyClear=button('Seçimi kaldır',()=>chooseStudent(null),'se-sticky-clear');
+  picker.append(previousStudent, pickerLabel, nextStudent,stickyClear);
   studentSelect.addEventListener('change', () => chooseStudent(studentSelect.value));
   function stepStudent(direction) { const index = exam?.students.findIndex(s => s.id === exam.activeStudentId) ?? -1; const student = exam?.students[index + direction]; if (student) chooseStudent(student.id); }
   function chooseStudent(id) {
@@ -62,7 +114,7 @@ export function mountAdmin(root, api, context) {
   }
   const form = el('section', undefined, 'se-form'); layout.append(picker, roster, form); root.append(header, toolbar, status, pairing, layout);
   function inform(text) { status.textContent = text; }
-  function controls() { start.disabled = busy || exam?.status === 'active'; finish.disabled = busy || !exam || exam.status !== 'active'; download.disabled = busy || !exam; history.disabled = busy; reload.disabled = busy; retry.disabled = busy; discard.disabled = busy; issue.disabled = finish.disabled; revoke.disabled = busy || !exam; studentSelect.disabled = busy || !exam; studentSummary.setAttribute('aria-disabled',String(busy||!exam)); if(busy)studentMenu.open=false; const index = exam?.students.findIndex(s => s.id === exam.activeStudentId) ?? -1; previousStudent.disabled = busy || index <= 0; nextStudent.disabled = busy || !exam || index >= exam.students.length - 1; }
+  function controls() { stickyClear.hidden=!exam?.activeStudentId;stickyClear.disabled=busy; start.disabled = busy || exam?.status === 'active'; finish.disabled = busy || !exam || exam.status !== 'active'; share.disabled = depo.disabled = download.disabled = busy || !exam; history.disabled = busy; reload.disabled = busy; retry.disabled = busy; discard.disabled = busy; issue.disabled = finish.disabled; revoke.disabled = busy || !exam; studentSelect.disabled = busy || !exam; studentSummary.setAttribute('aria-disabled',String(busy||!exam)); if(busy)studentMenu.open=false; const index = exam?.students.findIndex(s => s.id === exam.activeStudentId) ?? -1; previousStudent.disabled = busy || index <= 0; nextStudent.disabled = busy || !exam || index >= exam.students.length - 1; }
   async function action(fn) {
     if (busy || disposed) return;
     busy = true; controls();
@@ -96,6 +148,7 @@ export function mountAdmin(root, api, context) {
   });
   function load(value) {
     exam = value;
+    readPickerNumbers(value);
     key.value = ''; pairing.hidden = true; retry.hidden = true; discard.hidden = true;
     queue = new ScoreQueue({
       save: job => api.save(exam.id, job),
@@ -120,7 +173,7 @@ export function mountAdmin(root, api, context) {
     renderRoster(); renderForm(); controls(); scheduleSelectionClear();
   }
   function renderRoster() {
-    roster.replaceChildren(el('h3', 'Öğrenciler'));
+    roster.replaceChildren();
     studentSelect.replaceChildren(); const placeholder = el('option', 'Öğrenci seçin'); placeholder.value = ''; studentSelect.append(placeholder);
     for (const student of exam.students) {
       const option = el('option', student.name); option.value = student.id; studentSelect.append(option);
@@ -130,10 +183,11 @@ export function mountAdmin(root, api, context) {
     update();
   }
   function renderForm() {
-    form.replaceChildren();
+    syncClock();
+    form.replaceChildren(desktopClock.node);
     const student = exam.students.find(s => s.id === exam.activeStudentId);
     if (!student) { form.append(el('p', 'Değerlendirmek için listeden öğrenci seçin.', 'se-empty')); return; }
-    const head = el('div', undefined, 'se-form-heading'); head.append(el('h3', student.name), el('output', '', 'se-total'), button('Seçimi kaldır', () => chooseStudent(null))); form.append(head);
+    const head = el('div', undefined, 'se-form-heading'); head.append(el('h3', student.name), el('output', '', 'se-total'), button('Seçimi kaldır', () => chooseStudent(null),'se-form-clear')); form.append(head);
     exam.results[student.id] ||= {scores: emptyScores(), revision: 0};
     exam.rubric.criteria.forEach((criterion, index) => {
       const field = el('fieldset', undefined, 'se-criterion'), legend = el('legend', `${index + 1}. ${criterion}`), choices = el('div', undefined, 'se-scores');
@@ -152,9 +206,10 @@ export function mountAdmin(root, api, context) {
     update();
   }
   function update() {
+    syncClock();
     if (!exam) return;
     studentSelect.value = exam.activeStudentId || '';
-    for (const option of studentSelect.options) { const student = exam.students.find(s => s.id === option.value); if (!student) continue; const value = total(exam.results[student.id]?.scores ?? emptyScores()); option.textContent = `${student.name} · ${value.complete ? '✓ ' + value.sum + '/100' : value.count + '/10'}`; }
+    for (const option of studentSelect.options) { const student = exam.students.find(s => s.id === option.value); if (!student) continue; const value = total(exam.results[student.id]?.scores ?? emptyScores()); option.textContent = `${pickerName(student)} · ${value.complete ? '✓ ' + value.sum + '/100' : value.count + '/10'}`; }
     const optionsScroll=studentOptions.scrollTop;
     studentOptions.replaceChildren();
     const clearChoice=button('Öğrenci seçimini kaldır',()=>{studentMenu.open=false;chooseStudent(null);}); studentOptions.append(clearChoice);
@@ -162,13 +217,13 @@ export function mountAdmin(root, api, context) {
       const value=total(exam.results[student.id]?.scores??emptyScores());
       const row=button('',()=>{studentMenu.open=false;chooseStudent(student.id);});
       row.className='se-student-option '+(value.complete?'is-complete':'is-incomplete');
-      row.append(el('span',(value.complete?'✓ ':'')+student.name),el('small',`${value.count}/10 ölçüt · ${value.sum}/100 puan`));
+      row.append(el('span',pickerName(student,value.complete)),el('small',`${value.count}/10 ölçüt · ${value.sum}/100 puan`));
       row.setAttribute('aria-pressed',String(student.id===exam.activeStudentId));studentOptions.append(row);
     }
     studentOptions.scrollTop=optionsScroll;
     const selected=exam.students.find(s=>s.id===exam.activeStudentId);
     studentSummary.replaceChildren();
-    if(selected){const value=total(exam.results[selected.id]?.scores??emptyScores());studentSummary.append(el('span',selected.name),el('small',`${value.count}/10 ölçüt`),el('b',`${value.sum}/100`));}
+    if(selected){const value=total(exam.results[selected.id]?.scores??emptyScores());studentSummary.append(el('span',pickerName(selected,value.complete)),el('small',`${value.count}/10 ölçüt`),el('b',`${value.sum}/100`));}
     else studentSummary.textContent='Öğrenci seçin';
     for (const node of roster.querySelectorAll('[data-student-id]')) {
       const scores = exam.results[node.dataset.studentId]?.scores ?? emptyScores(), value = total(scores);
@@ -187,7 +242,7 @@ export function mountAdmin(root, api, context) {
   const online = () => { if (queue?.error?.code !== 'conflict') void action(async () => { await flush(); if (exam) load(await api.get(exam.id)); }); };
   window.addEventListener('beforeunload', beforeUnload); window.addEventListener('online', online);
   controls(); const ready = action(refreshHistory);
-  return {ready, async close() { await flush(); disposed = true; clearTimeout(selectionTimer); window.removeEventListener('beforeunload', beforeUnload); window.removeEventListener('online', online); root.replaceChildren(); }, get exam() { return exam; }};
+  return {ready, async close() { await flush(); disposed = true; document.removeEventListener('pointerdown',dismissStudentMenu,true);document.removeEventListener('keydown',escapeStudentMenu,true); clearInterval(clockTick); localClock.reset(); clearTimeout(selectionTimer); window.removeEventListener('beforeunload', beforeUnload); window.removeEventListener('online', online); root.replaceChildren(); }, get exam() { return exam; }};
 }
 
 // Optional drawer inside the EXISTING timer. Timer background/state stay intact.

@@ -1,0 +1,25 @@
+#examEntryAdmin[hidden]{display:none!important}
+#adminMenuSheet .exam-entry-launchers{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
+#adminMenuSheet .exam-entry-launchers>button{flex:1 1 190px;margin:0;display:flex;align-items:center;justify-content:center;min-height:44px;line-height:1.4;text-align:center}
+#adminMenuSheet .speech-exam-menu-body #examEntryOpen{background:linear-gradient(145deg,#eae2f6,#cfc0e6);border-color:#af9cc7;color:#584573;box-shadow:inset 0 1px 0 #fff9,0 2px 0 #0a14232b}
+#examEntryAdmin{margin-top:12px;border-top:1px solid #ffffff20}
+#examEntryAdmin select{font:inherit;padding:10px;border:1px solid #54617d;border-radius:10px;background:#293650;color:#eef2ff}
+#examEntryAdmin button{flex:1 1 140px}
+#examEntryAdmin [role=status]{font-size:.8rem;overflow-wrap:anywhere}
+
+#examEntrySection #examEntryAdmin{margin:0;border:0}#examEntrySection button{min-height:44px;border-radius:12px;padding:10px 16px;background:linear-gradient(145deg,#eae2f6,#cfc0e6);border:1px solid #af9cc7;color:#584573;font-family:inherit;font-size:13px;font-weight:700;box-shadow:inset 0 1px 0 #fff9,0 2px 0 #0a14232b}
+
+#examEntryAdmin .entry-listening[hidden]{display:none}
+#examEntryAdmin .entry-listening{padding:4px 16px 12px;display:grid;gap:8px}
+.entry-listening-rows{display:grid;gap:4px;max-height:48dvh;overflow-y:auto;padding-right:6px}
+.entry-listening-rows label{display:grid;grid-template-columns:minmax(0,1fr) 64px;align-items:center;gap:8px;padding:3px 8px;margin:0;border:1px solid #52617c;border-radius:10px;background:#26344b}
+.entry-listening-rows span{overflow-wrap:anywhere;font-size:13px}.entry-listening-rows input{box-sizing:border-box;width:100%;min-width:0;min-height:36px;height:36px;padding:4px;text-align:center;background:#19263c;color:#edf1ff;border:1px solid #667391;border-radius:9px;font:700 15px 'Plus Jakarta Sans',sans-serif}
+
+#examEntrySection #examEntryAdmin button{display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.35;white-space:normal}
+#examEntrySection [data-entry-listen]{background:linear-gradient(145deg,#e8e0f4,#cdbce3);border-color:#aa94c4;color:#51416b}
+#examEntrySection [data-entry-reload]{background:linear-gradient(145deg,#e3eef9,#bdd5eb);border-color:#8fadc9;color:#345774}
+#examEntrySection [data-entry-download],#examEntrySection .entry-listening button[type=submit]{background:linear-gradient(145deg,#e0f0e6,#b7d8c6);border-color:#89b19b;color:#315d47}
+#examEntryAdmin [role=status]:empty{display:none}
+
+#examEntryAdmin .entry-listening>strong{margin:0;line-height:1.4}
+#examEntryAdmin [role=status]{margin:0;line-height:1.35}

@@ -24,7 +24,7 @@
   ids.forEach(id=>{const el=$(id);if(el)controls.append(el);});
   section.append(controls);top.append(section);
  });
- body.append($('adminInfoPanel'),$('speechAdmin'),$('speechExamAdmin'));
+ body.append($('adminInfoPanel'),$('speechAdmin'),$('speechExamAdmin'),$('examEntrySection'));
  body.addEventListener('click',e=>{if(e.target.closest('#teacherMgrBtn,#subjectMgrBtn,#termMgrBtn,#qrBtn,#pushToBoardBtn,#changePwBtn'))close();});
  // One announcement surface, preserving each channel's inputs, drafts and save handlers.
  const info=$('adminInfoPanel'),noticeTabs=document.createElement('div');noticeTabs.className='notice-tabs';noticeTabs.setAttribute('role','tablist');
@@ -62,7 +62,7 @@
  const eye=$('viewToggle');eye.innerHTML='<svg width="25" height="25" viewBox="0 0 28 28" fill="none" stroke="#C5B2E4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="9" cy="9" r="3.2"/><circle cx="20" cy="8" r="3.2"/><path d="M3.5 22v-2a5.5 5.5 0 0 1 11 0v2M15.5 21v-3a4.5 4.5 0 0 1 9 0v3"/></svg>';eye.title='Veli görünümü';eye.setAttribute('aria-label','Veli görünümü');tabs.append(menu,eye);header.querySelector('.parent-view-shortcut').remove();
  $('homeworkCheckBar').addEventListener('click',event=>{if(!event.target.closest('label,input'))$('onlyUncheckedStudents').click();});
  const toolbar=document.createElement('div');toolbar.className='layout-search-toolbar';main.insertBefore(toolbar,$('homeworkCheckBar'));toolbar.append(document.querySelector('.student-search-bar'),$('homeworkCheckBar'));
- $('studentSearch').placeholder='Öğrenci ara';
+ $('studentSearch').placeholder='İsim veya öğrenci no…';
  const bulk=dateCard.querySelector('.bulk-action-row'),bulkButton=document.createElement('button');bulkButton.className='tbtn bulk-toggle';bulkButton.type='button';bulkButton.innerHTML='<svg width="25" height="28" viewBox="0 0 28 32" aria-hidden="true" focusable="false"><rect x="5" y="5" width="20" height="24" rx="5" fill="#DDEEE3" stroke="#87B79C" stroke-width="1.5"/><path d="M3 10v15a5 5 0 0 0 5 5" fill="none" stroke="#B9A6D8" stroke-width="2" stroke-linecap="round"/><path d="m9 12 2 2 3-4m-5 11 2 2 3-4M17 12h4m-4 9h4" fill="none" stroke="#497C65" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';bulkButton.title='Toplu işaretleme seçeneklerini aç/kapat';bulkButton.setAttribute('aria-label','Toplu işaretleme seçeneklerini aç/kapat');bulkButton.setAttribute('aria-expanded','false');toolbar.append(bulkButton);bulkButton.onclick=()=>{const open=bulk.classList.toggle('bulk-open');bulkButton.setAttribute('aria-expanded',String(open));};
  const progress=document.createElement('div');progress.className='layout-progress';progress.innerHTML='<div class="progress-ring"><span></span></div><div><strong></strong><small>işaretlendi</small></div>';bulk.before(progress);
  function progressUpdate(){const cards=[...$('studentList').querySelectorAll('.student-card')];$('studentList').style.setProperty('--student-column-rows',Math.max(1,Math.ceil(cards.filter(card=>!card.hidden).length/2)));const marked=cards.filter(c=>c.querySelector('.controls .active')).length;progress.querySelector('strong').textContent=marked+'/'+cards.length;progress.style.setProperty('--progress',(cards.length?marked/cards.length*100:0)+'%');}
@@ -82,7 +82,7 @@
 
  const todayButton=document.createElement('button');todayButton.type='button';todayButton.className='date-today';todayButton.title='Bugüne git';todayButton.setAttribute('aria-label','Bugüne git');todayButton.innerHTML='<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="3"/><path d="M8 3v4m8-4v4M4 10h16m-12 4h3v3H8z"/></svg><span class="homework-jump-label">Bugün</span>';
  $('nextDate').after(todayButton);todayButton.onclick=()=>{const now=new Date();$('currentDate').value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');$('currentDate').dispatchEvent(new Event('change',{bubbles:true}));};
- const updateTodayVisibility=()=>{const now=new Date();const localToday=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');todayButton.hidden=!$('currentDate').value||$('currentDate').value===localToday;};
+ const updateTodayVisibility=()=>{const now=new Date();const localToday=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');todayButton.hidden=false;todayButton.setAttribute('aria-current',$('currentDate').value===localToday?'date':'false');};
  $('currentDate').addEventListener('change',updateTodayVisibility);
  new MutationObserver(updateTodayVisibility).observe(document.getElementById('studentList'),{childList:true});
  document.addEventListener('visibilitychange',updateTodayVisibility);
